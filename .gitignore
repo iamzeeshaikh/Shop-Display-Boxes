@@ -3,6 +3,7 @@ node_modules/
 site/node_modules/
 site/dist/
 site/.astro/
+site/.vercel/
 
 # ── Secrets — never commit ─────────────────────────────────────────────────
 .env
@@ -11,6 +12,10 @@ site/.astro/
 site/.env
 site/.env.*
 !site/.env.example
+
+# NOTE: site/vercel.json is NOT ignored. Vercel reads it before the build runs,
+# so the CSP hashes it contains must be committed. `npm run qa:headers` fails if
+# it drifts from the current output.
 
 # ── Generated image derivatives ────────────────────────────────────────────
 # src/assets/products/ is produced from Images/ by `npm run images`. Committing

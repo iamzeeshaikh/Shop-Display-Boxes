@@ -12,8 +12,12 @@
  * with it on the next build.
  *
  * Outputs:
- *   dist/_headers   — Netlify / Cloudflare Pages
- *   dist/vercel.json — Vercel (headers + redirects)
+ *   vercel.json     — project root. Vercel reads this BEFORE the build runs, so
+ *                     it must be committed to the repository. `npm run qa`
+ *                     fails if the committed copy has drifted from what the
+ *                     current output would produce.
+ *   dist/_headers    — Netlify / Cloudflare Pages, if ever deployed there
+ *   dist/_redirects  — Netlify / Cloudflare Pages
  *
  * Run: automatically as part of `npm run build`.
  */
@@ -128,6 +132,8 @@ async function main() {
   // ── Vercel ─────────────────────────────────────────────────────────────
   const vercel = {
     $schema: 'https://openapi.vercel.sh/vercel.json',
+    // Matches Astro's trailingSlash: 'always'. Vercel issues the 308 from a
+    // non-slash URL to the canonical slashed one.
     trailingSlash: true,
     cleanUrls: false,
     headers: [
@@ -144,17 +150,31 @@ async function main() {
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ],
-    redirects: REDIRECTS.map((r) => ({
-      source: r.from.replace(/\/$/, ''),
-      destination: r.to,
-      permanent: r.status === 301,
-    })),
+    redirects: [
+      // www → non-www. The canonical host is the apex domain, and every
+      // canonical URL on the site points there.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.shopdisplayboxes.com' }],
+        destination: 'https://shopdisplayboxes.com/:path*',
+        permanent: true,
+      },
+      // Content redirects from the central map.
+      ...REDIRECTS.map((r) => ({
+        source: r.from.replace(/\/$/, ''),
+        destination: r.to,
+        permanent: r.status === 301,
+      })),
+    ],
   };
-  await writeFile(path.join(DIST_ROOT, 'vercel.json'), JSON.stringify(vercel, null, 2) + '\n', 'utf8');
+
+  // Written to the project root, not dist/ — Vercel reads it before building.
+  const vercelJson = JSON.stringify(vercel, null, 2) + '\n';
+  await writeFile(path.join(root, 'vercel.json'), vercelJson, 'utf8');
 
   console.log(
     `headers: CSP built from ${scriptHashes.size} script hash(es) and ${styleHashes.size} style hash(es); ` +
-      `${REDIRECTS.length} redirect(s) written`
+      `vercel.json written to project root (commit it — Vercel reads it pre-build)`
   );
 }
 

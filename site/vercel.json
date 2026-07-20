@@ -1,0 +1,76 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "cleanUrls": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'sha256-k0DYlxcMFxKYnLL2V65/CmAbRWDgMWMDp+1zGf9gfhY=' 'sha256-X/27JXpXJhkSl4U+pjy2DybeI4Ge0HiRYGFaVy1BTE4=' 'sha256-CEURHUbxICGG42ouREv7R9wRH4EQbUjj8z1MtKeUVuk='; style-src 'self' 'sha256-MgliikyZqdsa/GBblfZlL234Ix/l5HNWyDMOY9KW1OM=' 'sha256-qVhrkrxh9TrCl2nt7MBlPQrAi4BIch2nfapirP3vGGk=' 'sha256-cDPArUM/eMwT3euaFyuTz7iRKTgjDL37r4Y2Q2H4zME=' 'sha256-qKv+hFG+MFI72W+9N+LTrsYrkfM0CsFrRmClA98NHgY=' 'sha256-rnvp9Pgs9GXHb/seNhzV4OsN9MpaAjcs2AECxaCZkgc=' 'sha256-GVCFTHEXJ09y8UAtMv9yrRAZnmZmYiwwfdcuop70BDs='; font-src 'self'; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com; manifest-src 'self'; upgrade-insecure-requests"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
+      ]
+    },
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.shopdisplayboxes.com"
+        }
+      ],
+      "destination": "https://shopdisplayboxes.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/cardboard-retail-display-boxes",
+      "destination": "/retail-display-boxes/",
+      "permanent": true
+    }
+  ]
+}

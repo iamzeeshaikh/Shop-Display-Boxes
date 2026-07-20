@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: 'https://shopdisplayboxes.com',
@@ -10,10 +10,14 @@ export default defineConfig({
   // the form endpoint, which needs server-side validation.
   output: 'static',
 
-  // The Node adapter runs anywhere Node runs and keeps deployment portable.
-  // Swap for @astrojs/vercel or @astrojs/netlify if deploying to those — the
-  // form endpoint is adapter-agnostic. See README.
-  adapter: node({ mode: 'standalone' }),
+  // Deploying to Vercel. Static pages are served from the CDN; only the form
+  // endpoint (prerender = false) runs as a function.
+  //
+  // Security headers and redirects live in vercel.json at the project root
+  // rather than being emitted into the build output — Vercel reads that file
+  // before the build runs, so it must be committed. `npm run build` regenerates
+  // it and `npm run qa:headers` fails if the committed copy has gone stale.
+  adapter: vercel(),
 
   build: {
     format: 'directory',

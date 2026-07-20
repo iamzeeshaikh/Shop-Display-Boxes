@@ -161,19 +161,48 @@ dist/_redirects  Netlify / Cloudflare Pages
 dist/vercel.json Vercel headers + redirects
 ```
 
-The **Node adapter** (`@astrojs/node`, standalone) is configured, which runs
-anywhere Node runs. Swap `astro.config.mjs` for `@astrojs/vercel` or
-`@astrojs/netlify` if deploying there — the form endpoint is adapter-agnostic.
+### Vercel
 
-### Host-level rules you must configure
+Configured with `@astrojs/vercel`. Static pages are served from the CDN; only
+`/api/quote/` runs as a function.
 
-These cannot be done in the build and are **not optional**:
+**Import the repo, then set Root Directory to `site`** — the repository root
+holds `Images/` alongside the site, so Vercel needs pointing at the subdirectory.
+Framework preset and build command are detected automatically.
 
-1. **HTTP → HTTPS**, 301
-2. **www → non-www**, 301 (canonical host is `shopdisplayboxes.com`)
-3. **Non-trailing-slash → trailing slash**, 301 — every canonical URL ends in `/`
-4. **404s must return 404**, not redirect to the homepage
-5. Serve `dist/client` as the web root; route `/api/*` to the server entry
+**Set these Environment Variables in the Vercel dashboard** (never in a committed
+`.env` — the repository is public):
+
+| Variable | Value |
+| --- | --- |
+| `FORM_ADAPTER` | `resend` (or `sendgrid` / `webhook`) |
+| `FORM_TO_EMAIL` | where enquiries should land |
+| `FORM_FROM_EMAIL` | a verified sender on your domain |
+| `RESEND_API_KEY` | your key |
+
+Without these the endpoint validates submissions and logs them, but sends
+nothing. That is intentional — see "Connecting the forms" above.
+
+**Domains:** add `shopdisplayboxes.com` as primary and `www.shopdisplayboxes.com`
+redirecting to it. `vercel.json` also carries a www → apex redirect as a backstop.
+
+#### vercel.json is committed on purpose
+
+Vercel reads `vercel.json` *before* running the build, so the CSP hashes inside
+it necessarily come from a previous build. **After changing any component that
+contains an inline `<script>` or `<style>`, run `npm run build` and commit the
+regenerated `vercel.json`.**
+
+`npm run qa:headers` fails the check if the committed file no longer covers the
+inline code in the current output — without it, a stale CSP would silently block
+your own scripts in production. It runs as part of `npm run qa`.
+
+### What Vercel handles for you
+
+- **HTTP → HTTPS** — automatic
+- **www → non-www** — domain settings plus the `vercel.json` redirect
+- **Trailing slashes** — `"trailingSlash": true`, matching Astro's config
+- **404s return 404** — the custom 404 page is served with the correct status
 
 ### Security headers
 
