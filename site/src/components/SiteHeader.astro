@@ -391,13 +391,24 @@ const phone = has(business.phone)
   }
 
   /* ── Mega menu ───────────────────────────────────────────────────────── */
+  /*
+   * The mega panel spans the full header width rather than the width of its
+   * nav item. Making that item `static` moves the containing block up to
+   * .site-header, which is sticky and therefore positioned — so `top: 100%`
+   * resolves to the header's own height.
+   *
+   * It must not be `fixed`: against the viewport, `top: 100%` is 100vh and the
+   * panel opens below the fold, invisible. The sibling .dropdown menus stay
+   * absolute against .nav__item because they are meant to be item-width.
+   */
+  .nav__item:has(.mega) {
+    position: static;
+  }
+
   .mega {
     position: absolute;
     inset-inline: 0;
     top: 100%;
-    /* Break out of the nav item to span the full viewport width. */
-    position: fixed;
-    inset-inline: 0;
     background: var(--c-paper);
     border-block: 1px solid var(--c-border);
     box-shadow: var(--shadow-lg);
