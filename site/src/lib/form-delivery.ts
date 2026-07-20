@@ -14,6 +14,7 @@
  * See README → "Connecting the forms".
  */
 
+import nodemailer from 'nodemailer';
 import type { QuoteSubmission } from './form-validation';
 
 export type AdapterName = 'console' | 'resend' | 'sendgrid' | 'smtp' | 'webhook';
@@ -147,13 +148,62 @@ export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult>
     }
 
     case 'smtp': {
-      // SMTP needs a mail library, which is not installed because no SMTP
-      // credentials were supplied. Wire nodemailer here when they are.
-      return {
-        delivered: false,
-        adapter,
-        detail: 'smtp adapter selected but no SMTP client is installed — see README',
-      };
+      const host = env('SMTP_HOST');
+      const port = Number(env('SMTP_PORT')) || 587;
+      const user = env('SMTP_USER');
+      // SMTP_PASS is the documented name; SMTP_PASSWORD accepted as an alias.
+      const pass = env('SMTP_PASS') || env('SMTP_PASSWORD');
+
+      if (!host || !user || !pass) {
+        return {
+          delivered: false,
+          adapter,
+          detail: 'smtp selected but SMTP_HOST, SMTP_USER, or SMTP_PASS is unset',
+        };
+      }
+
+      // Recipient and sender, with the FORM_* names as fallbacks.
+      const recipient = env('SMTP_TO') || to;
+      const senderEmail = env('SMTP_FROM_EMAIL') || from || user;
+      const senderName = env('SMTP_FROM_NAME') || '';
+      const sender = senderName ? `"${senderName}" <${senderEmail}>` : senderEmail;
+
+      if (!recipient) {
+        return { delivered: false, adapter, detail: 'smtp selected but SMTP_TO is unset' };
+      }
+
+      try {
+        const transport = nodemailer.createTransport({
+          host,
+          port,
+          // 587 uses STARTTLS (secure:false then upgrade); 465 is implicit TLS.
+          secure: port === 465,
+          auth: { user, pass },
+          // Serverless functions are short-lived; fail fast rather than hold
+          // the request open until the platform timeout.
+          connectionTimeout: 10_000,
+          greetingTimeout: 10_000,
+          socketTimeout: 15_000,
+        });
+
+        await transport.sendMail({
+          from: sender,
+          to: recipient,
+          subject,
+          text,
+          // Replies go to the customer, not to the mailbox that sent it.
+          replyTo: payload.submission.email,
+        });
+
+        return { delivered: true, adapter };
+      } catch (err) {
+        // Detail is logged server-side only — SMTP errors can echo credentials.
+        return {
+          delivered: false,
+          adapter,
+          detail: `smtp send failed: ${err instanceof Error ? err.message : String(err)}`,
+        };
+      }
     }
 
     case 'console':

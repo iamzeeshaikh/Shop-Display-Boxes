@@ -124,8 +124,39 @@ cp .env.example .env
 # set FORM_TO_EMAIL, FORM_FROM_EMAIL, and the matching API key
 ```
 
-Adapters live in `src/lib/form-delivery.ts`. The SMTP adapter is stubbed —
-install `nodemailer` and wire it there if you need SMTP.
+Adapters live in `src/lib/form-delivery.ts`: `resend`, `sendgrid`, `smtp`, and
+`webhook`.
+
+### SMTP (Gmail)
+
+```
+FORM_ADAPTER=smtp
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your@gmail.com
+SMTP_PASS=<Google App Password>
+SMTP_TO=where-enquiries-land@example.com
+SMTP_FROM_NAME=Shop Display Boxes
+SMTP_FROM_EMAIL=info@shopdisplayboxes.com
+```
+
+Two Gmail specifics that catch people out:
+
+1. **`SMTP_PASS` must be a Google App Password, not your account password.**
+   Google stopped accepting account passwords for SMTP in 2022. Generate one at
+   [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
+   — it requires 2-Step Verification to be on.
+
+2. **Gmail rewrites the From address** to the authenticated account unless
+   `SMTP_FROM_EMAIL` is verified under Gmail → Settings → Accounts →
+   "Send mail as". Without that, mail sent as `info@shopdisplayboxes.com`
+   arrives showing the Gmail address instead.
+
+Gmail also caps sending at roughly 500 messages a day. Fine for quote enquiries;
+if volume grows, move to Resend or SendGrid — both adapters are already built.
+
+The transport refuses to send if TLS cannot be negotiated, so credentials are
+never transmitted in the clear.
 
 ### What the endpoint enforces
 
@@ -255,6 +286,22 @@ deletes only files it has positively verified nothing references.
 ignored and no AVIF is produced. Use `<Picture>` where you need multiple formats.
 
 ---
+
+## Dependency advisories
+
+`npm audit` reports three high-severity advisories, all the same root cause:
+`path-to-regexp` ([GHSA-9wv6-86v2-598j](https://github.com/advisories/GHSA-9wv6-86v2-598j),
+a ReDoS) reached through `@vercel/routing-utils`, a dependency of
+`@astrojs/vercel`.
+
+**Not fixed, deliberately.** `npm audit fix --force` "resolves" it by downgrading
+`@astrojs/vercel` from 11.0.3 to 8.0.4 — a major version downgrade that would
+break compatibility with Astro 7. We are already on the latest adapter release;
+there is no forward fix available yet.
+
+Assessed impact is low: `@vercel/routing-utils` runs at **build time** to
+generate route configuration, not on the request path handling visitor input.
+Recheck when `@astrojs/vercel` ships an update.
 
 ## Known gaps
 
