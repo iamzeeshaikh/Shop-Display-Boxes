@@ -1,0 +1,54 @@
+---
+/**
+ * Analytics loader.
+ *
+ * Nothing is emitted unless a genuine ID is present in the environment. There
+ * are no placeholder or example IDs anywhere in this file.
+ *
+ * Privacy: conversion events fire only after a successful server response, and
+ * carry no personal data — no name, email, phone, company, or file name is ever
+ * passed to an analytics call or embedded in a URL. See src/lib/track.ts.
+ */
+import { analytics } from '../data/business';
+
+const { ga4MeasurementId, gtmContainerId } = analytics;
+const hasGa4 = /^G-[A-Z0-9]+$/.test(ga4MeasurementId);
+const hasGtm = /^GTM-[A-Z0-9]+$/.test(gtmContainerId);
+---
+
+{
+  hasGtm && (
+    <script
+      is:inline
+      defer
+      set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmContainerId}');`}
+    />
+  )
+}
+
+{
+  hasGa4 && !hasGtm && (
+    <>
+      <script
+        is:inline
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`}
+      />
+      <script
+        is:inline
+        set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4MeasurementId}',{anonymize_ip:true});`}
+      />
+    </>
+  )
+}
+
+{/* Phone and email click tracking. Only the event name is sent — never PII. */}
+{
+  (hasGa4 || hasGtm) && (
+    <script
+      is:inline
+      defer
+      set:html={`document.addEventListener('click',function(e){var el=e.target&&e.target.closest&&e.target.closest('[data-track]');if(!el)return;window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:el.getAttribute('data-track')});});`}
+    />
+  )
+}

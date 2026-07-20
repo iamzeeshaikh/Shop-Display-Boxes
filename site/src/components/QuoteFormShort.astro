@@ -1,0 +1,237 @@
+---
+/**
+ * Short product quote form, embedded at the foot of each product page.
+ *
+ * Posts to the same endpoint as the full form at /request-a-quote/ with a
+ * `formType` discriminator. Client-side validation is usability only — the
+ * endpoint revalidates everything server-side and is the security boundary.
+ *
+ * Anti-spam: a honeypot field hidden from sight and from assistive tech, plus
+ * a timestamp the endpoint uses to reject submissions completed implausibly
+ * fast. Neither replaces the endpoint's rate limiting.
+ */
+interface Props {
+  productName: string;
+  productSlug: string;
+}
+const { productName, productSlug } = Astro.props;
+const formId = `quote-${productSlug}`;
+---
+
+<section class="quote-short" aria-labelledby={`${formId}-heading`}>
+  <div class="quote-short__intro">
+    <h2 id={`${formId}-heading`}>Get a price for {productName.toLowerCase()}</h2>
+    <p>
+      Send your dimensions and quantity and we will come back with a price and a suggested
+      structure. If you do not have dimensions yet, send the product itself — we size the box
+      around it.
+    </p>
+    <p class="quote-short__alt">
+      Need more fields? Use the <a href="/request-a-quote/">full quote form</a>.
+    </p>
+  </div>
+
+  <form class="quote-short__form" method="post" action="/api/quote/" novalidate>
+    <input type="hidden" name="formType" value="product-quote" />
+    <input type="hidden" name="product" value={productSlug} />
+    <input type="hidden" name="startedAt" value="" data-started-at />
+
+    {/* Honeypot: hidden from view and from assistive technology. */}
+    <div class="hp" aria-hidden="true">
+      <label for={`${formId}-company-url`}>Company website</label>
+      <input id={`${formId}-company-url`} name="companyUrl" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="field">
+      <label for={`${formId}-name`}>Your name <span aria-hidden="true">*</span></label>
+      <input id={`${formId}-name`} name="name" type="text" required autocomplete="name" />
+    </div>
+
+    <div class="field">
+      <label for={`${formId}-email`}>Business email <span aria-hidden="true">*</span></label>
+      <input
+        id={`${formId}-email`}
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+      />
+    </div>
+
+    <div class="field field--half">
+      <label for={`${formId}-qty`}>Quantity <span aria-hidden="true">*</span></label>
+      <input id={`${formId}-qty`} name="quantity" type="number" min="1" required inputmode="numeric" />
+    </div>
+
+    <div class="field field--half">
+      <label for={`${formId}-unit`}>Units</label>
+      <select id={`${formId}-unit`} name="unit">
+        <option value="in">Inches</option>
+        <option value="mm">Millimeters</option>
+        <option value="cm">Centimeters</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for={`${formId}-dims`}>Dimensions (length × width × height)</label>
+      <input id={`${formId}-dims`} name="dimensions" type="text" placeholder="e.g. 8 × 6 × 10" />
+    </div>
+
+    <div class="field">
+      <label for={`${formId}-notes`}>What are you packing?</label>
+      <textarea id={`${formId}-notes`} name="notes" rows="3"></textarea>
+    </div>
+
+    <div class="field field--consent">
+      <input id={`${formId}-consent`} name="consent" type="checkbox" required />
+      <label for={`${formId}-consent`}>
+        I agree that my details may be used to respond to this enquiry, as described in the
+        <a href="/privacy-policy/">privacy policy</a>.
+      </label>
+    </div>
+
+    <div class="form-status" role="status" aria-live="polite" data-form-status></div>
+
+    <button class="btn btn--primary btn--lg" type="submit">Request a quote</button>
+  </form>
+</section>
+
+<script>
+  // Stamp the render time so the endpoint can reject instant submissions.
+  document.querySelectorAll<HTMLInputElement>('[data-started-at]').forEach((el) => {
+    el.value = String(Date.now());
+  });
+</script>
+
+<style>
+  .quote-short {
+    display: grid;
+    gap: var(--s-7);
+    padding: var(--s-7);
+    background: var(--c-ink-900);
+    color: var(--c-ink-200);
+    border-radius: var(--r-lg);
+  }
+
+  @media (min-width: 56em) {
+    .quote-short {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: var(--s-9);
+      padding: var(--s-9);
+    }
+  }
+
+  .quote-short :global(h2) {
+    color: var(--c-paper);
+    margin-block-end: var(--s-4);
+  }
+
+  .quote-short__intro p {
+    max-width: 42ch;
+  }
+
+  .quote-short__alt {
+    margin-block-start: var(--s-4);
+    font-size: var(--t-sm);
+  }
+
+  .quote-short a {
+    color: var(--c-kraft-400);
+  }
+
+  .quote-short__form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+
+  .field {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .field--half {
+    grid-column: span 1;
+  }
+
+  label {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--c-paper);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: var(--s-3);
+    min-height: 44px;
+    background: var(--c-paper);
+    color: var(--c-ink-900);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-md);
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 1px;
+  }
+
+  input[aria-invalid='true'],
+  textarea[aria-invalid='true'] {
+    border-color: var(--c-error-700);
+    border-width: 2px;
+  }
+
+  .field--consent {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: var(--s-3);
+  }
+
+  .field--consent input {
+    width: 20px;
+    height: 20px;
+    min-height: 0;
+    margin-block-start: 2px;
+  }
+
+  .field--consent label {
+    font-weight: 400;
+    font-size: var(--t-sm);
+    color: var(--c-ink-200);
+  }
+
+  .field-error {
+    font-size: var(--t-sm);
+    color: #ffb4b4;
+    font-weight: 600;
+  }
+
+  .form-status {
+    grid-column: 1 / -1;
+  }
+
+  .form-status:empty {
+    display: none;
+  }
+
+  button[type='submit'] {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  /* Honeypot — removed from layout and from the accessibility tree. */
+  .hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

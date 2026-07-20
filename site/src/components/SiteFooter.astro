@@ -1,0 +1,201 @@
+---
+/**
+ * Site footer.
+ *
+ * Link volume is kept to four topical groups plus policies. Location links are
+ * deliberately absent — all 40 location pages are reached through the hub at
+ * /locations/, never repeated site-wide.
+ *
+ * Contact details render only when verified in src/data/business.ts. Until the
+ * owner supplies them, the footer shows the quote and contact routes instead of
+ * a placeholder phone number.
+ */
+import Logo from './Logo.astro';
+import { FOOTER_GROUPS, FOOTER_POLICIES } from '../data/navigation';
+import { business, site, has } from '../data/business';
+
+const phone = has(business.phone)
+  ? (business.phone.value as { e164: string; display: string })
+  : null;
+const email = has(business.email) ? (business.email.value as string) : null;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container container--wide">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a href="/" aria-label={`${site.name} — home`}><Logo /></a>
+        <p class="footer__blurb">
+          Custom printed display boxes and retail display packaging, produced to order and shipped
+          to businesses across the United States.
+        </p>
+        <div class="footer__contact">
+          {
+            phone && (
+              <a class="footer__contact-link" href={`tel:${phone.e164}`} data-track="phone-click">
+                {phone.display}
+              </a>
+            )
+          }
+          {
+            email && (
+              <a class="footer__contact-link" href={`mailto:${email}`} data-track="email-click">
+                {email}
+              </a>
+            )
+          }
+          <a class="btn btn--primary" href="/request-a-quote/">Request a quote</a>
+        </div>
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer">
+        {
+          FOOTER_GROUPS.map((group) => (
+            <div class="footer__group">
+              <h2 class="footer__heading">{group.heading}</h2>
+              <ul>
+                {group.links.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copy">
+        &copy; {year} {site.name}. All rights reserved.
+      </p>
+      <ul class="footer__policies">
+        {
+          FOOTER_POLICIES.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--c-ink-900);
+    color: var(--c-ink-200);
+    padding-block: var(--s-9) var(--s-6);
+    font-size: var(--t-base);
+  }
+
+  .footer__top {
+    display: grid;
+    gap: var(--s-8);
+    padding-block-end: var(--s-8);
+    border-block-end: 1px solid rgb(255 255 255 / 0.12);
+  }
+
+  @media (min-width: 60em) {
+    .footer__top {
+      grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+      gap: var(--s-10);
+    }
+  }
+
+  .footer__brand a {
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .footer__blurb {
+    margin-block: var(--s-4) var(--s-5);
+    color: var(--c-ink-300);
+    max-width: 34ch;
+  }
+
+  .footer__contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-3);
+  }
+
+  .footer__contact-link {
+    color: var(--c-paper);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .footer__contact-link:hover {
+    color: var(--c-kraft-400);
+    text-decoration: underline;
+  }
+
+  .footer__nav {
+    display: grid;
+    gap: var(--s-6) var(--s-5);
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  }
+
+  .footer__heading {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-kraft-400);
+    margin-block-end: var(--s-4);
+  }
+
+  .footer__nav ul,
+  .footer__policies {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer__nav li + li {
+    margin-block-start: var(--s-2);
+  }
+
+  .footer__nav a {
+    color: var(--c-ink-200);
+    text-decoration: none;
+  }
+
+  .footer__nav a:hover {
+    color: var(--c-paper);
+    text-decoration: underline;
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3) var(--s-5);
+    padding-block-start: var(--s-5);
+    font-size: var(--t-sm);
+    color: var(--c-ink-300);
+  }
+
+  .footer__policies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-5);
+  }
+
+  .footer__policies a {
+    color: var(--c-ink-300);
+    text-decoration: none;
+  }
+
+  .footer__policies a:hover {
+    color: var(--c-paper);
+    text-decoration: underline;
+  }
+</style>

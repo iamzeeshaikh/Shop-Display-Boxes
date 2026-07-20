@@ -1,0 +1,398 @@
+---
+/**
+ * Location page body, used for both state and city pages.
+ *
+ * The honesty constraint is enforced structurally rather than by convention:
+ * this component renders a fixed "how supply actually works" section on every
+ * location page, stating plainly that there is no local facility. There is no
+ * prop that would let a page claim otherwise.
+ *
+ * No LocalBusiness schema is emitted, and no address, phone, or opening hours
+ * appears — because none exists for these locations. Emitting LocalBusiness
+ * here would assert a physical presence that is not real.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FaqAccordion from './FaqAccordion.astro';
+import RelatedProducts from './RelatedProducts.astro';
+import QuotePanel from './QuotePanel.astro';
+import type { StateLocation, CityLocation } from '../data/locations';
+import { business, has } from '../data/business';
+import { LOCATION_FAQS } from '../data/location-faqs';
+import {
+  graph,
+  webPage,
+  breadcrumbs as breadcrumbSchema,
+  faqPage,
+  type Crumb,
+} from '../lib/schema';
+import { pickInRange } from '../lib/seo';
+
+interface Props {
+  location: StateLocation | CityLocation;
+  kind: 'state' | 'city';
+}
+const { location, kind } = Astro.props;
+
+const isCity = kind === 'city';
+const city = isCity ? (location as CityLocation) : null;
+const state = !isCity ? (location as StateLocation) : null;
+
+const url = `/${location.slug}/`;
+const displayName = isCity ? `${city!.name}, ${city!.stateAbbr}` : state!.name;
+
+/**
+ * Does the business's own verified address fall inside this location?
+ *
+ * This matters for honesty in both directions. Every other location page must
+ * say plainly that there is no local presence — but on the location that DOES
+ * contain the registered address, saying that would be false. The check is
+ * driven by the verified address in business.ts, so it stays correct if the
+ * address changes and cannot be forgotten.
+ *
+ * Brooklyn is a borough of New York City, so the NYC page counts as a match.
+ */
+const addr = has(business.address)
+  ? (business.address.value as { addressLocality: string; addressRegion: string; display: string })
+  : null;
+
+const NYC_BOROUGHS = ['Brooklyn', 'Queens', 'Manhattan', 'The Bronx', 'Staten Island'];
+
+const isHomeLocation = (() => {
+  if (!addr) return false;
+  if (isCity) {
+    if (addr.addressLocality === city!.name) return true;
+    // New York City page covers the boroughs.
+    return city!.name === 'New York' && NYC_BOROUGHS.includes(addr.addressLocality);
+  }
+  return addr.addressRegion === state!.abbr;
+})();
+
+const faqs = LOCATION_FAQS[location.slug] ?? [];
+if (faqs.length < 8) {
+  throw new Error(
+    `Location "${location.slug}" has ${faqs.length} FAQs; at least 8 are required. ` +
+      `Add them in src/data/location-faqs.ts or mark the location thin.`
+  );
+}
+
+const crumbs: Crumb[] = [
+  { name: 'Home', url: '/' },
+  { name: 'Locations', url: '/locations/' },
+  ...(isCity ? [{ name: city!.stateName, url: `/${city!.stateSlug}/` }] : []),
+  { name: displayName, url },
+];
+
+const title = isCity
+  ? `Custom Display Boxes in ${city!.name}, ${city!.stateAbbr}`
+  : `Custom Display Boxes in ${state!.name}`;
+
+// Place names vary enough in length that one formula cannot hold the editorial
+// window, so candidates are offered shortest-first and the fitting one is used.
+const metaTitle = isCity
+  ? pickInRange(
+      [
+        `Custom Display Boxes ${city!.name} ${city!.stateAbbr} | Shipped to You`,
+        `Custom Display Boxes in ${city!.name}, ${city!.stateAbbr} | Shipped to You`,
+        `Custom Display Boxes in ${city!.name}, ${city!.stateAbbr} | Made to Order`,
+      ],
+      50,
+      60
+    )
+  : pickInRange(
+      [
+        `Custom Display Boxes in ${state!.name} | Shipped Statewide`,
+        `Custom Display Boxes in ${state!.name} | Shipped Across the State`,
+      ],
+      50,
+      60
+    );
+
+const metaDescription = isCity
+  ? pickInRange(
+      [
+        `Custom printed display boxes shipped to businesses in ${city!.name}. Built to your product and artwork, with free dielines.`,
+        `Custom printed display boxes shipped to businesses in ${city!.name}, ${city!.stateAbbr}. Built to your own product and artwork, with free dielines.`,
+      ],
+      120,
+      130
+    )
+  : pickInRange(
+      [
+        `Custom printed display boxes shipped to businesses across ${state!.name}. Built to your product and artwork, with free dielines.`,
+        `Custom printed display boxes shipped to businesses right across ${state!.name}. Built to your own product and artwork, with free dielines.`,
+      ],
+      120,
+      130
+    );
+
+const schema = graph(
+  webPage({ url, name: title, description: metaDescription }),
+  breadcrumbSchema(crumbs),
+  faqPage(faqs)
+);
+---
+
+<BaseLayout url={url} title={metaTitle} description={metaDescription} schema={schema}>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="section section--tight">
+    <div class="container container--wide">
+      <p class="eyebrow">{isCity ? `${city!.stateName} · City` : 'State'}</p>
+      <h1>{title}</h1>
+      <p class="lede">{location.positioning}</p>
+    </div>
+  </section>
+
+  {/* ── The honesty section. Rendered on every location page, always. ─── */}
+  <section class="section section--tight">
+    <div class="container container--wide">
+      <div class="supply-note">
+        <h2>How supply to {displayName} actually works</h2>
+        {
+          isHomeLocation ? (
+            <>
+              <p>
+                Our registered address is in {addr!.addressLocality}, so unlike every other location
+                on this site, we are based in {displayName}. That address is
+                {' '}{addr!.display}.
+              </p>
+              <p>
+                Being registered here does not mean a trade counter you can collect from — we have
+                not published opening hours or described this as a walk-in location, because that
+                is not what it is. Orders are produced to specification and shipped to your business
+                address, the same as anywhere else.
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                We do not have an office, production facility, warehouse, or collection point in
+                {' '}{displayName}, and we are not going to imply otherwise. Custom display packaging
+                is produced to order against your specification and shipped to your business address.
+              </p>
+              <p>
+                We also do not publish transit times or delivery guarantees we have not committed
+                to. If your order depends on a fixed in-store date, say so when you request a quote
+                and we will tell you whether it is achievable before you commit to anything.
+              </p>
+            </>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="container container--wide split">
+      <div>
+        <h2>Sectors here that use display packaging</h2>
+        <ul class="ticks">
+          {location.sectors.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Retail context</h2>
+        <ul class="ticks">
+          {location.retailContext.map((r) => <li>{r}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide body-grid">
+      <div>
+        <section class="body-section">
+          <h2>{location.packagingAngle.heading}</h2>
+          {location.packagingAngle.body.map((p) => <p>{p}</p>)}
+        </section>
+
+        {
+          isCity && (
+            <section class="body-section">
+              <h2>Ordering from {city!.name}</h2>
+              <p>
+                The process is the same wherever you are: send the product and a quantity, we draw a
+                dieline around it before you commit, you approve that and a print proof, and the run
+                follows. The two approval stages are where the risk sits — changes before them cost
+                nothing, changes after them are a new job.
+              </p>
+              <p class="body-section__link">
+                Statewide context is on the{' '}
+                <a href={`/${city!.stateSlug}/`}>{city!.stateName} page</a>.
+              </p>
+            </section>
+          )
+        }
+
+        {
+          !isCity && state!.cities.length > 0 && (
+            <section class="body-section">
+              <h2>Cities in {state!.name}</h2>
+              <p>
+                We ship to businesses throughout the state. These city pages cover context specific
+                to their local sectors and retail conditions.
+              </p>
+              <ul class="city-list">
+                {state!.cities.map((c) => (
+                  <li>
+                    <a href={`/${c.slug}/`}>Display boxes in {c.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <section class="body-section">
+          <h2>What we need to quote</h2>
+          <ul class="ticks">
+            <li>The product itself, or its dimensions at the widest point</li>
+            <li>How many units the display should hold</li>
+            <li>Where it will sit — counter, shelf, or floor</li>
+            <li>Any footprint or shelf-ready specification your retailer has issued</li>
+          </ul>
+          <p class="body-section__link">
+            The full sequence is set out under <a href="/how-to-order/">how ordering works</a>.
+          </p>
+        </section>
+      </div>
+
+      <aside class="body-grid__aside">
+        <QuotePanel />
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="container container--wide">
+      <RelatedProducts
+        slugs={location.products}
+        heading={`Display packaging for ${displayName} businesses`}
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <FaqAccordion faqs={faqs} heading={`Questions from ${displayName} buyers`} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .supply-note {
+    padding: var(--s-6);
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-inline-start: 3px solid var(--c-ink-700);
+    border-radius: var(--r-lg);
+    max-width: 68ch;
+  }
+
+  .supply-note h2 {
+    font-size: var(--t-lg);
+    margin-block-end: var(--s-4);
+  }
+
+  .supply-note p + p {
+    margin-block-start: var(--s-4);
+  }
+
+  .supply-note p {
+    color: var(--c-text-muted);
+  }
+
+  .split {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  @media (min-width: 52em) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-9);
+    }
+  }
+
+  .ticks {
+    list-style: none;
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .ticks li {
+    position: relative;
+    padding-inline-start: var(--s-6);
+    color: var(--c-text-muted);
+  }
+
+  .ticks li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.62em;
+    width: 9px;
+    height: 9px;
+    background: var(--c-kraft-400);
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+
+  .body-grid {
+    display: grid;
+    gap: var(--s-8);
+    align-items: start;
+  }
+
+  @media (min-width: 66em) {
+    .body-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+      gap: var(--s-10);
+    }
+    .body-grid__aside {
+      position: sticky;
+      top: 7rem;
+    }
+  }
+
+  .body-section + .body-section {
+    margin-block-start: var(--s-8);
+  }
+
+  .body-section h2 {
+    margin-block-end: var(--s-4);
+  }
+
+  .body-section p {
+    color: var(--c-text-muted);
+    max-width: 68ch;
+  }
+
+  .body-section p + p {
+    margin-block-start: var(--s-4);
+  }
+
+  .body-section__link {
+    margin-block-start: var(--s-4);
+  }
+
+  .city-list {
+    list-style: none;
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-2);
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+
+  .city-list a {
+    display: block;
+    padding: var(--s-3) 0;
+    font-weight: 600;
+    border-block-start: 1px solid var(--c-border);
+  }
+</style>

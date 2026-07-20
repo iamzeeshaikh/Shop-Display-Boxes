@@ -1,0 +1,122 @@
+---
+/**
+ * FAQ list built on native <details>/<summary>.
+ *
+ * Native elements mean the answers are in the DOM and crawlable, keyboard
+ * operable with no JavaScript, and announced correctly by screen readers
+ * without any ARIA. The only script is an optional one-open-at-a-time behavior
+ * that degrades to "all independently open" if it never runs.
+ */
+import type { Faq } from '../data/product-content';
+
+interface Props {
+  faqs: Faq[];
+  heading?: string;
+  intro?: string;
+  /** Rendered as H2 by default; pass 3 when nested under another H2. */
+  level?: 2 | 3;
+}
+const { faqs, heading = 'Frequently asked questions', intro, level = 2 } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3';
+---
+
+<section class="faqs">
+  <Heading class="faqs__heading">{heading}</Heading>
+  {intro && <p class="faqs__intro">{intro}</p>}
+  <div class="faqs__list">
+    {
+      faqs.map((faq) => (
+        <details class="faq" name="faq">
+          <summary>
+            <span class="faq__q">{faq.question}</span>
+            <span class="faq__icon" aria-hidden="true" />
+          </summary>
+          <div class="faq__a">
+            <p>{faq.answer}</p>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .faqs__heading {
+    margin-block-end: var(--s-3);
+  }
+
+  .faqs__intro {
+    color: var(--c-text-muted);
+    max-width: 60ch;
+    margin-block-end: var(--s-6);
+  }
+
+  .faqs__list {
+    border-block-start: 1px solid var(--c-border);
+    max-width: 78ch;
+  }
+
+  .faq {
+    border-block-end: 1px solid var(--c-border);
+  }
+
+  summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding-block: var(--s-4);
+    min-height: 44px;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    color: var(--c-ink-900);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:hover .faq__q {
+    color: var(--c-signal-700);
+  }
+
+  .faq__q {
+    font-size: var(--t-md);
+    line-height: var(--lh-snug);
+  }
+
+  .faq__icon {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+    margin-block-start: 0.35em;
+  }
+
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 2px;
+    background: var(--c-signal-700);
+    border-radius: 2px;
+  }
+
+  .faq__icon::after {
+    transform: rotate(90deg);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  [open] .faq__icon::after {
+    transform: rotate(0deg);
+  }
+
+  .faq__a {
+    padding-block-end: var(--s-5);
+    padding-inline-end: var(--s-8);
+    color: var(--c-text-muted);
+    max-width: 70ch;
+  }
+</style>

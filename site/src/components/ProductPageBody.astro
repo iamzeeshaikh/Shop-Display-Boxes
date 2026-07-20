@@ -1,0 +1,415 @@
+---
+/**
+ * Product page body. Rendered by the root [slug] route when the slug resolves
+ * to a product. Owns its own <BaseLayout> so each page type controls its own
+ * head, schema graph, and Open Graph image.
+ */
+import { getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import ProductGallery from './ProductGallery.astro';
+import PriceNote from './PriceNote.astro';
+import SpecTable from './SpecTable.astro';
+import FaqAccordion from './FaqAccordion.astro';
+import RelatedProducts from './RelatedProducts.astro';
+import QuoteFormShort from './QuoteFormShort.astro';
+import { getProduct } from '../data/products';
+import type { ProductContent } from '../data/product-content';
+import { business } from '../data/business';
+import { reviewsForProduct, aggregateFor } from '../data/reviews';
+import {
+  graph,
+  webPage,
+  breadcrumbs as breadcrumbSchema,
+  product as productSchema,
+  faqPage,
+  type Crumb,
+} from '../lib/schema';
+
+
+interface Props {
+  content: ProductContent;
+}
+
+const { content } = Astro.props;
+const record = getProduct(content.slug);
+const url = `/${content.slug}/`;
+
+const crumbs: Crumb[] = [
+  { name: 'Home', url: '/' },
+  { name: record.name, url },
+];
+
+const price = business.startingPricePerPiece.value;
+
+// Reviews for this product, and the rating computed from them. Both are empty
+// until real reviews exist in src/data/reviews.ts, at which point they render
+// on the page AND appear in schema together.
+const productReviews = reviewsForProduct(content.slug);
+const rating = aggregateFor(productReviews);
+
+/**
+ * Resolve the real emitted URLs for the gallery images so JSON-LD and the
+ * Open Graph tag point at files that actually exist. Astro writes optimized,
+ * content-hashed assets, so the source filename is not the delivered URL.
+ */
+const imageModules = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png');
+
+const schemaImages = await Promise.all(
+  content.imageAlts.slice(0, 4).map(async (entry) => {
+    const load = imageModules[`../assets/products/${content.slug}/${entry.file}`];
+    const optimized = await getImage({
+      src: (await load()).default,
+      width: 1200,
+      format: 'webp',
+    });
+    return optimized.src;
+  })
+);
+
+const schema = graph(
+  webPage({ url, name: content.h1, description: content.metaDescription, dateModified: content.updated }),
+  breadcrumbSchema(crumbs),
+  productSchema({
+    name: record.name,
+    slug: url,
+    description: content.summary,
+    images: schemaImages,
+    priceFrom: { amount: price.amount, currency: price.currency },
+    aggregateRating: rating,
+    reviews: productReviews,
+  }),
+  faqPage(content.faqs)
+);
+---
+
+<BaseLayout
+  url={url}
+  title={content.metaTitle}
+  description={content.metaDescription}
+  ogType="product"
+  ogImage={schemaImages[0]}
+  ogImageAlt={content.imageAlts[0].alt}
+  modified={content.updated}
+  schema={schema}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  {/* ── Hero: gallery + commercial summary + primary CTA ─────────────── */}
+  <section class="section section--tight">
+    <div class="container container--wide hero">
+      <div class="hero__media">
+        <ProductGallery
+          slug={content.slug}
+          imageAlts={content.imageAlts}
+          productName={record.name}
+        />
+      </div>
+
+      <div class="hero__body">
+        <p class="eyebrow">{record.group}</p>
+        <h1>{content.h1}</h1>
+        <p class="lede">{content.summary}</p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="/request-a-quote/">Request a quote</a>
+          <a class="btn btn--outline btn--lg" href="/sample-request/">Request a sample</a>
+        </div>
+
+        <ul class="hero__assurances">
+          <li>Free dieline drawn for your product</li>
+          <li>Custom sizes — the box is built around your unit</li>
+          <li>Shipped to businesses across all 50 states</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {/* ── Uses and industries ──────────────────────────────────────────── */}
+  <section class="section section--warm">
+    <div class="container container--wide split">
+      <div>
+        <h2>What these displays are used for</h2>
+        <ul class="ticks">
+          {content.uses.map((use) => <li>{use}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Who orders them</h2>
+        <ul class="ticks">
+          {content.industries.map((i) => <li>{i}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {/* ── Body sections ────────────────────────────────────────────────── */}
+  <section class="section">
+    <div class="container container--wide body-grid">
+      <div class="body-grid__content">
+        {
+          content.sections.map((section) => (
+            <section class="body-section">
+              <h2>{section.heading}</h2>
+              {section.body.map((p) => (
+                <p>{p}</p>
+              ))}
+              {section.points && (
+                <ul class="ticks">
+                  {section.points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              )}
+              {section.link && (
+                <p class="body-section__link">
+                  {section.link.text} <a href={section.link.href}>{section.link.anchor}</a>.
+                </p>
+              )}
+            </section>
+          ))
+        }
+      </div>
+
+      <aside class="body-grid__aside">
+        <PriceNote />
+      </aside>
+    </div>
+  </section>
+
+  {/* ── Specifications ───────────────────────────────────────────────── */}
+  <section class="section section--sunk">
+    <div class="container container--wide">
+      <h2>Specifications</h2>
+      <p class="lede spec-lede">
+        These are the options available for this style. The values set per job are marked as such
+        rather than given a figure that would not hold for every order.
+      </p>
+      <div class="spec-wrap">
+        <SpecTable specs={content.specs} productName={record.name} />
+      </div>
+    </div>
+  </section>
+
+  {/* ── FAQs ─────────────────────────────────────────────────────────── */}
+  <section class="section">
+    <div class="container container--wide">
+      <FaqAccordion
+        faqs={content.faqs}
+        heading={`${record.name} — questions we get asked`}
+        intro="Answers specific to this style. For ordering, artwork, and shipping questions that apply across the range, see the general FAQ."
+      />
+    </div>
+  </section>
+
+  {
+    productReviews.length > 0 && (
+      <section class="section section--sunk">
+        <div class="container container--wide">
+          <h2>What customers said about this style</h2>
+          {rating && (
+            <p class="rating-summary">
+              <strong>{rating.ratingValue} out of 5</strong> from {rating.reviewCount}{' '}
+              {rating.reviewCount === 1 ? 'review' : 'reviews'}
+            </p>
+          )}
+          <ul class="reviews">
+            {productReviews.map((r) => (
+              <li class="review">
+                {r.rating && (
+                  <p class="review__rating" aria-label={`Rated ${r.rating} out of 5`}>
+                    <span aria-hidden="true">
+                      {'★'.repeat(r.rating)}
+                      {'☆'.repeat(5 - r.rating)}
+                    </span>
+                  </p>
+                )}
+                <blockquote class="review__body">{r.body}</blockquote>
+                <p class="review__author">
+                  {r.author}
+                  {r.organization ? `, ${r.organization}` : ''} ·{' '}
+                  <time datetime={r.date}>{r.date}</time>
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {/* ── Related ──────────────────────────────────────────────────────── */}
+  <section class="section section--warm">
+    <div class="container container--wide">
+      <RelatedProducts slugs={content.related} />
+    </div>
+  </section>
+
+  {/* ── Final quote CTA ──────────────────────────────────────────────── */}
+  <section class="section">
+    <div class="container container--wide">
+      <QuoteFormShort productName={record.name} productSlug={content.slug} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    gap: var(--s-7);
+    align-items: start;
+  }
+
+  @media (min-width: 64em) {
+    .hero {
+      grid-template-columns: minmax(0, 32rem) minmax(0, 1fr);
+      gap: var(--s-9);
+    }
+  }
+
+  .hero__body h1 {
+    margin-block: var(--s-1) var(--s-4);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-block: var(--s-6) var(--s-6);
+  }
+
+  .hero__assurances {
+    list-style: none;
+    margin: 0;
+    padding: var(--s-5) 0 0;
+    border-block-start: 1px solid var(--c-border);
+    display: grid;
+    gap: var(--s-2);
+    font-size: var(--t-base);
+    color: var(--c-text-muted);
+  }
+
+  .split {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  @media (min-width: 52em) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-9);
+    }
+  }
+
+  .ticks {
+    list-style: none;
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .ticks li {
+    position: relative;
+    padding-inline-start: var(--s-6);
+    color: var(--c-text-muted);
+  }
+
+  .ticks li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.62em;
+    width: 9px;
+    height: 9px;
+    background: var(--c-kraft-400);
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+
+  .body-grid {
+    display: grid;
+    gap: var(--s-8);
+    align-items: start;
+  }
+
+  @media (min-width: 66em) {
+    .body-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+      gap: var(--s-10);
+    }
+
+    .body-grid__aside {
+      position: sticky;
+      top: 7rem;
+    }
+  }
+
+  .body-section + .body-section {
+    margin-block-start: var(--s-8);
+  }
+
+  .body-section h2 {
+    margin-block-end: var(--s-4);
+  }
+
+  .body-section p + p {
+    margin-block-start: var(--s-4);
+  }
+
+  .body-section p {
+    color: var(--c-text-muted);
+    max-width: 68ch;
+  }
+
+  .body-section__link {
+    margin-block-start: var(--s-4);
+    font-size: var(--t-base);
+  }
+
+  .spec-lede {
+    margin-block: var(--s-3) var(--s-6);
+  }
+
+  .spec-wrap {
+    max-width: 56rem;
+  }
+
+  .rating-summary {
+    margin-block: var(--s-3) var(--s-6);
+    color: var(--c-text-muted);
+  }
+
+  .reviews {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  }
+
+  .review {
+    padding: var(--s-5);
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+  }
+
+  .review__rating {
+    color: var(--c-signal-700);
+    letter-spacing: 0.1em;
+  }
+
+  .review__body {
+    margin: var(--s-3) 0;
+    border: 0;
+    padding: 0;
+    color: var(--c-text-muted);
+  }
+
+  .review__author {
+    font-size: var(--t-sm);
+    color: var(--c-text-subtle);
+  }
+</style>

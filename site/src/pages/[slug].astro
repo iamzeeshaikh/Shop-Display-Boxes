@@ -1,0 +1,109 @@
+---
+/**
+ * The single root-level route.
+ *
+ * Every public page on this site lives at the root — products, commercial
+ * pages, industry pages, buyer guides, policies, and locations. Astro permits
+ * only one dynamic route per path pattern, so they are all resolved here and
+ * dispatched to the appropriate body component by type.
+ *
+ * This is what keeps product URLs at /cosmetic-display-boxes/ rather than
+ * under a /products/ segment, without the different page types colliding.
+ *
+ * Static routes (src/pages/index.astro, /blog/, and so on) still take
+ * precedence over this file, so they are unaffected.
+ */
+import ProductPageBody from '../components/ProductPageBody.astro';
+import ContentPageBody from '../components/ContentPageBody.astro';
+import LocationPageBody from '../components/LocationPageBody.astro';
+import { PRODUCTS } from '../data/products';
+import type { ProductContent } from '../data/product-content';
+import type { PageContent } from '../data/page-content';
+import { PUBLISHED_STATES, PUBLISHED_CITIES } from '../data/locations';
+import type { StateLocation, CityLocation } from '../data/locations';
+
+export async function getStaticPaths() {
+  const productModules = import.meta.glob<{ default: ProductContent }>(
+    '../content/products/*.ts',
+    { eager: true }
+  );
+  const pageModules = import.meta.glob<{ default: PageContent }>(
+    '../content/pages/**/*.ts',
+    { eager: true }
+  );
+
+  const paths: Array<{ params: { slug: string }; props: Record<string, unknown> }> = [];
+  const seen = new Set<string>();
+
+  // ── Products ────────────────────────────────────────────────────────────
+  const missingProducts: string[] = [];
+  for (const record of PRODUCTS) {
+    const mod = productModules[`../content/products/${record.slug}.ts`];
+    if (!mod) {
+      missingProducts.push(record.slug);
+      continue;
+    }
+    seen.add(record.slug);
+    paths.push({
+      params: { slug: record.slug },
+      props: { type: 'product', content: mod.default },
+    });
+  }
+
+  // ── Everything else ─────────────────────────────────────────────────────
+  for (const [file, mod] of Object.entries(pageModules)) {
+    const content = mod.default;
+    if (!content?.slug) {
+      throw new Error(`Content file ${file} has no slug.`);
+    }
+    if (seen.has(content.slug)) {
+      throw new Error(
+        `Slug collision: "${content.slug}" is defined by both a product and ${file}. ` +
+          `Root-level slugs must be unique across every page type.`
+      );
+    }
+    seen.add(content.slug);
+    paths.push({
+      params: { slug: content.slug },
+      props: { type: 'page', content },
+    });
+  }
+
+  // ── Locations ───────────────────────────────────────────────────────────
+  for (const state of PUBLISHED_STATES) {
+    if (seen.has(state.slug)) throw new Error(`Slug collision: "${state.slug}" (state)`);
+    seen.add(state.slug);
+    paths.push({ params: { slug: state.slug }, props: { type: 'location', kind: 'state', content: state } });
+  }
+  for (const city of PUBLISHED_CITIES) {
+    if (seen.has(city.slug)) throw new Error(`Slug collision: "${city.slug}" (city)`);
+    seen.add(city.slug);
+    paths.push({ params: { slug: city.slug }, props: { type: 'location', kind: 'city', content: city } });
+  }
+
+  if (missingProducts.length) {
+    console.warn(
+      `\n  [routes] ${missingProducts.length} product(s) without a content file were NOT built:\n` +
+        missingProducts.map((s) => `    src/content/products/${s}.ts`).join('\n') +
+        '\n'
+    );
+  }
+
+  return paths;
+}
+
+const { type, content, kind } = Astro.props as
+  | { type: 'product'; content: ProductContent; kind?: undefined }
+  | { type: 'page'; content: PageContent; kind?: undefined }
+  | { type: 'location'; content: StateLocation | CityLocation; kind: 'state' | 'city' };
+---
+
+{
+  type === 'product' ? (
+    <ProductPageBody content={content as ProductContent} />
+  ) : type === 'location' ? (
+    <LocationPageBody location={content as StateLocation | CityLocation} kind={kind!} />
+  ) : (
+    <ContentPageBody content={content as PageContent} />
+  )
+}

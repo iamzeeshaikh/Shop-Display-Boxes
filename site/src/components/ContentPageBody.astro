@@ -1,0 +1,459 @@
+---
+/**
+ * Body for every non-product root-level page: commercial, industry, guide,
+ * and policy. The `kind` discriminator changes the layout emphasis and the
+ * schema type, so a guide does not render identically to a policy page.
+ *
+ * Layout variants:
+ *   commercial — wide sections with a sticky quote panel
+ *   industry   — wide sections, product recommendations, FAQ block
+ *   guide      — narrow prose column, tables, no sticky panel
+ *   policy     — narrow prose column, owner-verification notice where needed
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import FaqAccordion from './FaqAccordion.astro';
+import RelatedProducts from './RelatedProducts.astro';
+import QuotePanel from './QuotePanel.astro';
+import type { PageContent } from '../data/page-content';
+import { allReviews, aggregateFor } from '../data/reviews';
+import {
+  graph,
+  webPage,
+  breadcrumbs as breadcrumbSchema,
+  faqPage,
+  type Crumb,
+} from '../lib/schema';
+import { absolute } from '../lib/urls';
+
+interface Props {
+  content: PageContent;
+}
+const { content } = Astro.props;
+const url = `/${content.slug}/`;
+
+const crumbs: Crumb[] = [
+  { name: 'Home', url: '/' },
+  { name: content.h1, url },
+];
+
+const schemaType =
+  content.slug === 'about-us'
+    ? 'AboutPage'
+    : content.slug === 'contact-us'
+      ? 'ContactPage'
+      : 'WebPage';
+
+// Declared before `schema` because the schema graph consumes it.
+const reviews = content.showReviews ? allReviews() : [];
+const reviewAggregate = aggregateFor(reviews);
+
+const schema = graph(
+  webPage({
+    url,
+    name: content.h1,
+    description: content.metaDescription,
+    type: schemaType,
+    dateModified: content.updated,
+  }),
+  breadcrumbSchema(crumbs),
+  content.faqs && content.faqs.length ? faqPage(content.faqs) : null,
+  // Review nodes, emitted only for reviews rendered on this page.
+  ...reviews.map((r) => ({
+    '@type': 'Review',
+    itemReviewed: { '@id': absolute('/') + '#organization' },
+    author: {
+      '@type': 'Person',
+      name: r.author,
+      ...(r.organization ? { worksFor: { '@type': 'Organization', name: r.organization } } : {}),
+    },
+    datePublished: r.date,
+    reviewBody: r.body,
+    ...(typeof r.rating === 'number'
+      ? {
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: r.rating,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+  }))
+);
+
+const isNarrow = content.kind === 'guide' || content.kind === 'policy';
+const showQuotePanel = content.kind === 'commercial' || content.kind === 'industry';
+---
+
+<BaseLayout
+  url={url}
+  title={content.metaTitle}
+  description={content.metaDescription}
+  modified={content.updated}
+  schema={schema}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="section section--tight">
+    <div class={`container ${isNarrow ? '' : 'container--wide'}`}>
+      <p class="eyebrow">
+        {
+          content.kind === 'guide'
+            ? 'Buyer guide'
+            : content.kind === 'industry'
+              ? 'Industry'
+              : content.kind === 'policy'
+                ? 'Policy'
+                : 'Shop Display Boxes'
+        }
+      </p>
+      <h1>{content.h1}</h1>
+      <p class="lede page-intro">{content.intro}</p>
+
+      {
+        content.awaitingOwnerFacts && (
+          <p class="verify-notice" role="note">
+            <strong>Pre-launch note:</strong> parts of this policy depend on business details that
+            have not yet been confirmed by the site owner. Those passages are marked and must be
+            completed before this page is published. Nothing on this page has been invented to fill
+            a gap.
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class={`container ${isNarrow ? '' : 'container--wide'} ${showQuotePanel ? 'body-grid' : ''}`}>
+      <div class={isNarrow ? 'prose' : 'body-grid__content'}>
+        {
+          content.sections.map((section) => (
+            <section class="body-section">
+              <h2>{section.heading}</h2>
+              {section.body.map((p) => (
+                <p>{p}</p>
+              ))}
+              {section.points && (
+                <ul class="ticks">
+                  {section.points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              )}
+              {section.link && (
+                <p class="body-section__link">
+                  {section.link.text} <a href={section.link.href}>{section.link.anchor}</a>.
+                </p>
+              )}
+            </section>
+          ))
+        }
+
+        {
+          content.tables?.map((table) => (
+            <div class="table-block">
+              <div class="table-wrap">
+                <table>
+                  <caption>{table.caption}</caption>
+                  <thead>
+                    <tr>
+                      {table.headers.map((h) => (
+                        <th scope="col">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {table.rows.map((row) => (
+                      <tr>
+                        {row.map((cell, i) =>
+                          i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {table.note && <p class="table-note">{table.note}</p>}
+            </div>
+          ))
+        }
+      </div>
+
+      {
+        showQuotePanel && (
+          <aside class="body-grid__aside">
+            <QuotePanel />
+          </aside>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    reviews.length > 0 && (
+      <section class="section section--warm">
+        <div class="container container--wide">
+          <h2>What customers have said</h2>
+          {reviewAggregate && (
+            <p class="review-summary">
+              <strong>{reviewAggregate.ratingValue} out of 5</strong> from{' '}
+              {reviewAggregate.reviewCount} rated{' '}
+              {reviewAggregate.reviewCount === 1 ? 'review' : 'reviews'}
+            </p>
+          )}
+          <ul class="reviews">
+            {reviews.map((r) => (
+              <li class="review">
+                {r.rating && (
+                  <p class="review__rating" aria-label={`Rated ${r.rating} out of 5`}>
+                    <span aria-hidden="true">
+                      {'★'.repeat(r.rating)}
+                      {'☆'.repeat(5 - r.rating)}
+                    </span>
+                  </p>
+                )}
+                <blockquote class="review__body">{r.body}</blockquote>
+                <p class="review__author">
+                  {r.author}
+                  {r.organization ? `, ${r.organization}` : ''} ·{' '}
+                  <time datetime={r.date}>{r.date}</time>
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    content.relatedProducts && content.relatedProducts.length > 0 && (
+      <section class="section section--warm">
+        <div class="container container--wide">
+          <RelatedProducts
+            slugs={content.relatedProducts}
+            heading="Display packaging for this application"
+          />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    content.faqs && content.faqs.length > 0 && (
+      <section class="section">
+        <div class="container container--wide">
+          <FaqAccordion faqs={content.faqs} heading="Frequently asked questions" />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    content.relatedPages && content.relatedPages.length > 0 && (
+      <section class="section section--tight">
+        <div class="container container--wide">
+          <h2 class="related-pages__heading">Related reading</h2>
+          <ul class="related-pages">
+            {content.relatedPages.map((p) => (
+              <li>
+                <a href={p.href}>{p.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    content.cta && (
+      <section class="section">
+        <div class="container container--wide">
+          <div class="page-cta">
+            <div>
+              <h2>{content.cta.heading}</h2>
+              <p>{content.cta.body}</p>
+            </div>
+            <a class="btn btn--primary btn--lg" href={content.cta.buttonHref ?? '/request-a-quote/'}>
+              {content.cta.buttonLabel ?? 'Request a quote'}
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .page-intro {
+    margin-block-start: var(--s-4);
+    max-width: 62ch;
+  }
+
+  .verify-notice {
+    margin-block-start: var(--s-6);
+    padding: var(--s-4) var(--s-5);
+    background: var(--c-warn-100);
+    border-inline-start: 3px solid var(--c-warn-700);
+    border-radius: var(--r-md);
+    font-size: var(--t-base);
+    max-width: 68ch;
+  }
+
+  .body-grid {
+    display: grid;
+    gap: var(--s-8);
+    align-items: start;
+  }
+
+  @media (min-width: 66em) {
+    .body-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+      gap: var(--s-10);
+    }
+    .body-grid__aside {
+      position: sticky;
+      top: 7rem;
+    }
+  }
+
+  .body-section + .body-section {
+    margin-block-start: var(--s-8);
+  }
+
+  .body-section h2 {
+    margin-block-end: var(--s-4);
+  }
+
+  .body-section p {
+    color: var(--c-text-muted);
+    max-width: 68ch;
+  }
+
+  .body-section p + p {
+    margin-block-start: var(--s-4);
+  }
+
+  .body-section__link {
+    margin-block-start: var(--s-4);
+  }
+
+  .ticks {
+    list-style: none;
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .ticks li {
+    position: relative;
+    padding-inline-start: var(--s-6);
+    color: var(--c-text-muted);
+  }
+
+  .ticks li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.62em;
+    width: 9px;
+    height: 9px;
+    background: var(--c-kraft-400);
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+
+  .table-block {
+    margin-block-start: var(--s-8);
+  }
+
+  .table-note {
+    margin-block-start: var(--s-3);
+    font-size: var(--t-sm);
+    color: var(--c-text-subtle);
+    max-width: 66ch;
+  }
+
+  .related-pages__heading {
+    margin-block-end: var(--s-4);
+  }
+
+  .related-pages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-2);
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+
+  .related-pages a {
+    display: block;
+    padding: var(--s-3) 0;
+    font-weight: 600;
+    border-block-start: 1px solid var(--c-border);
+  }
+
+  .review-summary {
+    margin-block: var(--s-3) var(--s-6);
+    color: var(--c-text-muted);
+  }
+
+  .reviews {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  }
+
+  .review {
+    padding: var(--s-5);
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+  }
+
+  .review__rating {
+    color: var(--c-signal-700);
+    letter-spacing: 0.1em;
+  }
+
+  .review__body {
+    margin: var(--s-3) 0;
+    border: 0;
+    padding: 0;
+    color: var(--c-text-muted);
+  }
+
+  .review__author {
+    font-size: var(--t-sm);
+    color: var(--c-text-subtle);
+  }
+
+  .page-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding: var(--s-7);
+    background: var(--c-ink-900);
+    color: var(--c-ink-200);
+    border-radius: var(--r-lg);
+  }
+
+  .page-cta :global(h2) {
+    color: var(--c-paper);
+    margin-block-end: var(--s-3);
+  }
+
+  .page-cta p {
+    max-width: 54ch;
+    margin: 0;
+  }
+</style>

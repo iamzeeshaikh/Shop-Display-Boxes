@@ -1,0 +1,57 @@
+---
+/**
+ * Sticky quote panel used in the sidebar of commercial and industry pages.
+ * Deliberately does not repeat the $0.30 pricing statement — that belongs on
+ * product pages, where the Offer schema mirrors it.
+ */
+---
+
+<aside class="quote-panel" aria-labelledby="quote-panel-heading">
+  <h2 class="quote-panel__heading" id="quote-panel-heading">Get a price</h2>
+  <p class="quote-panel__body">
+    Send your dimensions, quantity, and what you are packing. If you do not have dimensions yet,
+    send the product — we size the box around it and draw the dieline before you commit.
+  </p>
+  <a class="btn btn--primary" href="/request-a-quote/">Request a quote</a>
+  <ul class="quote-panel__list">
+    <li><a href="/sample-request/">Request a sample</a></li>
+    <li><a href="/get-a-free-dieline/">Get a free dieline</a></li>
+    <li><a href="/contact-us/">Talk to someone</a></li>
+  </ul>
+</aside>
+
+<style>
+  .quote-panel {
+    padding: var(--s-6);
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-inline-start: 3px solid var(--c-signal-700);
+    border-radius: var(--r-lg);
+  }
+
+  .quote-panel__heading {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-signal-700);
+    margin-block-end: var(--s-3);
+  }
+
+  .quote-panel__body {
+    font-size: var(--t-base);
+    color: var(--c-text-muted);
+    margin-block-end: var(--s-5);
+  }
+
+  .quote-panel__list {
+    list-style: none;
+    margin: var(--s-5) 0 0;
+    padding: var(--s-4) 0 0;
+    border-block-start: 1px solid var(--c-border);
+    display: grid;
+    gap: var(--s-2);
+    font-size: var(--t-sm);
+  }
+</style>

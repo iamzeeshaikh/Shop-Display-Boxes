@@ -1,0 +1,272 @@
+---
+/**
+ * Blog index.
+ *
+ * Articles are grouped by tag for scanning, but tags do not generate their own
+ * URLs — a tag archive across twenty articles would be a thin page competing
+ * with the articles themselves. Grouping here is a UI device only.
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { readingTime, type BlogPost, type BlogTag } from '../../data/blog';
+import { graph, webPage, breadcrumbs as breadcrumbSchema, type Crumb } from '../../lib/schema';
+
+const posts = Object.values(
+  import.meta.glob<{ default: BlogPost }>('../../content/blog/*.ts', { eager: true })
+)
+  .map((m) => m.default)
+  .sort((a, b) => (a.published < b.published ? 1 : -1));
+
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  '../../assets/products/**/*.png'
+);
+
+const cards = await Promise.all(
+  posts.map(async (post) => {
+    const key = `../../assets/products/${post.image.productSlug}/${post.image.file}`;
+    const loader = imageModules[key];
+    return {
+      post,
+      minutes: readingTime(post),
+      image: loader ? (await loader()).default : undefined,
+    };
+  })
+);
+
+// Tag counts, for the scanning strip. No tag links to its own page.
+const tagCounts = new Map<BlogTag, number>();
+for (const p of posts) for (const t of p.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+
+const url = '/blog/';
+const crumbs: Crumb[] = [
+  { name: 'Home', url: '/' },
+  { name: 'Blog', url },
+];
+
+const seo = {
+  url,
+  title: 'Display Packaging Blog | Practical Guides for Buyers',
+  description:
+    'Practical articles on display packaging: materials, printing, structural design, costs, and ordering, written for buyers.',
+};
+
+const schema = graph(
+  webPage({ url, name: 'Display Packaging Blog', description: seo.description, type: 'CollectionPage' }),
+  breadcrumbSchema(crumbs)
+);
+
+const [lead, ...rest] = cards;
+---
+
+<BaseLayout {...seo} schema={schema}>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="section section--tight">
+    <div class="container container--wide">
+      <p class="eyebrow">Blog</p>
+      <h1>Display packaging, explained</h1>
+      <p class="lede">
+        Articles on materials, printing, structure, and cost — written for the person specifying
+        packaging rather than for search engines. Every one of them is about a decision you will
+        actually have to make.
+      </p>
+
+      {
+        tags.length > 0 && (
+          <ul class="tagstrip" aria-label="Topics covered">
+            {tags.map(([tag, count]) => (
+              <li>
+                {tag} <span class="tagstrip__count">{count}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    lead && (
+      <section class="section section--tight">
+        <div class="container container--wide">
+          <a class="lead-card" href={`/blog/${lead.post.slug}/`}>
+            {lead.image && (
+              <Image
+                src={lead.image}
+                alt=""
+                widths={[520, 1040]}
+                sizes="(min-width: 60em) 34rem, 94vw"
+                format="webp"
+                loading="eager"
+                class="lead-card__img"
+              />
+            )}
+            <div class="lead-card__body">
+              <p class="eyebrow">{lead.post.tags[0]}</p>
+              <h2>{lead.post.title}</h2>
+              <p class="lead-card__excerpt">{lead.post.excerpt}</p>
+              <p class="card__meta">
+                {lead.post.author} · {lead.minutes} min read
+              </p>
+            </div>
+          </a>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--tight">
+    <div class="container container--wide">
+      <ul class="grid">
+        {
+          rest.map(({ post, minutes, image }) => (
+            <li class="card">
+              <a href={`/blog/${post.slug}/`}>
+                {image && (
+                  <Image
+                    src={image}
+                    alt=""
+                    widths={[300, 600]}
+                    sizes="(min-width: 60em) 20rem, 45vw"
+                    format="webp"
+                    loading="lazy"
+                    decoding="async"
+                    class="card__img"
+                  />
+                )}
+                <p class="card__tag">{post.tags[0]}</p>
+                <h2 class="card__title">{post.title}</h2>
+                <p class="card__excerpt">{post.excerpt}</p>
+                <p class="card__meta">{minutes} min read</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tagstrip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-3);
+    list-style: none;
+    margin: var(--s-6) 0 0;
+    padding: 0;
+  }
+
+  .tagstrip li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-1) var(--s-3);
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--c-ink-700);
+    background: var(--c-ink-50);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-pill);
+  }
+
+  .tagstrip__count {
+    font-weight: 450;
+    color: var(--c-text-subtle);
+  }
+
+  .lead-card {
+    display: grid;
+    gap: var(--s-6);
+    text-decoration: none;
+    color: inherit;
+    padding-block-end: var(--s-7);
+    border-block-end: 1px solid var(--c-border);
+  }
+
+  @media (min-width: 60em) {
+    .lead-card {
+      grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+      gap: var(--s-8);
+      align-items: center;
+    }
+  }
+
+  .lead-card__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+    background: var(--c-paper-warm);
+  }
+
+  .lead-card h2 {
+    font-size: var(--t-2xl);
+    margin-block-end: var(--s-4);
+  }
+
+  .lead-card:hover h2 {
+    color: var(--c-signal-700);
+  }
+
+  .lead-card__excerpt {
+    color: var(--c-text-muted);
+    max-width: 52ch;
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--s-7) var(--s-6);
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    background: var(--c-paper-warm);
+    margin-block-end: var(--s-4);
+  }
+
+  .card__tag {
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-signal-700);
+  }
+
+  .card__title {
+    font-size: var(--t-lg);
+    margin-block: var(--s-2) var(--s-3);
+  }
+
+  .card a:hover .card__title {
+    color: var(--c-signal-700);
+  }
+
+  .card__excerpt {
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+  }
+
+  .card__meta {
+    margin-block-start: var(--s-3);
+    font-size: var(--t-xs);
+    color: var(--c-text-subtle);
+  }
+</style>

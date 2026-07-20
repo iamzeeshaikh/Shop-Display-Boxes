@@ -1,0 +1,698 @@
+---
+/**
+ * Homepage.
+ *
+ * Deliberately omitted: testimonials, client logos, counters, awards, and
+ * certifications. None has been supplied, and the brief forbids inventing them.
+ * The trust sections here are built from what is verifiable — how the work is
+ * done — rather than from social proof that does not exist yet.
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import { FEATURED_PRODUCTS, PRODUCTS } from '../data/products';
+import { business } from '../data/business';
+import { graph, organization, localBusiness, website, webPage, faqPage } from '../lib/schema';
+import manifest from '../assets/products/manifest.json';
+
+const seo = {
+  url: '/',
+  title: 'Custom Display Boxes & Retail Display Packaging | USA',
+  description:
+    'Custom printed display boxes built around your product, with free dielines and low minimums. Shipped to businesses across the USA.',
+};
+
+const price = business.startingPricePerPiece.value;
+
+const imageModules = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png');
+const files = manifest as Record<string, Array<{ file: string }>>;
+
+async function loadFirst(slug: string) {
+  const file = files[slug]?.[0]?.file;
+  const loader = file ? imageModules[`../assets/products/${slug}/${file}`] : undefined;
+  return loader ? (await loader()).default : undefined;
+}
+
+const featured = await Promise.all(
+  FEATURED_PRODUCTS.map(async (p) => ({ product: p, image: await loadFirst(p.slug) }))
+);
+
+// Hero image: the LCP element. Eager, high priority, never lazy-loaded.
+const heroImage = await loadFirst('cardboard-display-stands');
+
+const gallery = await Promise.all(
+  [
+    'corrugated-display-boxes',
+    'candle-display-boxes',
+    'display-gift-boxes',
+    'counter-display-boxes',
+    'soap-display-boxes',
+    'display-trays',
+  ].map(async (slug) => ({ slug, image: await loadFirst(slug) }))
+);
+
+const industries = [
+  { label: 'Cosmetics & beauty', href: '/cosmetic-packaging/' },
+  { label: 'Food & beverage', href: '/food-display-packaging/' },
+  { label: 'Candles', href: '/candle-packaging/' },
+  { label: 'Soap & bath', href: '/soap-packaging/' },
+  { label: 'Supplements', href: '/supplement-display-packaging/' },
+  { label: 'Pharmacy', href: '/pharmaceutical-display-packaging/' },
+  { label: 'Electronics', href: '/electronics-display-packaging/' },
+  { label: 'Jewelry', href: '/jewelry-display-packaging/' },
+  { label: 'Confectionery', href: '/confectionery-display-packaging/' },
+  { label: 'Pet products', href: '/pet-product-display-packaging/' },
+  { label: 'Toys', href: '/toy-display-packaging/' },
+  { label: 'Retail (general)', href: '/retail-packaging/' },
+];
+
+const faqs = [
+  { question: 'What does a custom display box cost?', answer: `${price.statement} Quantity is the largest single driver, because setup costs are fixed and spread across the run — which is why halving an order does not halve the invoice.` },
+  { question: 'Do you charge for dielines?', answer: 'No. We draw a dieline around your product before you commit to anything, supplied as a layered vector file with cut, crease, and bleed on separate layers. It is yours to keep.' },
+  { question: 'What is your minimum order?', answer: 'Minimum order is 100 units. Digital printing removes plate setup, which is what makes a run that short viable — expect a higher per-piece price at 100 than at volume, because fixed setup costs are spread across fewer pieces.' },
+  { question: 'How do I know whether I need cardboard or corrugated?', answer: 'Load the display to its intended assortment, lift it by one edge, and watch the base. If it bows, you need corrugated. Then repeat the test after several days loaded — paperboard fails gradually, so day-one results mislead.' },
+  { question: 'What do you need from me to start?', answer: 'The product itself, or its dimensions at the widest point, plus a quantity and where the display will sit. For anything with a cavity insert, send a physical unit — spec sheets omit the cap flare and label thickness that decide fit.' },
+  { question: 'Where do you ship?', answer: 'To business addresses across all fifty states. We do not maintain offices, production facilities, or collection points in individual states or cities — everything is produced to order and shipped to you.' },
+  { question: 'Do you check that my labeling is compliant?', answer: 'No, in any market. We print exactly the artwork you supply including ingredient lists, warnings, and safety marks, but responsibility for accuracy and regulatory compliance stays with you.' },
+  { question: 'Do you have customer reviews?', answer: 'Not yet, and we are not publishing any until we have verified ones from real customers. There are no star ratings anywhere on this site, and none in its structured data either.' },
+];
+
+const schema = graph(
+  organization(),
+  localBusiness(),
+  website(),
+  webPage({ url: '/', name: seo.title, description: seo.description }),
+  faqPage(faqs)
+);
+---
+
+<BaseLayout {...seo} schema={schema}>
+  <section class="hero">
+    <div class="container container--wide hero__inner">
+      <div class="hero__body">
+        <p class="eyebrow">Custom printed display packaging</p>
+        <h1>Display boxes built around your product, not around a stock size</h1>
+        <p class="lede">
+          A display that holds your product approximately is a display whose front row leans within
+          a week — and a leaning row stops selling. We draw a dieline around the real thing before
+          you commit to anything.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="/request-a-quote/">Request a quote</a>
+          <a class="btn btn--outline btn--lg" href="/get-a-free-dieline/">Get a free dieline</a>
+        </div>
+        <ul class="hero__points">
+          <li>Free dielines drawn from your actual product</li>
+          <li>Low minimums — digital printing removes plate setup</li>
+          <li>Shipped to businesses across all fifty states</li>
+        </ul>
+      </div>
+      <div class="hero__media">
+        {
+          heroImage && (
+            <Image
+              src={heroImage}
+              alt="Tall printed floor display stand holding four tiers of product"
+              widths={[480, 720, 960]}
+              sizes="(min-width: 64em) 30rem, 90vw"
+              format="webp"
+              loading="eager"
+              fetchpriority="high"
+              decoding="sync"
+              class="hero__img"
+            />
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <p class="eyebrow">Where to start</p>
+      <h2>Narrow it down in one question: where will it sit?</h2>
+      <p class="lede">
+        Placement sets the footprint you are allowed and the angle a shopper views from, and both
+        constrain everything downstream. It is the most useful first filter there is.
+      </p>
+      <div class="placement-grid">
+        <a class="placement" href="/counter-display-boxes/">
+          <h3>On a counter</h3>
+          <p>
+            Small footprint, steep viewing angle, easiest placement to win. Build upward, not
+            outward.
+          </p>
+        </a>
+        <a class="placement" href="/shelf-ready-display-boxes/">
+          <h3>On a shelf</h3>
+          <p>
+            Planogram constrained, and increasingly governed by shelf-ready specifications from the
+            chain.
+          </p>
+        </a>
+        <a class="placement" href="/cardboard-display-stands/">
+          <h3>On the floor</h3>
+          <p>
+            Highest stock capacity, most negotiation, and the structure that has to carry its own
+            load.
+          </p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="container container--wide">
+      <p class="eyebrow">Display box styles</p>
+      <h2>Selected formats</h2>
+      <ul class="product-grid">
+        {
+          featured.map(({ product, image }) => (
+            <li>
+              <a href={`/${product.slug}/`}>
+                {image && (
+                  <Image
+                    src={image}
+                    alt=""
+                    widths={[280, 560]}
+                    sizes="(min-width: 60em) 18rem, 45vw"
+                    format="webp"
+                    loading="lazy"
+                    decoding="async"
+                    class="product-grid__img"
+                  />
+                )}
+                <span class="product-grid__name">{product.name}</span>
+              </a>
+              <p class="product-grid__intent">{product.searchIntent}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="section-link">
+        All {PRODUCTS.length} styles are in the{' '}
+        <a href="/display-box-packaging/">display packaging overview</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <p class="eyebrow">Industries</p>
+      <h2>Different categories break in different ways</h2>
+      <p class="lede">
+        Glass weight for candles. Oil migration for soap. Food-contact coatings for bakery. Warning
+        copy claiming panel space before design starts. The constraint changes by category.
+      </p>
+      <ul class="industry-list">
+        {industries.map((i) => (
+          <li>
+            <a href={i.href}>{i.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--sunk">
+    <div class="container container--wide">
+      <p class="eyebrow">Specification</p>
+      <h2>The four decisions that set your quote</h2>
+      <div class="spec-grid">
+        <article>
+          <h3>Material</h3>
+          <p>
+            Folding boxboard prints best and suits light units. Corrugated carries load and survives
+            transit. The dividing line is weight against unsupported base span — not category.
+          </p>
+          <a href="/box-materials/">Box materials</a>
+        </article>
+        <article>
+          <h3>Printing</h3>
+          <p>
+            Digital removes plate setup and wins on short runs. Offset overtakes it at volume.
+            Litho-lamination gives carton print quality on a shipper-grade structure.
+          </p>
+          <a href="/custom-printing-options/">Printing options</a>
+        </article>
+        <article>
+          <h3>Finishing</h3>
+          <p>
+            A durability decision before a visual one — and the decision that determines whether the
+            board stays in the paper recycling stream.
+          </p>
+          <a href="/finishes-and-add-ons/">Finishes and add-ons</a>
+        </article>
+        <article>
+          <h3>Size</h3>
+          <p>
+            Measured at the widest point, which is usually the cap rather than the body. Internal
+            dimensions are the ones that matter, and board thickness changes them.
+          </p>
+          <a href="/custom-box-sizes/">Custom box sizes</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide pricing-band">
+      <div>
+        <p class="eyebrow">Pricing and minimums</p>
+        <h2>What it costs, honestly</h2>
+        <p class="price-statement">{price.statement}</p>
+        <p class="price-qualifier">{price.qualifier}</p>
+        <p class="section-link">
+          Each cost driver is broken down in the guide to{' '}
+          <a href="/how-much-do-custom-display-boxes-cost/">what custom display boxes cost</a>.
+        </p>
+      </div>
+      <div class="pricing-aside">
+        <h3>Low minimums</h3>
+        <p>
+          Digital printing removes plate setup, which is what makes genuinely short runs viable. The
+          actual minimum depends on structure, board, and print route — we confirm it with your
+          quote rather than publishing a number that would not hold for every job.
+        </p>
+        <a class="btn btn--outline" href="/low-minimum-orders/">Low minimum orders</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="container container--wide">
+      <p class="eyebrow">Process</p>
+      <h2>Six stages, two of which carry the risk</h2>
+      <ol class="steps">
+        <li>
+          <strong>Specification and quote.</strong> Send the product, a quantity, and where it will
+          sit.
+        </li>
+        <li>
+          <strong>Dieline — first approval.</strong> Drawn around your real product. This fixes the
+          structure.
+        </li>
+        <li><strong>Artwork.</strong> Placed onto that dieline rather than designed to a rectangle.</li>
+        <li>
+          <strong>Proof — second approval.</strong> This fixes color and content. Changes after it
+          are a new job.
+        </li>
+        <li>
+          <strong>Production.</strong> Each stage checked against the approved proof, not the
+          previous stage.
+        </li>
+        <li><strong>Delivery.</strong> Usually flat-packed, since freight is billed on volume.</li>
+      </ol>
+      <p class="section-link">
+        The full sequence and what to check at each approval is under{' '}
+        <a href="/how-to-order/">how ordering works</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <p class="eyebrow">What you get</p>
+      <h2>Support that prevents reprints rather than explaining them</h2>
+      <div class="trust-grid">
+        <article>
+          <h3>Free dielines and artwork checks</h3>
+          <p>
+            We draw the dieline and check your file against it before press — bleed, safe area,
+            resolution, color space, and whether live copy crosses a crease. Those are the faults
+            behind most reprints, and all are cheap to fix beforehand.
+          </p>
+          <a href="/free-design-support/">Free design support</a>
+        </article>
+        <article>
+          <h3>Checked against the proof</h3>
+          <p>
+            Every production stage is checked against the approved proof rather than the stage
+            before it, so a small drift cannot compound down the line. Displays with inserts get a
+            loaded fit check before the run completes.
+          </p>
+          <a href="/quality-assurance/">Quality assurance</a>
+        </article>
+        <article>
+          <h3>Recyclable specifications</h3>
+          <p>
+            The coating determines recyclability more than the board or its recycled content. If it
+            is a requirement, settle it before choosing a finish — a film laminate takes board out
+            of the paper stream in most municipalities.
+          </p>
+          <a href="/sustainability/">Sustainability options</a>
+        </article>
+        <article>
+          <h3>Shipped across the USA</h3>
+          <p>
+            To business addresses in all fifty states. Freight on display packaging is billed on
+            volume rather than weight, which is why flat-packing changes the delivered cost so
+            substantially.
+          </p>
+          <a href="/shipping-information/">Shipping information</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sunk">
+    <div class="container container--wide">
+      <p class="eyebrow">Work</p>
+      <h2>Production work, by the problem it solved</h2>
+      <ul class="gallery-grid">
+        {
+          gallery.map(({ slug, image }) =>
+            image ? (
+              <li>
+                <a href={`/${slug}/`}>
+                  <Image
+                    src={image}
+                    alt=""
+                    widths={[260, 520]}
+                    sizes="(min-width: 60em) 16rem, 45vw"
+                    format="webp"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              </li>
+            ) : null
+          )
+        }
+      </ul>
+      <p class="section-link">
+        More in the <a href="/portfolio/">portfolio</a>, organized by the constraint each structure
+        had to solve.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <FaqAccordion faqs={faqs} heading="Common questions" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <div class="final-cta">
+        <div>
+          <h2>Send the product, not the measurements</h2>
+          <p>
+            For anything with an insert, the dimensions that decide fit are the ones no spec sheet
+            records. We will draw the dieline around the real thing and come back with a structure,
+            a board, and a price.
+          </p>
+        </div>
+        <a class="btn btn--primary btn--lg" href="/request-a-quote/">Request a quote</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--s-8) var(--section-y);
+    background: linear-gradient(to bottom, var(--c-paper-warm), var(--c-paper));
+    border-block-end: 1px solid var(--c-border);
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: var(--s-8);
+    align-items: center;
+  }
+
+  @media (min-width: 64em) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+      gap: var(--s-10);
+    }
+  }
+
+  .hero h1 {
+    margin-block: var(--s-2) var(--s-5);
+    max-width: 18ch;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-block: var(--s-6);
+  }
+
+  .hero__points {
+    list-style: none;
+    margin: 0;
+    padding: var(--s-5) 0 0;
+    border-block-start: 1px solid var(--c-border);
+    display: grid;
+    gap: var(--s-2);
+    color: var(--c-text-muted);
+    font-size: var(--t-base);
+  }
+
+  .hero__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+    background: var(--c-paper-warm);
+  }
+
+  .placement-grid,
+  .spec-grid,
+  .trust-grid {
+    display: grid;
+    gap: var(--s-5);
+    margin-block-start: var(--s-7);
+  }
+
+  @media (min-width: 52em) {
+    .placement-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .spec-grid,
+    .trust-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-7);
+    }
+  }
+
+  @media (min-width: 72em) {
+    .spec-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .placement {
+    display: block;
+    padding: var(--s-6);
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    text-decoration: none;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .placement:hover {
+    border-color: var(--c-signal-700);
+  }
+
+  .placement h3 {
+    margin-block-end: var(--s-3);
+  }
+
+  .placement p {
+    color: var(--c-text-muted);
+    font-size: var(--t-base);
+  }
+
+  .spec-grid h3,
+  .trust-grid h3 {
+    margin-block-end: var(--s-3);
+  }
+
+  .spec-grid p,
+  .trust-grid p {
+    color: var(--c-text-muted);
+    margin-block-end: var(--s-3);
+  }
+
+  .spec-grid article,
+  .trust-grid article {
+    padding-block-start: var(--s-4);
+    border-block-start: 2px solid var(--c-kraft-400);
+  }
+
+  .product-grid {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    list-style: none;
+    margin: var(--s-7) 0 0;
+    padding: 0;
+  }
+
+  .product-grid a {
+    text-decoration: none;
+    display: block;
+  }
+
+  .product-grid__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: var(--c-paper);
+  }
+
+  .product-grid__name {
+    display: block;
+    margin-block-start: var(--s-3);
+    font-weight: 650;
+    color: var(--c-ink-900);
+  }
+
+  .product-grid a:hover .product-grid__name {
+    color: var(--c-signal-700);
+  }
+
+  .product-grid__intent {
+    margin-block-start: var(--s-1);
+    font-size: var(--t-sm);
+    color: var(--c-text-subtle);
+  }
+
+  .industry-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-3);
+    list-style: none;
+    margin: var(--s-7) 0 0;
+    padding: 0;
+  }
+
+  .industry-list a {
+    display: inline-block;
+    padding: var(--s-2) var(--s-4);
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-pill);
+    font-size: var(--t-base);
+    font-weight: 550;
+    text-decoration: none;
+  }
+
+  .industry-list a:hover {
+    border-color: var(--c-signal-700);
+    color: var(--c-signal-700);
+  }
+
+  .pricing-band {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  @media (min-width: 62em) {
+    .pricing-band {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: var(--s-9);
+      align-items: start;
+    }
+  }
+
+  .price-statement {
+    font-size: var(--t-lg);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    color: var(--c-ink-900);
+    margin-block: var(--s-4);
+    max-width: 46ch;
+  }
+
+  .price-qualifier {
+    color: var(--c-text-muted);
+    max-width: 62ch;
+  }
+
+  .pricing-aside {
+    padding: var(--s-6);
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-inline-start: 3px solid var(--c-signal-700);
+    border-radius: var(--r-lg);
+  }
+
+  .pricing-aside h3 {
+    margin-block-end: var(--s-3);
+  }
+
+  .pricing-aside p {
+    color: var(--c-text-muted);
+    margin-block-end: var(--s-5);
+    font-size: var(--t-base);
+  }
+
+  .steps {
+    margin: var(--s-7) 0 0;
+    padding-inline-start: var(--s-5);
+    display: grid;
+    gap: var(--s-3);
+    max-width: 70ch;
+    color: var(--c-text-muted);
+  }
+
+  .steps strong {
+    color: var(--c-ink-900);
+  }
+
+  .gallery-grid {
+    display: grid;
+    gap: var(--s-4);
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    list-style: none;
+    margin: var(--s-7) 0 0;
+    padding: 0;
+  }
+
+  .gallery-grid img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+  }
+
+  .section-link {
+    margin-block-start: var(--s-6);
+  }
+
+  .final-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding: var(--s-8);
+    background: var(--c-ink-900);
+    color: var(--c-ink-200);
+    border-radius: var(--r-lg);
+  }
+
+  .final-cta :global(h2) {
+    color: var(--c-paper);
+    margin-block-end: var(--s-3);
+  }
+
+  .final-cta p {
+    max-width: 56ch;
+    margin: 0;
+  }
+</style>

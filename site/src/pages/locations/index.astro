@@ -1,0 +1,292 @@
+---
+/**
+ * Location hub — the only site-wide entry point to location pages.
+ *
+ * Location links deliberately do NOT appear in the footer or in the primary
+ * navigation. Repeating 24 location links on every page is the keyword-stuffed
+ * pattern the brief rules out, and it would dilute the internal linking that
+ * the product and commercial pages depend on.
+ *
+ * The hub is organized state → cities, so the parent/child relationship is
+ * visible to a reader and to a crawler without generating parameter URLs.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { PUBLISHED_STATES, PUBLISHED_CITIES } from '../../data/locations';
+import { graph, webPage, breadcrumbs as breadcrumbSchema, type Crumb } from '../../lib/schema';
+
+const url = '/locations/';
+const crumbs: Crumb[] = [
+  { name: 'Home', url: '/' },
+  { name: 'Locations', url },
+];
+
+const seo = {
+  url,
+  title: 'Locations We Ship Custom Display Packaging To | USA',
+  description:
+    'The states and cities we ship custom display packaging to, with the sector context that shapes packaging choices in each.',
+};
+
+const schema = graph(
+  webPage({ url, name: 'Locations we ship to', description: seo.description, type: 'CollectionPage' }),
+  breadcrumbSchema(crumbs)
+);
+
+const statesWithCities = PUBLISHED_STATES.filter((s) => s.cities.length > 0);
+const statesWithoutCities = PUBLISHED_STATES.filter((s) => s.cities.length === 0);
+---
+
+<BaseLayout {...seo} schema={schema}>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="section section--tight">
+    <div class="container container--wide">
+      <p class="eyebrow">Locations</p>
+      <h1>Where we ship custom display packaging</h1>
+      <p class="lede">
+        We ship to business addresses across all fifty states. The pages below cover the sectors
+        and retail conditions in particular markets — because what drives a packaging decision in a
+        freight hub is genuinely different from what drives one in a high-rent retail city.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container container--wide">
+      <div class="notice">
+        <h2>What these pages are, and are not</h2>
+        <p>
+          They are context, not a branch network. Our registered address is in Brooklyn, New York —
+          that is the one place we are actually based, and it is not a published trade counter you
+          can collect from. Everywhere else on this list, we have no office, facility, warehouse, or
+          collection point, and every order is produced to specification and shipped to you.
+        </p>
+        <p>
+          We publish a location page only where there is something genuinely specific to say about
+          that market. Adding pages for every state to look bigger would mean writing the same page
+          fifty times with the name changed, which helps nobody.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <h2 class="group-heading">States</h2>
+      <ul class="state-grid">
+        {
+          statesWithCities.map((state) => (
+            <li class="state-card">
+              <a class="state-card__link" href={`/${state.slug}/`}>
+                <span class="state-card__name">{state.name}</span>
+                <span class="state-card__abbr">{state.abbr}</span>
+              </a>
+              <p class="state-card__note">{state.positioning}</p>
+              <ul class="state-card__cities">
+                {state.cities.map((c) => (
+                  <li>
+                    <a href={`/${c.slug}/`}>{c.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+        {
+          statesWithoutCities.map((state) => (
+            <li class="state-card">
+              <a class="state-card__link" href={`/${state.slug}/`}>
+                <span class="state-card__name">{state.name}</span>
+                <span class="state-card__abbr">{state.abbr}</span>
+              </a>
+              <p class="state-card__note">{state.positioning}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="container container--wide">
+      <h2 class="group-heading">Cities</h2>
+      <ul class="city-grid">
+        {
+          PUBLISHED_CITIES.map((city) => (
+            <li>
+              <a href={`/${city.slug}/`}>
+                <span class="city-grid__name">
+                  {city.name}, {city.stateAbbr}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <div class="hub-cta">
+        <div>
+          <h2>Not listed here?</h2>
+          <p>
+            It makes no difference to your order. We ship to business addresses in every state, and
+            the process is identical wherever you are — send the product and a quantity, and the
+            dieline follows before you commit to anything.
+          </p>
+        </div>
+        <a class="btn btn--primary btn--lg" href="/request-a-quote/">Request a quote</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notice {
+    padding: var(--s-6);
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-inline-start: 3px solid var(--c-ink-700);
+    border-radius: var(--r-lg);
+    max-width: 68ch;
+  }
+
+  .notice h2 {
+    font-size: var(--t-lg);
+    margin-block-end: var(--s-4);
+  }
+
+  .notice p {
+    color: var(--c-text-muted);
+  }
+
+  .notice p + p {
+    margin-block-start: var(--s-4);
+  }
+
+  .group-heading {
+    margin-block-end: var(--s-6);
+  }
+
+  .state-grid {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .state-card {
+    padding-block-start: var(--s-4);
+    border-block-start: 2px solid var(--c-kraft-400);
+  }
+
+  .state-card__link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-3);
+    text-decoration: none;
+  }
+
+  .state-card__name {
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-weight: 600;
+    color: var(--c-ink-900);
+  }
+
+  .state-card__link:hover .state-card__name {
+    color: var(--c-signal-700);
+  }
+
+  .state-card__abbr {
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    color: var(--c-text-subtle);
+  }
+
+  .state-card__note {
+    margin-block-start: var(--s-2);
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+  }
+
+  .state-card__cities {
+    list-style: none;
+    margin: var(--s-4) 0 0;
+    padding: 0 0 0 var(--s-4);
+    border-inline-start: 2px solid var(--c-border);
+    display: grid;
+    gap: var(--s-1);
+  }
+
+  .state-card__cities a {
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+    text-decoration: none;
+  }
+
+  .state-card__cities a:hover {
+    color: var(--c-signal-700);
+    text-decoration: underline;
+  }
+
+  .city-grid {
+    display: grid;
+    gap: var(--s-3);
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .city-grid a {
+    display: block;
+    padding: var(--s-3) var(--s-4);
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    text-decoration: none;
+  }
+
+  .city-grid a:hover {
+    border-color: var(--c-ink-500);
+  }
+
+  .city-grid__name {
+    font-weight: 600;
+    color: var(--c-ink-900);
+  }
+
+  .city-grid a:hover .city-grid__name {
+    color: var(--c-signal-700);
+  }
+
+  .hub-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding: var(--s-7);
+    background: var(--c-ink-900);
+    color: var(--c-ink-200);
+    border-radius: var(--r-lg);
+  }
+
+  .hub-cta :global(h2) {
+    color: var(--c-paper);
+    margin-block-end: var(--s-3);
+  }
+
+  .hub-cta p {
+    max-width: 54ch;
+    margin: 0;
+  }
+</style>

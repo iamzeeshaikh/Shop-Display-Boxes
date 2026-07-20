@@ -1,0 +1,104 @@
+---
+/**
+ * Related products. Kept to a small, hand-picked set per product — these are
+ * chosen for genuine relevance in the product content file, not generated to
+ * fill a grid.
+ */
+import { Image } from 'astro:assets';
+import { getProduct } from '../data/products';
+import manifest from '../assets/products/manifest.json';
+
+interface Props {
+  slugs: string[];
+  heading?: string;
+}
+const { slugs, heading = 'Related display packaging' } = Astro.props;
+
+const modules = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png');
+
+const items = await Promise.all(
+  slugs.map(async (slug) => {
+    const product = getProduct(slug);
+    const first = (manifest as Record<string, Array<{ file: string }>>)[slug]?.[0]?.file;
+    const load = first ? modules[`../assets/products/${slug}/${first}`] : undefined;
+    return { product, image: load ? (await load()).default : undefined };
+  })
+);
+---
+
+<section class="related">
+  <h2>{heading}</h2>
+  <ul class="related__grid">
+    {
+      items.map(({ product, image }) => (
+        <li class="related__item">
+          <a class="related__link" href={`/${product.slug}/`}>
+            {image && (
+              <Image
+                src={image}
+                alt=""
+                widths={[220, 440]}
+                sizes="(min-width: 48em) 15rem, 45vw"
+                format="webp"
+                loading="lazy"
+                decoding="async"
+                class="related__img"
+              />
+            )}
+            <span class="related__name">{product.name}</span>
+          </a>
+          <p class="related__intent">{product.searchIntent}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .related__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--s-5);
+    list-style: none;
+    margin: var(--s-6) 0 0;
+    padding: 0;
+  }
+
+  .related__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .related__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .related__link:hover .related__img {
+    border-color: var(--c-ink-500);
+  }
+
+  .related__name {
+    display: block;
+    margin-block-start: var(--s-3);
+    font-weight: 650;
+    color: var(--c-ink-900);
+  }
+
+  .related__link:hover .related__name {
+    color: var(--c-signal-700);
+  }
+
+  .related__intent {
+    margin-block-start: var(--s-1);
+    font-size: var(--t-sm);
+    color: var(--c-text-subtle);
+  }
+</style>

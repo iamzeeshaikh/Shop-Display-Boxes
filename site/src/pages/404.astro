@@ -1,0 +1,87 @@
+---
+/**
+ * Custom 404.
+ *
+ * Serves a genuine 404 status at the host level (configured in _headers /
+ * vercel.json) rather than redirecting missing URLs to the homepage, which
+ * hides broken links from both users and crawlers.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { FEATURED_PRODUCTS } from '../data/products';
+---
+
+<BaseLayout
+  url="/404/"
+  title="Page Not Found | Shop Display Boxes"
+  description="That page does not exist. Here are the display box styles, guides, and quote routes most people are looking for."
+  noindex
+>
+  <section class="section">
+    <div class="container container--wide notfound">
+      <p class="eyebrow">404</p>
+      <h1>That page does not exist</h1>
+      <p class="lede">
+        The link may be out of date, or the address may have a typo. Nothing here redirects to the
+        homepage to hide the problem — so here is where people usually want to go instead.
+      </p>
+
+      <div class="notfound__grid">
+        <div>
+          <h2>Popular display box styles</h2>
+          <ul>
+            {FEATURED_PRODUCTS.map((p) => (
+              <li><a href={`/${p.slug}/`}>{p.name}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2>Getting a price</h2>
+          <ul>
+            <li><a href="/request-a-quote/">Request a quote</a></li>
+            <li><a href="/get-a-free-dieline/">Get a free dieline</a></li>
+            <li><a href="/sample-request/">Request a sample</a></li>
+            <li><a href="/how-much-do-custom-display-boxes-cost/">What display boxes cost</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Working it out</h2>
+          <ul>
+            <li><a href="/display-box-packaging/">Display packaging overview</a></li>
+            <li><a href="/how-to-choose-retail-display-packaging/">How to choose</a></li>
+            <li><a href="/box-materials/">Box materials</a></li>
+            <li><a href="/blog/">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Everything else</h2>
+          <ul>
+            <li><a href="/contact-us/">Contact us</a></li>
+            <li><a href="/how-to-order/">How ordering works</a></li>
+            <li><a href="/locations/">Locations we ship to</a></li>
+            <li><a href="/faq/">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound h1 { margin-block: var(--s-2) var(--s-4); }
+  .notfound__grid {
+    display: grid;
+    gap: var(--s-7);
+    margin-block-start: var(--s-9);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+  .notfound__grid h2 {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-text-subtle);
+    margin-block-end: var(--s-4);
+  }
+  .notfound__grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+</style>

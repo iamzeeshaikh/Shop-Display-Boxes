@@ -1,0 +1,424 @@
+---
+/**
+ * Blog article. Lives under /blog/ rather than at the root, which keeps
+ * editorial content clearly separated from the commercial pages and avoids
+ * competing with them in the root namespace.
+ */
+import { getImage, Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { headingId, readingTime, tableOfContents, type BlogPost } from '../../data/blog';
+import {
+  graph,
+  webPage,
+  breadcrumbs as breadcrumbSchema,
+  article as articleSchema,
+  type Crumb,
+} from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const modules = import.meta.glob<{ default: BlogPost }>('../../content/blog/*.ts', {
+    eager: true,
+  });
+  return Object.values(modules).map((m) => ({
+    params: { slug: m.default.slug },
+    props: { post: m.default },
+  }));
+}
+
+interface Props {
+  post: BlogPost;
+}
+const { post } = Astro.props;
+const url = `/blog/${post.slug}/`;
+const minutes = readingTime(post);
+const toc = tableOfContents(post);
+
+const crumbs: Crumb[] = [
+  { name: 'Home', url: '/' },
+  { name: 'Blog', url: '/blog/' },
+  { name: post.title, url },
+];
+
+// Resolve the featured image from the shared product asset library.
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  '../../assets/products/**/*.png'
+);
+const loader = imageModules[`../../assets/products/${post.image.productSlug}/${post.image.file}`];
+if (!loader) {
+  throw new Error(
+    `Blog post "${post.slug}" references a missing image: ` +
+      `src/assets/products/${post.image.productSlug}/${post.image.file}`
+  );
+}
+const featured = (await loader()).default;
+const ogImage = await getImage({ src: featured, width: 1200, format: 'webp' });
+
+const schema = graph(
+  webPage({
+    url,
+    name: post.title,
+    description: post.metaDescription,
+    datePublished: post.published,
+    dateModified: post.updated,
+  }),
+  breadcrumbSchema(crumbs),
+  articleSchema({
+    url,
+    headline: post.title,
+    description: post.metaDescription,
+    image: ogImage.src,
+    datePublished: post.published,
+    dateModified: post.updated,
+    authorName: post.author,
+  })
+);
+
+const publishedLabel = new Date(post.published + 'T00:00:00Z').toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+const updatedLabel = new Date(post.updated + 'T00:00:00Z').toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+// Related articles, resolved from the same collection.
+const allPosts = Object.values(
+  import.meta.glob<{ default: BlogPost }>('../../content/blog/*.ts', { eager: true })
+).map((m) => m.default);
+const related = post.related
+  .map((slug) => allPosts.find((p) => p.slug === slug))
+  .filter((p): p is BlogPost => Boolean(p));
+---
+
+<BaseLayout
+  url={url}
+  title={post.metaTitle}
+  description={post.metaDescription}
+  ogType="article"
+  ogImage={ogImage.src}
+  ogImageAlt={post.image.alt}
+  published={post.published}
+  modified={post.updated}
+  schema={schema}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <article>
+    <header class="section section--tight">
+      <div class="container article-head">
+        <p class="eyebrow">{post.tags.join(' · ')}</p>
+        <h1>{post.title}</h1>
+        <p class="lede">{post.excerpt}</p>
+        <p class="article-meta">
+          <span>{post.author}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime={post.published}>{publishedLabel}</time>
+          {
+            post.updated !== post.published && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>
+                  Updated <time datetime={post.updated}>{updatedLabel}</time>
+                </span>
+              </>
+            )
+          }
+          <span aria-hidden="true">·</span>
+          <span>{minutes} min read</span>
+        </p>
+      </div>
+    </header>
+
+    <div class="container article-figure">
+      <Picture
+        src={featured}
+        alt={post.image.alt}
+        widths={[640, 960, 1280]}
+        sizes="(min-width: 68em) 62rem, 94vw"
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+        loading="eager"
+        fetchpriority="high"
+        class="article-figure__img"
+      />
+    </div>
+
+    <div class="section section--tight">
+      <div class="container article-body">
+        <nav class="toc" aria-labelledby="toc-heading">
+          <h2 class="toc__heading" id="toc-heading">On this page</h2>
+          <ol>
+            {
+              toc.map((entry) => (
+                <li>
+                  <a href={`#${entry.id}`}>{entry.heading}</a>
+                  {entry.children.length > 0 && (
+                    <ol>
+                      {entry.children.map((child) => (
+                        <li>
+                          <a href={`#${child.id}`}>{child.heading}</a>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+
+        <div class="prose">
+          {
+            post.sections.map((section) => (
+              <section>
+                <h2 id={headingId(section.heading)}>{section.heading}</h2>
+                {section.body.map((p) => (
+                  <p>{p}</p>
+                ))}
+                {section.points && (
+                  <ul>
+                    {section.points.map((point) => (
+                      <li>{point}</li>
+                    ))}
+                  </ul>
+                )}
+                {section.subsections?.map((sub) => (
+                  <>
+                    <h3 id={headingId(sub.heading)}>{sub.heading}</h3>
+                    {sub.body.map((p) => (
+                      <p>{p}</p>
+                    ))}
+                    {sub.points && (
+                      <ul>
+                        {sub.points.map((point) => (
+                          <li>{point}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </>
+                ))}
+                {section.link && (
+                  <p>
+                    {section.link.text} <a href={section.link.href}>{section.link.anchor}</a>.
+                  </p>
+                )}
+              </section>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    {
+      post.furtherReading && post.furtherReading.length > 0 && (
+        <div class="section section--tight">
+          <div class="container">
+            <div class="further">
+              <h2>Where to go next</h2>
+              <ul>
+                {post.furtherReading.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <div class="section section--warm">
+          <div class="container">
+            <h2 class="related-heading">Related articles</h2>
+            <ul class="related-list">
+              {related.map((r) => (
+                <li>
+                  <a href={`/blog/${r.slug}/`}>
+                    <span class="related-list__title">{r.title}</span>
+                    <span class="related-list__excerpt">{r.excerpt}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .article-head {
+    max-width: 46rem;
+  }
+
+  .article-head h1 {
+    margin-block: var(--s-2) var(--s-4);
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-3);
+    margin-block-start: var(--s-5);
+    font-size: var(--t-sm);
+    color: var(--c-text-subtle);
+  }
+
+  .article-figure {
+    margin-block: var(--s-6);
+  }
+
+  .article-figure__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+    background: var(--c-paper-warm);
+  }
+
+  .article-body {
+    display: grid;
+    gap: var(--s-8);
+    align-items: start;
+  }
+
+  @media (min-width: 62em) {
+    .article-body {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      gap: var(--s-9);
+    }
+
+    .toc {
+      position: sticky;
+      top: 7rem;
+      max-height: calc(100dvh - 9rem);
+      overflow-y: auto;
+    }
+  }
+
+  .toc__heading {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-text-subtle);
+    margin-block-end: var(--s-4);
+  }
+
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: toc;
+  }
+
+  .toc > ol > li {
+    counter-increment: toc;
+    border-inline-start: 2px solid var(--c-border);
+    padding-inline-start: var(--s-4);
+  }
+
+  .toc > ol > li + li {
+    margin-block-start: var(--s-3);
+  }
+
+  .toc a {
+    display: block;
+    padding-block: var(--s-1);
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+    text-decoration: none;
+  }
+
+  .toc a:hover {
+    color: var(--c-signal-700);
+    text-decoration: underline;
+  }
+
+  .toc ol ol {
+    padding-inline-start: var(--s-4);
+    margin-block-start: var(--s-1);
+  }
+
+  .toc ol ol a {
+    font-size: var(--t-xs);
+  }
+
+  .prose :global(section + section) {
+    margin-block-start: var(--s-8);
+  }
+
+  .further {
+    padding: var(--s-6);
+    border: 1px solid var(--c-border);
+    border-inline-start: 3px solid var(--c-signal-700);
+    border-radius: var(--r-lg);
+    background: var(--c-paper-warm);
+    max-width: 46rem;
+  }
+
+  .further h2 {
+    font-size: var(--t-lg);
+    margin-block-end: var(--s-4);
+  }
+
+  .further ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .related-heading {
+    margin-block-end: var(--s-6);
+  }
+
+  .related-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-5);
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  }
+
+  .related-list a {
+    display: block;
+    padding-block-start: var(--s-4);
+    border-block-start: 2px solid var(--c-kraft-400);
+    text-decoration: none;
+  }
+
+  .related-list__title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    color: var(--c-ink-900);
+  }
+
+  .related-list a:hover .related-list__title {
+    color: var(--c-signal-700);
+  }
+
+  .related-list__excerpt {
+    display: block;
+    margin-block-start: var(--s-2);
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+  }
+</style>

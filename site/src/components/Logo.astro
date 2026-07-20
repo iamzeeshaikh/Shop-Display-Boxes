@@ -1,0 +1,90 @@
+---
+/**
+ * Wordmark.
+ *
+ * No logo file was supplied with the project assets and the domain did not
+ * resolve, so this is a typographic wordmark built to be replaced: swap the
+ * <svg> for the real artwork and nothing else in the codebase changes. The
+ * mark uses currentColor throughout so it inverts on the ink footer for free.
+ *
+ * The glyph is a flap-open display carton drawn from the same die shape that
+ * appears in the product photography.
+ */
+interface Props {
+  /** Rendered as an <h1>-adjacent link on every page except the homepage. */
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<span class={`logo ${className ?? ''}`}>
+  <svg
+    class="logo__glyph"
+    width="34"
+    height="34"
+    viewBox="0 0 34 34"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <!-- Open display carton: back panel, tray, and angled front flap. -->
+    <path d="M4 11.5 17 5l13 6.5v3L17 21 4 14.5v-3Z" fill="currentColor" opacity=".28" />
+    <path
+      d="M4 14.5 17 21l13-6.5V25a1 1 0 0 1-.55.9L17 32 4.55 25.9A1 1 0 0 1 4 25V14.5Z"
+      fill="currentColor"
+    />
+    <path d="M17 21v11" stroke="currentColor" stroke-width="1.1" opacity=".35" />
+  </svg>
+  <span class="logo__type">
+    <span class="logo__word">Shop</span><span class="logo__word logo__word--accent">Display</span
+    ><span class="logo__word">Boxes</span>
+  </span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    color: var(--c-ink-900);
+    text-decoration: none;
+  }
+
+  .logo__glyph {
+    flex: none;
+    color: var(--c-signal-700);
+  }
+
+  .logo__type {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.0625rem;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    font-variation-settings: 'opsz' 40;
+  }
+
+  .logo__word--accent {
+    color: var(--c-signal-700);
+  }
+
+  /* On the ink footer the whole mark goes to paper white. */
+  :global(.section--ink) .logo,
+  :global(.site-footer) .logo {
+    color: var(--c-paper);
+  }
+  :global(.site-footer) .logo__glyph,
+  :global(.site-footer) .logo__word--accent {
+    color: var(--c-kraft-400);
+  }
+
+  @media (min-width: 40em) {
+    .logo__type {
+      flex-direction: row;
+      gap: 0.28em;
+      font-size: 1.1875rem;
+    }
+  }
+</style>

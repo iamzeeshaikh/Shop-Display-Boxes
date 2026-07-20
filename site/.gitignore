@@ -1,0 +1,18 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# secrets — never commit
+.env
+.env.*
+!.env.example
+
+# generated image derivatives (rebuilt by `npm run images`)
+public/img/
+
+# logs, os
+*.log
+.DS_Store

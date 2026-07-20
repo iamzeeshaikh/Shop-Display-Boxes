@@ -1,0 +1,28 @@
+# ── Dependencies and build output ──────────────────────────────────────────
+node_modules/
+site/node_modules/
+site/dist/
+site/.astro/
+
+# ── Secrets — never commit ─────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+site/.env
+site/.env.*
+!site/.env.example
+
+# ── Generated image derivatives ────────────────────────────────────────────
+# src/assets/products/ is produced from Images/ by `npm run images`. Committing
+# it would store all 146 photographs a second time (~108 MB) for no benefit.
+# Clone, run `npm run images`, then build.
+site/src/assets/products/
+
+# ── OS and editor noise ────────────────────────────────────────────────────
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+*.log
+.vscode/
+.idea/

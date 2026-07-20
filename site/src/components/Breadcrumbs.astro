@@ -1,0 +1,71 @@
+---
+/**
+ * Breadcrumb trail. The same crumb array is passed to the BreadcrumbList
+ * schema builder so the two can never disagree.
+ */
+import type { Crumb } from '../lib/schema';
+import { path } from '../lib/urls';
+
+interface Props {
+  crumbs: Crumb[];
+}
+const { crumbs } = Astro.props;
+const last = crumbs.length - 1;
+---
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <div class="container container--wide">
+    <ol>
+      {
+        crumbs.map((c, i) => (
+          <li>
+            {i === last ? (
+              <span aria-current="page">{c.name}</span>
+            ) : (
+              <a href={path(c.url)}>{c.name}</a>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</nav>
+
+<style>
+  .crumbs {
+    border-block-end: 1px solid var(--c-border);
+    background: var(--c-paper-warm);
+    font-size: var(--t-sm);
+  }
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    list-style: none;
+    margin: 0;
+    padding-block: var(--s-3);
+  }
+
+  li + li::before {
+    content: '/';
+    margin-inline-end: var(--s-2);
+    color: var(--c-ink-300);
+  }
+
+  a {
+    color: var(--c-text-muted);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--c-signal-700);
+    text-decoration: underline;
+  }
+
+  [aria-current='page'] {
+    color: var(--c-ink-900);
+    font-weight: 600;
+  }
+</style>
