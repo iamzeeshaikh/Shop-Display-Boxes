@@ -112,6 +112,33 @@ const phone = has(business.phone)
                       </div>
                     </div>
                   </div>
+                ) : item.kind === 'columns' ? (
+                  <div class="mega" id={id} hidden>
+                    <div class="container container--wide mega__inner mega__inner--columns">
+                      {item.columns.map((col) => (
+                        <div class="mega__col">
+                          <h2 class="mega__heading">{col.heading}</h2>
+                          <ul class="mega__list mega__list--split">
+                            {col.links.map((l) => (
+                              <li>
+                                <a href={l.href}>{l.label}</a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                      <div class="mega__col mega__col--promo">
+                        <h2 class="mega__heading">Shipping nationwide</h2>
+                        <p class="mega__promo-text">
+                          Orders ship to businesses in all fifty states. The pages above cover the
+                          markets we are asked about most.
+                        </p>
+                        <a class="mega__promo-link" href={item.overview.href}>
+                          {item.overview.label}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div class="dropdown" id={id} hidden>
                     <ul class="dropdown__list">
@@ -161,7 +188,11 @@ const phone = has(business.phone)
                 );
               }
               const links =
-                item.kind === 'mega' ? PRODUCT_MENU.flatMap((c) => c.links) : item.links;
+                item.kind === 'mega'
+                  ? PRODUCT_MENU.flatMap((c) => c.links)
+                  : item.kind === 'columns'
+                    ? [...item.columns.flatMap((c) => c.links), item.overview]
+                    : item.links;
               const id = `m-${item.label.toLowerCase().replace(/[^a-z]+/g, '-')}`;
               return (
                 <li class="mobile-nav__group">
@@ -419,6 +450,21 @@ const phone = has(business.phone)
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr)) 15rem;
     gap: var(--s-6) var(--s-5);
+  }
+
+  /* Locations: two link groups plus the promo, rather than the product menu's four. */
+  .mega__inner--columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 15rem;
+  }
+
+  /* Twelve entries in a single column runs too tall; flow them into two. */
+  .mega__list--split {
+    columns: 2;
+    column-gap: var(--s-5);
+  }
+
+  .mega__list--split li {
+    break-inside: avoid;
   }
 
   .mega__heading {

@@ -10,6 +10,7 @@
  */
 
 import { PRODUCTS, type ProductGroup } from './products';
+import { PUBLISHED_STATES, PUBLISHED_CITIES } from './locations';
 
 export interface NavLink {
   label: string;
@@ -19,9 +20,25 @@ export interface NavLink {
 }
 
 export interface MegaColumn {
-  heading: ProductGroup;
+  heading: string;
   links: NavLink[];
 }
+
+/**
+ * Columns for the Locations panel, built from the published location pages so
+ * the menu cannot drift from what actually exists. Held-back locations have no
+ * page and therefore never appear here.
+ */
+export const LOCATION_MENU: MegaColumn[] = [
+  {
+    heading: 'By state',
+    links: PUBLISHED_STATES.map((s) => ({ label: s.name, href: `/${s.slug}/` })),
+  },
+  {
+    heading: 'By city',
+    links: PUBLISHED_CITIES.map((c) => ({ label: c.name, href: `/${c.slug}/` })),
+  },
+];
 
 /** Product columns for the mega menu, built from the product registry. */
 export const PRODUCT_MENU: MegaColumn[] = (
@@ -38,6 +55,7 @@ export const PRIMARY_NAV: Array<
   | { label: string; href: string; kind: 'link' }
   | { label: string; kind: 'mega' }
   | { label: string; kind: 'dropdown'; links: NavLink[] }
+  | { label: string; kind: 'columns'; columns: MegaColumn[]; overview: NavLink }
 > = [
   { label: 'Display Boxes', kind: 'mega' },
   {
@@ -90,7 +108,12 @@ export const PRIMARY_NAV: Array<
       { label: 'FAQ', href: '/faq/' },
     ],
   },
-  { label: 'Locations', href: '/locations/', kind: 'link' },
+  {
+    label: 'Locations',
+    kind: 'columns',
+    columns: LOCATION_MENU,
+    overview: { label: 'All locations', href: '/locations/' },
+  },
   { label: 'About', href: '/about-us/', kind: 'link' },
 ];
 
