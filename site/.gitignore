@@ -16,3 +16,4 @@ public/img/
 # logs, os
 *.log
 .DS_Store
+.vercel

@@ -78,8 +78,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // ── Uploads ───────────────────────────────────────────────────────────────
-  const maxBytes = Number(process.env.UPLOAD_MAX_BYTES) || 15 * 1024 * 1024;
-  const attachments: Array<{ filename: string; size: number }> = [];
+  // Vercel serverless rejects request bodies over ~4.5 MB before this runs, so
+  // there is no point accepting more; 4 MB keeps a clean margin.
+  const maxBytes = Number(process.env.UPLOAD_MAX_BYTES) || 4 * 1024 * 1024;
+  const attachments: Array<{ filename: string; size: number; content: Buffer }> = [];
   for (const file of files) {
     if (!file || file.size === 0) continue;
     const check = await validateUpload(file, maxBytes);
@@ -89,7 +91,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         { field: 'artwork', message: 'Please upload a PDF, AI, EPS, PSD, PNG, JPG, or ZIP file.' },
       ]);
     }
-    attachments.push({ filename: file.name, size: file.size });
+    // Read the bytes so the file can actually be attached to the delivery email,
+    // not merely named in the body.
+    const content = Buffer.from(await file.arrayBuffer());
+    attachments.push({ filename: file.name, size: file.size, content });
   }
 
   // ── Delivery ──────────────────────────────────────────────────────────────

@@ -13,6 +13,7 @@ import SpecTable from './SpecTable.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import RelatedProducts from './RelatedProducts.astro';
 import QuoteFormShort from './QuoteFormShort.astro';
+import InquiryForm from './InquiryForm.astro';
 import { getProduct } from '../data/products';
 import type { ProductContent } from '../data/product-content';
 import { business } from '../data/business';
@@ -122,6 +123,18 @@ const schema = graph(
           <li>Shipped to businesses across all 50 states</li>
         </ul>
       </div>
+    </div>
+  </section>
+
+  {/* ── Quick inquiry (compact, name/email/phone/message) ────────────── */}
+  <section class="section section--tight">
+    <div class="container container--wide">
+      <InquiryForm
+        context={record.name}
+        contextSlug={content.slug}
+        formType="product-inquiry"
+        variant="compact"
+      />
     </div>
   </section>
 
@@ -251,6 +264,7 @@ const schema = graph(
       <QuoteFormShort productName={record.name} productSlug={content.slug} />
     </div>
   </section>
+
 </BaseLayout>
 
 <style>

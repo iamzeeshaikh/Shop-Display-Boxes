@@ -1,0 +1,427 @@
+---
+/**
+ * Full quote form for /request-a-quote/.
+ *
+ * The detailed counterpart to InquiryForm and QuoteFormShort: it collects the
+ * fields that actually move a quote — dimensions, quantity, material, print,
+ * finish — plus an optional artwork upload. It posts to the same /api/quote/
+ * endpoint, whose validator already recognises every field name used here, so
+ * no server change is needed. The endpoint remains the security boundary; the
+ * client validation below is usability only.
+ *
+ * Submission is progressive enhancement: without JavaScript it posts natively
+ * and the endpoint responds; with JavaScript it submits in the background
+ * (multipart, so the artwork file is included) and reports inline, so the
+ * visitor never leaves the page. Anti-spam mirrors the other forms: a honeypot
+ * hidden from sight and assistive tech, plus a render timestamp the endpoint
+ * uses to reject instant bot submissions.
+ */
+const formId = 'quote-full';
+---
+
+<section class="quote-full" aria-labelledby={`${formId}-heading`}>
+  <h2 id={`${formId}-heading`} class="quote-full__title">Tell us about your project</h2>
+  <p class="quote-full__lead">
+    Fields marked <span aria-hidden="true">*</span> are required. Everything else helps us quote
+    accurately, but send what you have — we fill the gaps and suggest options.
+  </p>
+
+  <form class="quote-full__form" method="post" action="/api/quote/" enctype="multipart/form-data" data-quote-form novalidate>
+    <input type="hidden" name="formType" value="quote" />
+    <input type="hidden" name="startedAt" value="" data-started-at />
+
+    {/* Honeypot: hidden from view and from assistive technology. */}
+    <div class="hp" aria-hidden="true">
+      <label for={`${formId}-company-url`}>Company website</label>
+      <input id={`${formId}-company-url`} name="companyUrl" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <fieldset class="group">
+      <legend>Your details</legend>
+      <div class="grid">
+        <div class="field">
+          <label for={`${formId}-name`}>Name <span aria-hidden="true">*</span></label>
+          <input id={`${formId}-name`} name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for={`${formId}-business`}>Business name</label>
+          <input id={`${formId}-business`} name="businessName" type="text" autocomplete="organization" />
+        </div>
+        <div class="field">
+          <label for={`${formId}-email`}>Email <span aria-hidden="true">*</span></label>
+          <input id={`${formId}-email`} name="email" type="email" required autocomplete="email" inputmode="email" />
+        </div>
+        <div class="field">
+          <label for={`${formId}-phone`}>Phone <span aria-hidden="true">*</span></label>
+          <input id={`${formId}-phone`} name="phone" type="tel" required autocomplete="tel" inputmode="tel" />
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>The box</legend>
+      <div class="grid">
+        <div class="field field--wide">
+          <label for={`${formId}-product`}>What are you packing? <span aria-hidden="true">*</span></label>
+          <input
+            id={`${formId}-product`}
+            name="product"
+            type="text"
+            required
+            placeholder="e.g. cosmetic jars, 50ml candles, retail counter display"
+          />
+        </div>
+
+        <div class="field">
+          <label for={`${formId}-qty`}>Quantity <span aria-hidden="true">*</span></label>
+          <input id={`${formId}-qty`} name="quantity" type="number" min="1" required inputmode="numeric" placeholder="e.g. 500" />
+        </div>
+        <div class="field">
+          <label for={`${formId}-unit`}>Dimension units</label>
+          <select id={`${formId}-unit`} name="unit">
+            <option value="in">Inches</option>
+            <option value="mm">Millimetres</option>
+            <option value="cm">Centimetres</option>
+          </select>
+        </div>
+
+        <div class="field field--wide">
+          <label for={`${formId}-dims`}>Dimensions (length × width × height)</label>
+          <input id={`${formId}-dims`} name="dimensions" type="text" placeholder="e.g. 8 × 6 × 10 — or leave blank and send the product" />
+        </div>
+
+        <div class="field">
+          <label for={`${formId}-material`}>Material</label>
+          <select id={`${formId}-material`} name="material">
+            <option value="">Not sure — advise me</option>
+            <option>Kraft (brown)</option>
+            <option>White cardboard (SBS)</option>
+            <option>Corrugated — E-flute</option>
+            <option>Corrugated — B-flute</option>
+            <option>Rigid / greyboard</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for={`${formId}-printing`}>Printing</label>
+          <select id={`${formId}-printing`} name="printing">
+            <option value="">Not sure — advise me</option>
+            <option>Full colour (CMYK)</option>
+            <option>1–2 spot colours</option>
+            <option>Plain / unprinted</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for={`${formId}-finish`}>Finish</label>
+          <select id={`${formId}-finish`} name="finishing">
+            <option value="">Not sure — advise me</option>
+            <option>Matte lamination</option>
+            <option>Gloss lamination</option>
+            <option>Aqueous coating (recyclable)</option>
+            <option>Soft-touch</option>
+            <option>Spot UV</option>
+            <option>None</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for={`${formId}-addons`}>Add-ons</label>
+          <input id={`${formId}-addons`} name="addOns" type="text" placeholder="e.g. window patch, foam insert, foil stamping" />
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Timing &amp; delivery</legend>
+      <div class="grid">
+        <div class="field">
+          <label for={`${formId}-date`}>Needed by</label>
+          <input id={`${formId}-date`} name="requiredDate" type="date" />
+        </div>
+        <div class="field">
+          <label for={`${formId}-zip`}>Shipping ZIP / postcode</label>
+          <input id={`${formId}-zip`} name="shippingZip" type="text" autocomplete="postal-code" inputmode="numeric" />
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="field field--wide">
+      <label for={`${formId}-notes`}>Anything else?</label>
+      <textarea id={`${formId}-notes`} name="notes" rows="4" placeholder="Retailer footprint limits, board weight concerns, questions — anything that helps."></textarea>
+    </div>
+
+    <div class="field field--wide">
+      <label for={`${formId}-artwork`}>Artwork (optional)</label>
+      <input id={`${formId}-artwork`} name="artwork" type="file" accept=".pdf,.ai,.eps,.psd,.svg,.png,.jpg,.jpeg,.zip" />
+      <p class="hint">PDF, AI, EPS, PSD, SVG, PNG, JPG or ZIP, up to 4 MB. If you do not have artwork, we draw the dieline first.</p>
+    </div>
+
+    <div class="field field--wide field--consent">
+      <input id={`${formId}-consent`} name="consent" type="checkbox" required />
+      <label for={`${formId}-consent`}>
+        I agree my details may be used to respond to this enquiry, per the
+        <a href="/privacy-policy/">privacy policy</a>. <span aria-hidden="true">*</span>
+      </label>
+    </div>
+
+    <div class="quote-full__status" role="status" aria-live="polite" data-form-status></div>
+
+    <button class="btn btn--primary btn--lg quote-full__submit" type="submit">Request a quote</button>
+  </form>
+</section>
+
+<script>
+  // Progressive enhancement: submit in the background (multipart, so the file
+  // is included) and report inline, so a successful send never navigates the
+  // visitor away to a raw JSON response.
+  document.querySelectorAll<HTMLFormElement>('[data-quote-form]').forEach((form) => {
+    const stamp = form.querySelector<HTMLInputElement>('[data-started-at]');
+    if (stamp) stamp.value = String(Date.now());
+
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    const setStatus = (message: string, tone: 'ok' | 'error' | '') => {
+      if (!status) return;
+      status.textContent = message;
+      status.dataset.tone = tone;
+    };
+
+    // The serverless endpoint rejects request bodies over ~4.5 MB before it can
+    // run, so guard the file here and give a clear message instead of a cryptic
+    // failure. 4 MB leaves headroom for the other fields and multipart overhead.
+    const MAX_UPLOAD = 4 * 1024 * 1024;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const file = form.querySelector<HTMLInputElement>('input[type="file"]')?.files?.[0];
+      if (file && file.size > MAX_UPLOAD) {
+        setStatus('That file is over 4 MB. Please compress it, or email it to us directly.', 'error');
+        return;
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+      setStatus('', '');
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.ok) {
+          if (button) button.textContent = 'Sent — redirecting…';
+          window.location.assign('/thank-you/');
+          return;
+        }
+
+        if (response.status === 413) {
+          setStatus('That file is too large to upload here (max 4 MB). Please email it to us directly.', 'error');
+        } else {
+          setStatus(
+            data.message || 'Something went wrong. Please try again or email us directly.',
+            'error'
+          );
+        }
+      } catch {
+        setStatus('We could not send that just now. Please try again in a moment.', 'error');
+      } finally {
+        if (button && button.textContent === 'Sending…') {
+          button.disabled = false;
+          button.textContent = 'Request a quote';
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .quote-full {
+    padding: var(--s-7);
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-inline-start: 3px solid var(--c-signal-700);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  @media (min-width: 48em) {
+    .quote-full {
+      padding: var(--s-8);
+    }
+  }
+
+  .quote-full__title {
+    font-size: var(--t-xl);
+    margin-block-end: var(--s-2);
+  }
+
+  .quote-full__lead {
+    color: var(--c-text-muted);
+    max-width: 60ch;
+    margin-block-end: var(--s-6);
+  }
+
+  .quote-full__lead span,
+  label span[aria-hidden='true'] {
+    color: var(--c-signal-700);
+    font-weight: 700;
+  }
+
+  .group {
+    border: 0;
+    padding: 0;
+    margin: 0 0 var(--s-6);
+  }
+
+  .group legend {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-signal-700);
+    margin-block-end: var(--s-4);
+    padding: 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+
+  .field {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .field--wide {
+    grid-column: 1 / -1;
+  }
+
+  /* Notes / artwork / consent sit outside a .grid, so span the form width. */
+  .quote-full__form > .field--wide {
+    margin-block-end: var(--s-5);
+  }
+
+  @media (max-width: 34em) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  label {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--c-ink-900);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: var(--s-3);
+    min-height: 44px;
+    font: inherit;
+    background: var(--c-paper);
+    color: var(--c-ink-900);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-md);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 96px;
+  }
+
+  input[type='file'] {
+    padding: var(--s-2);
+    background: var(--c-paper);
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--c-ink-500);
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    border-color: var(--c-signal-700);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-signal-700) 25%, transparent);
+  }
+
+  .hint {
+    font-size: var(--t-xs);
+    color: var(--c-text-muted);
+    margin: 0;
+  }
+
+  .field--consent {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: var(--s-3);
+  }
+
+  .field--consent input {
+    width: 20px;
+    height: 20px;
+    min-height: 0;
+    margin-block-start: 2px;
+    accent-color: var(--c-signal-700);
+  }
+
+  .field--consent label {
+    font-weight: 400;
+    color: var(--c-text-muted);
+  }
+
+  .quote-full__status {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+    margin-block-end: var(--s-4);
+  }
+
+  .quote-full__status:empty {
+    display: none;
+  }
+
+  .quote-full__status[data-tone='ok'] {
+    background: var(--c-success-100, #e7f6ec);
+    color: var(--c-success-700, #14713b);
+  }
+
+  .quote-full__status[data-tone='error'] {
+    background: var(--c-error-100, #fdeaea);
+    color: var(--c-error-700, #b42318);
+  }
+
+  .quote-full__submit:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  /* Honeypot — removed from layout and from the accessibility tree. */
+  .hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

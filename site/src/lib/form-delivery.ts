@@ -28,7 +28,7 @@ export interface DeliveryResult {
 
 export interface DeliveryPayload {
   submission: QuoteSubmission;
-  attachments: Array<{ filename: string; size: number }>;
+  attachments: Array<{ filename: string; size: number; content?: Buffer }>;
   receivedAt: string;
 }
 
@@ -37,32 +37,48 @@ function env(key: string): string {
   return (import.meta.env?.[key] as string) ?? process.env?.[key] ?? '';
 }
 
-/** Plain-text body. Values are inserted as text, never as HTML. */
+/**
+ * Plain-text body. Values are inserted as text, never as HTML.
+ *
+ * Only fields the sender actually filled in are shown. A short inquiry (name,
+ * email, phone, message) therefore does not carry a wall of empty box-spec
+ * lines the way the full quote form does — each form reads as what it is.
+ */
 function renderBody(payload: DeliveryPayload): string {
   const s = payload.submission;
+  const label = (t: string) => `${(t + ':').padEnd(14)}`;
+
   const lines = [
     `New ${s.formType} submission`,
     `Received: ${payload.receivedAt}`,
     '',
-    `Name:          ${s.name}`,
-    `Business:      ${s.businessName || '—'}`,
-    `Email:         ${s.email}`,
-    `Phone:         ${s.phone || '—'}`,
-    '',
-    `Product:       ${s.product || '—'}`,
-    `Dimensions:    ${s.dimensions || '—'} (${s.unit})`,
-    `Quantity:      ${s.quantity ?? '—'}`,
-    `Material:      ${s.material || '—'}`,
-    `Printing:      ${s.printing || '—'}`,
-    `Coating:       ${s.coating || '—'}`,
-    `Finishing:     ${s.finishing || '—'}`,
-    `Add-ons:       ${s.addOns || '—'}`,
-    `Required by:   ${s.requiredDate || '—'}`,
-    `Shipping ZIP:  ${s.shippingZip || '—'}`,
-    '',
-    'Notes:',
-    s.notes || '—',
+    `${label('Name')}${s.name}`,
+    `${label('Email')}${s.email}`,
+    `${label('Phone')}${s.phone || '—'}`,
   ];
+  if (s.businessName) lines.push(`${label('Business')}${s.businessName}`);
+
+  // Box specification — include only the fields with a value, so nothing that
+  // was left blank appears as a dash.
+  const spec: Array<[string, string]> = [
+    ['Product', s.product],
+    ['Dimensions', s.dimensions ? `${s.dimensions} (${s.unit})` : ''],
+    ['Quantity', s.quantity != null ? String(s.quantity) : ''],
+    ['Material', s.material],
+    ['Printing', s.printing],
+    ['Coating', s.coating],
+    ['Finishing', s.finishing],
+    ['Add-ons', s.addOns],
+    ['Required by', s.requiredDate],
+    ['Shipping ZIP', s.shippingZip],
+  ].filter((pair): pair is [string, string] => Boolean(pair[1]));
+
+  if (spec.length) {
+    lines.push('');
+    for (const [name, value] of spec) lines.push(`${label(name)}${value}`);
+  }
+
+  if (s.notes) lines.push('', 'Notes:', s.notes);
 
   if (payload.attachments.length) {
     lines.push('', 'Attachments:');
@@ -193,6 +209,10 @@ export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult>
           text,
           // Replies go to the customer, not to the mailbox that sent it.
           replyTo: payload.submission.email,
+          // Attach the uploaded artwork itself, not just its name.
+          attachments: payload.attachments
+            .filter((a) => a.content)
+            .map((a) => ({ filename: a.filename, content: a.content })),
         });
 
         return { delivered: true, adapter };

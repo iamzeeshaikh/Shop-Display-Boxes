@@ -52,6 +52,13 @@ const DIST = resolveOutDir(DIST_ROOT);
  */
 const ANALYTICS = 'https://www.googletagmanager.com https://www.google-analytics.com';
 
+/**
+ * ZeeOps live-chat widget host. It loads widget.js, then talks to the same
+ * origin for config/messages/uploads and renders visitor image attachments
+ * from it — so it needs script-src, connect-src and img-src.
+ */
+const CHAT = 'https://chat.zeeops.dev';
+
 async function walk(dir, out = []) {
   for (const e of await readdir(dir, { withFileTypes: true })) {
     const full = path.join(dir, e.name);
@@ -77,6 +84,8 @@ async function main() {
       if (m[1].trim()) scriptHashes.add(sha256(m[1]));
     }
 
+    // Still counted for the build log, but no longer used in style-src — see
+    // the 'unsafe-inline' note on that directive below.
     for (const m of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
       if (m[1].trim()) styleHashes.add(sha256(m[1]));
     }
@@ -90,12 +99,17 @@ async function main() {
     // than the legacy X-Frame-Options header.
     `frame-ancestors 'none'`,
     `object-src 'none'`,
-    `script-src 'self' ${ANALYTICS} ${[...scriptHashes].join(' ')}`,
-    `style-src 'self' ${[...styleHashes].join(' ')}`,
+    `script-src 'self' ${ANALYTICS} ${CHAT} ${[...scriptHashes].join(' ')}`,
+    // 'unsafe-inline' rather than the page's own style hashes: the chat widget
+    // builds its stylesheet at runtime (the brand colour is fetched per-site),
+    // so no build-time hash can cover it. CSP Level 3 ignores 'unsafe-inline'
+    // whenever any hash is present, so the hashes have to go for it to apply —
+    // keeping them here would silently block the widget's CSS.
+    `style-src 'self' 'unsafe-inline'`,
     // Fonts are self-hosted; no external font host is permitted.
     `font-src 'self'`,
-    `img-src 'self' data: ${ANALYTICS}`,
-    `connect-src 'self' ${ANALYTICS}`,
+    `img-src 'self' data: blob: ${ANALYTICS} ${CHAT}`,
+    `connect-src 'self' ${ANALYTICS} ${CHAT}`,
     `manifest-src 'self'`,
     `upgrade-insecure-requests`,
   ].join('; ');

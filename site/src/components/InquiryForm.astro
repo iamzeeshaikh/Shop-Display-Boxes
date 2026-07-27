@@ -1,0 +1,396 @@
+---
+/**
+ * Short inquiry form — name, email, phone, message.
+ *
+ * A deliberately compact alternative to the full quote form: four visible
+ * fields for a visitor who just wants to start a conversation. It posts to the
+ * same /api/quote/ endpoint with a `formType` discriminator, mapping "message"
+ * to the endpoint's `notes` field, so no server change is needed — the endpoint
+ * already validates name, email, phone, notes, and consent.
+ *
+ * Submission is progressive enhancement. Without JavaScript the form still
+ * posts natively and the endpoint responds; with JavaScript it submits in the
+ * background and shows an inline status, so the visitor never leaves the page.
+ *
+ * Anti-spam mirrors the quote form: a honeypot hidden from sight and assistive
+ * tech, plus a render timestamp the endpoint uses to reject instant bots.
+ */
+interface Props {
+  /** Product or industry name, used to personalise the heading and tag the lead. */
+  context: string;
+  /** Slug sent with the submission so the team knows which page it came from. */
+  contextSlug: string;
+  /** Distinguishes the source in the inbox: "product-inquiry" | "industry-inquiry". */
+  formType?: string;
+  /** "compact" is a slimmer band for placing high on a page. */
+  variant?: 'default' | 'compact';
+}
+const { context, contextSlug, formType = 'inquiry', variant = 'default' } = Astro.props;
+const formId = `inquiry-${contextSlug}`;
+const isCompact = variant === 'compact';
+// In the compact band the three short fields share one row; the full-width
+// helper stays for message and consent.
+const shortField = isCompact ? 'field field--third' : 'field field--half';
+---
+
+<section class={`inquiry ${isCompact ? 'inquiry--compact' : ''}`} aria-labelledby={`${formId}-heading`}>
+  <div class="inquiry__intro">
+    <h2 id={`${formId}-heading`}>Have a question about {context.toLowerCase()}?</h2>
+    <p>
+      {
+        isCompact
+          ? 'Send a quick message and we usually reply the same working day.'
+          : 'Leave your details and a short message — we usually reply the same working day with next steps, and there is no obligation.'
+      }
+    </p>
+  </div>
+
+  <form class="inquiry__form" method="post" action="/api/quote/" enctype="multipart/form-data" data-inquiry-form novalidate>
+    <input type="hidden" name="formType" value={formType} />
+    <input type="hidden" name="product" value={contextSlug} />
+    <input type="hidden" name="startedAt" value="" data-started-at />
+
+    {/* Honeypot: hidden from view and from assistive technology. */}
+    <div class="hp" aria-hidden="true">
+      <label for={`${formId}-company-url`}>Company website</label>
+      <input id={`${formId}-company-url`} name="companyUrl" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class={shortField}>
+      <label for={`${formId}-name`}>Name <span aria-hidden="true">*</span></label>
+      <input id={`${formId}-name`} name="name" type="text" required autocomplete="name" />
+    </div>
+
+    <div class={shortField}>
+      <label for={`${formId}-email`}>Email <span aria-hidden="true">*</span></label>
+      <input
+        id={`${formId}-email`}
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+      />
+    </div>
+
+    <div class={shortField}>
+      <label for={`${formId}-phone`}>Phone <span aria-hidden="true">*</span></label>
+      <input
+        id={`${formId}-phone`}
+        name="phone"
+        type="tel"
+        required
+        autocomplete="tel"
+        inputmode="tel"
+      />
+    </div>
+
+    <div class="field">
+      <label for={`${formId}-message`}>Message <span aria-hidden="true">*</span></label>
+      <textarea
+        id={`${formId}-message`}
+        name="notes"
+        rows={isCompact ? '2' : '4'}
+        required
+        placeholder="Tell us what you are packing, quantities, or anything you would like to know."
+      ></textarea>
+    </div>
+
+    <div class="field">
+      <label for={`${formId}-artwork`}>Artwork (optional)</label>
+      <input
+        id={`${formId}-artwork`}
+        name="artwork"
+        type="file"
+        accept=".pdf,.ai,.eps,.psd,.svg,.png,.jpg,.jpeg,.zip"
+      />
+      <p class="hint">PDF, AI, EPS, PSD, SVG, PNG, JPG or ZIP, up to 4 MB. No artwork? We draw the dieline first.</p>
+    </div>
+
+    <div class="field field--consent">
+      <input id={`${formId}-consent`} name="consent" type="checkbox" required />
+      <label for={`${formId}-consent`}>
+        I agree my details may be used to respond to this enquiry, per the
+        <a href="/privacy-policy/">privacy policy</a>.
+      </label>
+    </div>
+
+    <div class="inquiry__status" role="status" aria-live="polite" data-form-status></div>
+
+    <button class="btn btn--primary btn--lg inquiry__submit" type="submit">Send message</button>
+  </form>
+</section>
+
+<script>
+  // Progressive enhancement: submit in the background and report inline, so a
+  // successful send never navigates the visitor away to a raw JSON response.
+  document.querySelectorAll<HTMLFormElement>('[data-inquiry-form]').forEach((form) => {
+    // Stamp the render time so the endpoint can reject instant (bot) submissions.
+    const stamp = form.querySelector<HTMLInputElement>('[data-started-at]');
+    if (stamp) stamp.value = String(Date.now());
+
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    const setStatus = (message: string, tone: 'ok' | 'error' | '') => {
+      if (!status) return;
+      status.textContent = message;
+      status.dataset.tone = tone;
+    };
+
+    // The serverless endpoint rejects request bodies over ~4.5 MB before it can
+    // run, so guard the file here and give a clear message instead of a cryptic
+    // failure. 4 MB leaves headroom for the other fields and multipart overhead.
+    const MAX_UPLOAD = 4 * 1024 * 1024;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const file = form.querySelector<HTMLInputElement>('input[type="file"]')?.files?.[0];
+      if (file && file.size > MAX_UPLOAD) {
+        setStatus('That file is over 4 MB. Please compress it, or email it to us directly.', 'error');
+        return;
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+      setStatus('', '');
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.ok) {
+          // Success goes to the dedicated thank-you page.
+          if (button) button.textContent = 'Sent — redirecting…';
+          window.location.assign('/thank-you/');
+          return;
+        }
+
+        if (response.status === 413) {
+          setStatus('That file is too large to upload here (max 4 MB). Please email it to us directly.', 'error');
+        } else {
+          setStatus(
+            data.message || 'Something went wrong. Please try again or email us directly.',
+            'error'
+          );
+        }
+      } catch {
+        setStatus('We could not send that just now. Please try again in a moment.', 'error');
+      } finally {
+        // Re-enable unless the send succeeded (button label already updated).
+        if (button && button.textContent === 'Sending…') {
+          button.disabled = false;
+          button.textContent = 'Send message';
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .inquiry {
+    display: grid;
+    gap: var(--s-6);
+    padding: var(--s-7);
+    background: var(--c-paper-warm);
+    border: 1px solid var(--c-border);
+    border-inline-start: 3px solid var(--c-signal-700);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  @media (min-width: 52em) {
+    .inquiry {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: var(--s-8);
+      padding: var(--s-8);
+      align-items: start;
+    }
+  }
+
+  /* ── Compact band: slimmer, for placing high on a page ──────────────── */
+  .inquiry--compact {
+    padding: var(--s-6);
+    gap: var(--s-4);
+  }
+
+  @media (min-width: 52em) {
+    .inquiry--compact {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+      gap: var(--s-6);
+      padding: var(--s-6) var(--s-7);
+    }
+  }
+
+  .inquiry--compact .inquiry__intro h2 {
+    font-size: var(--t-lg);
+  }
+
+  .inquiry--compact .inquiry__intro p {
+    font-size: var(--t-sm);
+    max-width: none;
+  }
+
+  /* Three short fields share one row on wider screens. */
+  @media (min-width: 40em) {
+    .inquiry--compact .inquiry__form {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .inquiry--compact .field--third {
+      grid-column: span 1;
+    }
+  }
+
+  .inquiry__intro h2 {
+    font-size: var(--t-xl);
+    margin-block-end: var(--s-3);
+  }
+
+  .inquiry__intro p {
+    color: var(--c-text-muted);
+    max-width: 40ch;
+    margin: 0;
+  }
+
+  .inquiry__form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+
+  .field {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  @media (min-width: 40em) {
+    .field--half {
+      grid-column: span 1;
+    }
+  }
+
+  label {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--c-ink-900);
+  }
+
+  label span[aria-hidden='true'] {
+    color: var(--c-signal-700);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: var(--s-3);
+    min-height: 44px;
+    font: inherit;
+    background: var(--c-paper);
+    color: var(--c-ink-900);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-md);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 96px;
+  }
+
+  input[type='file'] {
+    padding: var(--s-2);
+    background: var(--c-paper);
+    cursor: pointer;
+  }
+
+  .hint {
+    font-size: var(--t-xs);
+    color: var(--c-text-muted);
+    margin: 0;
+  }
+
+  input:hover,
+  textarea:hover {
+    border-color: var(--c-ink-500);
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    border-color: var(--c-signal-700);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-signal-700) 25%, transparent);
+  }
+
+  .field--consent {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: var(--s-3);
+  }
+
+  .field--consent input {
+    width: 20px;
+    height: 20px;
+    min-height: 0;
+    margin-block-start: 2px;
+    accent-color: var(--c-signal-700);
+  }
+
+  .field--consent label {
+    font-weight: 400;
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+  }
+
+  .inquiry__status {
+    grid-column: 1 / -1;
+    font-size: var(--t-sm);
+    font-weight: 600;
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+  }
+
+  .inquiry__status:empty {
+    display: none;
+  }
+
+  .inquiry__status[data-tone='ok'] {
+    background: var(--c-success-100, #e7f6ec);
+    color: var(--c-success-700, #14713b);
+  }
+
+  .inquiry__status[data-tone='error'] {
+    background: var(--c-error-100, #fdeaea);
+    color: var(--c-error-700, #b42318);
+  }
+
+  .inquiry__submit {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .inquiry__submit:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  /* Honeypot — removed from layout and from the accessibility tree. */
+  .hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

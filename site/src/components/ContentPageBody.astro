@@ -15,6 +15,8 @@ import Breadcrumbs from './Breadcrumbs.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import RelatedProducts from './RelatedProducts.astro';
 import QuotePanel from './QuotePanel.astro';
+import InquiryForm from './InquiryForm.astro';
+import QuoteFormFull from './QuoteFormFull.astro';
 import type { PageContent } from '../data/page-content';
 import { allReviews, aggregateFor } from '../data/reviews';
 import {
@@ -83,7 +85,11 @@ const schema = graph(
 );
 
 const isNarrow = content.kind === 'guide' || content.kind === 'policy';
-const showQuotePanel = content.kind === 'commercial' || content.kind === 'industry';
+const showQuoteForm = content.slug === 'request-a-quote';
+// The request-a-quote page carries the full form itself, so the sidebar panel
+// that merely links back to it would be redundant there.
+const showQuotePanel =
+  (content.kind === 'commercial' || content.kind === 'industry') && !showQuoteForm;
 ---
 
 <BaseLayout
@@ -123,6 +129,16 @@ const showQuotePanel = content.kind === 'commercial' || content.kind === 'indust
       }
     </div>
   </section>
+
+  {
+    showQuoteForm && (
+      <section class="section section--tight">
+        <div class="container container--wide">
+          <QuoteFormFull />
+        </div>
+      </section>
+    )
+  }
 
   <section class="section section--tight">
     <div class={`container ${isNarrow ? '' : 'container--wide'} ${showQuotePanel ? 'body-grid' : ''}`}>
@@ -262,6 +278,16 @@ const showQuotePanel = content.kind === 'commercial' || content.kind === 'indust
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    content.kind === 'industry' && (
+      <section class="section section--tight">
+        <div class="container container--wide">
+          <InquiryForm context={content.h1} contextSlug={content.slug} formType="industry-inquiry" />
         </div>
       </section>
     )

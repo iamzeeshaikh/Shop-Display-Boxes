@@ -1,25 +1,27 @@
 /**
- * Sitemap index at exactly /sitemap.xml, as the brief requires.
+ * Single sitemap at exactly /sitemap.xml.
  *
- * Only sub-sitemaps that actually contain URLs are referenced — an empty
- * sitemap in an index is a crawl error waiting to happen.
+ * Every indexable URL on the site is listed directly in one <urlset> — there
+ * is no sitemap index and no sub-sitemaps. Entries are gathered from each
+ * content group (products, pages, industries, guides, blog, states, cities),
+ * flattened, and de-duplicated so a URL cannot appear twice.
  */
 import type { APIRoute } from 'astro';
-import { SITEMAP_NAMES, getSitemap, xmlEscape } from '../lib/sitemap-data';
-import { absolute } from '../lib/urls';
+import { SITEMAP_NAMES, getSitemap, renderUrlset, type SitemapEntry } from '../lib/sitemap-data';
 
 export const GET: APIRoute = () => {
-  const present = SITEMAP_NAMES.filter((name) => getSitemap(name).length > 0);
+  const seen = new Set<string>();
+  const entries: SitemapEntry[] = [];
 
-  const body = `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${present
-  .map((name) => `  <sitemap>\n    <loc>${xmlEscape(absolute('/') + `sitemaps/${name}.xml`)}</loc>\n  </sitemap>`)
-  .join('\n')}
-</sitemapindex>
-`;
+  for (const name of SITEMAP_NAMES) {
+    for (const entry of getSitemap(name)) {
+      if (seen.has(entry.loc)) continue;
+      seen.add(entry.loc);
+      entries.push(entry);
+    }
+  }
 
-  return new Response(body, {
+  return new Response(renderUrlset(entries), {
     headers: { 'Content-Type': 'application/xml; charset=utf-8' },
   });
 };

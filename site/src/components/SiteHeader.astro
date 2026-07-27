@@ -14,10 +14,14 @@
 import Logo from './Logo.astro';
 import { PRIMARY_NAV, PRODUCT_MENU } from '../data/navigation';
 import { business, has } from '../data/business';
+import { menuThumbnails } from '../lib/menu-thumbs';
 
 const phone = has(business.phone)
   ? (business.phone.value as { e164: string; display: string })
   : null;
+
+// Thumbnails for the product mega menu, generated once per build.
+const menuThumbs = await menuThumbnails();
 ---
 
 <header class="site-header">
@@ -90,10 +94,23 @@ const phone = has(business.phone)
                       {PRODUCT_MENU.map((col) => (
                         <div class="mega__col">
                           <h2 class="mega__heading">{col.heading}</h2>
-                          <ul class="mega__list">
+                          <ul class="mega__list mega__list--products">
                             {col.links.map((l) => (
                               <li>
-                                <a href={l.href}>{l.label}</a>
+                                <a href={l.href}>
+                                  {menuThumbs[l.href] && (
+                                    <img
+                                      class="mega__thumb"
+                                      src={menuThumbs[l.href]}
+                                      alt=""
+                                      width="36"
+                                      height="36"
+                                      loading="lazy"
+                                      decoding="async"
+                                    />
+                                  )}
+                                  <span>{l.label}</span>
+                                </a>
                               </li>
                             ))}
                           </ul>
@@ -121,7 +138,20 @@ const phone = has(business.phone)
                           <ul class="mega__list mega__list--split">
                             {col.links.map((l) => (
                               <li>
-                                <a href={l.href}>{l.label}</a>
+                                <a href={l.href}>
+                                  {menuThumbs[l.href] && (
+                                    <img
+                                      class="mega__thumb"
+                                      src={menuThumbs[l.href]}
+                                      alt=""
+                                      width="32"
+                                      height="32"
+                                      loading="lazy"
+                                      decoding="async"
+                                    />
+                                  )}
+                                  <span>{l.label}</span>
+                                </a>
                               </li>
                             ))}
                           </ul>
@@ -144,7 +174,20 @@ const phone = has(business.phone)
                     <ul class="dropdown__list">
                       {item.links.map((l) => (
                         <li>
-                          <a href={l.href}>{l.label}</a>
+                          <a href={l.href}>
+                            {menuThumbs[l.href] && (
+                              <img
+                                class="mega__thumb"
+                                src={menuThumbs[l.href]}
+                                alt=""
+                                width="32"
+                                height="32"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            <span>{l.label}</span>
+                          </a>
                         </li>
                       ))}
                     </ul>
@@ -351,7 +394,7 @@ const phone = has(business.phone)
   .header__inner {
     display: flex;
     align-items: center;
-    gap: var(--s-5);
+    gap: var(--s-4);
     min-height: 72px;
   }
 
@@ -374,9 +417,6 @@ const phone = has(business.phone)
     .header__cta {
       display: block;
     }
-    .header__toggle {
-      display: none;
-    }
   }
 
   .nav__list {
@@ -396,7 +436,7 @@ const phone = has(business.phone)
     display: inline-flex;
     align-items: center;
     gap: var(--s-2);
-    padding: var(--s-3) var(--s-3);
+    padding: var(--s-3) var(--s-2);
     font-size: var(--t-base);
     font-weight: 550;
     color: var(--c-ink-800);
@@ -500,6 +540,23 @@ const phone = has(business.phone)
     color: var(--c-signal-700);
   }
 
+  /* Product menu: each link carries a small thumbnail of the product. */
+  .mega__list--products a {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+
+  .mega__thumb {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--c-border);
+    background: var(--c-paper-warm);
+  }
+
   .mega__col--promo {
     padding: var(--s-5);
     background: var(--c-paper-warm);
@@ -544,13 +601,22 @@ const phone = has(business.phone)
   }
 
   .dropdown__list a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
     padding: var(--s-2) var(--s-3);
     font-size: var(--t-base);
     color: var(--c-ink-800);
     text-decoration: none;
     border-radius: var(--r-sm);
     white-space: nowrap;
+  }
+
+  /* Location split lists carry thumbnails too. */
+  .mega__list--split a {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
   }
 
   .dropdown__list a:hover {
@@ -613,6 +679,12 @@ const phone = has(business.phone)
 
   @media (min-width: 62em) {
     .mobile-nav {
+      display: none;
+    }
+    /* Placed after the base .header__toggle rule so it wins on source order —
+       otherwise the base `display: grid` overrides an earlier hide and the
+       burger leaks onto the desktop layout. */
+    .header__toggle {
       display: none;
     }
   }

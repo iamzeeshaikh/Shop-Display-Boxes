@@ -31,3 +31,4 @@ site/src/assets/products/
 *.log
 .vscode/
 .idea/
+.vercel

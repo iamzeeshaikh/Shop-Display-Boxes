@@ -98,9 +98,59 @@ const formId = `quote-${productSlug}`;
 </section>
 
 <script>
-  // Stamp the render time so the endpoint can reject instant submissions.
-  document.querySelectorAll<HTMLInputElement>('[data-started-at]').forEach((el) => {
-    el.value = String(Date.now());
+  // Progressive enhancement: submit in the background and, on success, send the
+  // visitor to the thank-you page rather than navigating to a raw JSON response.
+  document.querySelectorAll<HTMLFormElement>('.quote-short__form').forEach((form) => {
+    const stamp = form.querySelector<HTMLInputElement>('[data-started-at]');
+    if (stamp) stamp.value = String(Date.now());
+
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+      if (status) {
+        status.textContent = '';
+        delete status.dataset.tone;
+      }
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.ok) {
+          if (button) button.textContent = 'Sent — redirecting…';
+          window.location.assign('/thank-you/');
+          return;
+        }
+
+        if (status) {
+          status.textContent =
+            data.message || 'Something went wrong. Please try again or email us directly.';
+          status.dataset.tone = 'error';
+        }
+      } catch {
+        if (status) {
+          status.textContent = 'We could not send that just now. Please try again in a moment.';
+          status.dataset.tone = 'error';
+        }
+      } finally {
+        if (button && button.textContent === 'Sending…') {
+          button.disabled = false;
+          button.textContent = 'Request a quote';
+        }
+      }
+    });
   });
 </script>
 

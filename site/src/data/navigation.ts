@@ -114,7 +114,6 @@ export const PRIMARY_NAV: Array<
     columns: LOCATION_MENU,
     overview: { label: 'All locations', href: '/locations/' },
   },
-  { label: 'About', href: '/about-us/', kind: 'link' },
 ];
 
 export const FOOTER_GROUPS: Array<{ heading: string; links: NavLink[] }> = [

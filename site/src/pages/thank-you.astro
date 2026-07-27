@@ -1,0 +1,120 @@
+---
+/**
+ * Confirmation page shown after any form is submitted successfully.
+ *
+ * All forms (inquiry, short quote, full quote) redirect here on success. The
+ * path is in NOINDEX_PATHS, so it is served noindex,follow and kept out of the
+ * sitemap — a thank-you page has no business ranking.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { FEATURED_PRODUCTS } from '../data/products';
+---
+
+<BaseLayout
+  url="/thank-you/"
+  title="Thank You — We’ve Received Your Message | Shop Display Boxes"
+  description="Your message has been received. We usually reply the same working day with next steps."
+  noindex
+>
+  <section class="section">
+    <div class="container container--wide thanks">
+      <div class="thanks__badge" aria-hidden="true">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+          <path
+            d="m5 12.5 4 4 10-10"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </div>
+
+      <p class="eyebrow">Message received</p>
+      <h1>Thank you — we’ll be in touch</h1>
+      <p class="lede">
+        Your details are with our team. We usually reply the same working day with next steps, a
+        price, or the questions we need answered to draw your dieline. If it is urgent, call us on
+        the number in the header and mention you have just submitted a request.
+      </p>
+
+      <div class="thanks__actions">
+        <a class="btn btn--primary btn--lg" href="/">Back to home</a>
+        <a class="btn btn--outline btn--lg" href="/blog/">Read the blog</a>
+      </div>
+
+      <div class="thanks__grid">
+        <div>
+          <h2>While you wait</h2>
+          <ul>
+            <li><a href="/how-to-order/">How ordering works</a></li>
+            <li><a href="/artwork-guidelines/">Artwork guidelines</a></li>
+            <li><a href="/dieline-templates/">Dieline templates</a></li>
+            <li><a href="/how-much-do-custom-display-boxes-cost/">What display boxes cost</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Popular display box styles</h2>
+          <ul>
+            {FEATURED_PRODUCTS.map((p) => (
+              <li><a href={`/${p.slug}/`}>{p.name}</a></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thanks {
+    max-width: 62ch;
+  }
+
+  .thanks__badge {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-block-end: var(--s-5);
+    color: var(--c-success-700, #14713b);
+    background: var(--c-success-100, #e7f6ec);
+    border-radius: 50%;
+  }
+
+  .thanks h1 {
+    margin-block: var(--s-2) var(--s-4);
+  }
+
+  .thanks__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-block-start: var(--s-6);
+  }
+
+  .thanks__grid {
+    display: grid;
+    gap: var(--s-7);
+    margin-block-start: var(--s-9);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  .thanks__grid h2 {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--c-text-subtle);
+    margin-block-end: var(--s-4);
+  }
+
+  .thanks__grid ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+</style>
