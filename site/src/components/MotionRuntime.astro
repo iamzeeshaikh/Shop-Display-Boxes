@@ -1,0 +1,59 @@
+---
+/**
+ * Opts a page into the scroll-driven motion system.
+ *
+ * Emits the reveal stylesheet and the one small feature-detect that decides
+ * whether a fallback is needed. Include it on a page by adding <MotionRuntime />
+ * and nothing else; which pages are allowed to is decided in src/data/motion.ts.
+ *
+ * The fallback is behind a dynamic `import()`, so it is a separate chunk that a
+ * browser with native scroll-driven animation support never requests. The cost
+ * to those visitors is the detect itself, which is a few hundred bytes.
+ *
+ * ── Why the CSS is read as a string instead of imported ──────────────────────
+ * Astro resolves CSS through the module graph and bundles it per route. Every
+ * root-level page on this site — all 25 products, the guides, the policies, and
+ * the quote form — is served by the single [slug].astro route, and this
+ * component is imported by ContentPageBody, which they all render. A plain
+ * `import '../styles/motion.css'` is therefore a static dependency of all of
+ * them, and the stylesheet ships on every one whether or not the runtime
+ * `motion` flag ever renders this component. Measured: it added ~500 bytes
+ * gzipped to more than two hundred pages that must not carry it.
+ *
+ * Reading the file as a string keeps it out of the CSS graph entirely, so it
+ * appears on exactly the pages that opt in and nowhere else.
+ *
+ * The trade-off is that the build's CSS minifier never sees it, so it is
+ * minified here instead. The rules in motion.css are plain — no strings, no
+ * url(), no data URIs — which is what makes a strip this simple safe. Keep it
+ * that way, or move to a real minifier.
+ */
+import motionCss from '../styles/motion.css?raw';
+
+const css = motionCss
+  .replace(/\/\*[\s\S]*?\*\//g, '') // comments
+  .replace(/\s+/g, ' ') // runs of whitespace — leaves the single spaces calc() needs
+  .replace(/\s*([{}:;,>])\s*/g, '$1')
+  .replace(/;}/g, '}')
+  .trim();
+---
+
+<style is:inline set:html={css}></style>
+
+<script>
+  // Both conditions are cheap and neither touches the DOM, so this runs inline
+  // without blocking anything meaningful.
+  const reduced =
+    typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const native =
+    typeof CSS !== 'undefined' &&
+    typeof CSS.supports === 'function' &&
+    CSS.supports('animation-timeline: view()');
+
+  // Native support, or a visitor who has asked for less motion: nothing to do,
+  // and nothing to download. The CSS handles both cases on its own.
+  if (!reduced && !native) {
+    import('../scripts/motion-fallback');
+  }
+</script>

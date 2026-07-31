@@ -1,0 +1,200 @@
+---
+/**
+ * The process section, laid out as a sticky pin.
+ *
+ * This replaces the plain "Six stages" block that was already on the homepage.
+ * The copy, the heading, the ordered-list semantics and the single link to
+ * /how-to-order/ are carried over word for word — the only thing that changed
+ * is the layout. Nothing was added, so the page's internal link structure and
+ * its schema are untouched.
+ *
+ * The pin is `position: sticky` and nothing else. No scroll-jacking, no
+ * scrollbar interception, no scroll-snap on the document: the visitor's scroll
+ * does exactly what they expect, and the left column simply stays put while the
+ * six stages pass it. Below 62em the sticky rule does not apply at all and it
+ * renders as an ordinary stacked section.
+ */
+
+const steps = [
+  {
+    title: 'Specification and quote.',
+    body: 'Send the product, a quantity, and where it will sit.',
+  },
+  {
+    title: 'Dieline — first approval.',
+    body: 'Drawn around your real product. This fixes the structure.',
+  },
+  {
+    title: 'Artwork.',
+    body: 'Placed onto that dieline rather than designed to a rectangle.',
+  },
+  {
+    title: 'Proof — second approval.',
+    body: 'This fixes color and content. Changes after it are a new job.',
+  },
+  {
+    title: 'Production.',
+    body: 'Each stage checked against the approved proof, not the previous stage.',
+  },
+  {
+    title: 'Delivery.',
+    body: 'Usually flat-packed, since freight is billed on volume.',
+  },
+];
+---
+
+<section class="section section--warm pinned">
+  <div class="container container--wide pinned__grid">
+    <div class="pinned__aside">
+      <div class="pinned__pin">
+        <p class="eyebrow">Process</p>
+        <h2>Six stages, two of which carry the risk</h2>
+        <div class="pinned__rail" aria-hidden="true">
+          <span class="pinned__rail-fill"></span>
+        </div>
+        <p class="section-link">
+          The full sequence and what to check at each approval is under{' '}
+          <a href="/how-to-order/">how ordering works</a>.
+        </p>
+      </div>
+    </div>
+
+    <ol class="pinned__steps fx-stagger">
+      {
+        steps.map((step) => (
+          <li class="pinned__step">
+            <strong>{step.title}</strong> {step.body}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pinned__grid {
+    display: grid;
+    gap: var(--s-7);
+    align-items: start;
+  }
+
+  .pinned__aside h2 {
+    margin-block: var(--s-2) var(--s-5);
+    max-width: 16ch;
+  }
+
+  .pinned__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-5);
+    counter-reset: stage;
+  }
+
+  .pinned__step {
+    counter-increment: stage;
+    position: relative;
+    padding: var(--s-5) var(--s-6) var(--s-5) var(--s-9);
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    color: var(--c-text-muted);
+  }
+
+  .pinned__step::before {
+    content: counter(stage);
+    position: absolute;
+    inset-inline-start: var(--s-5);
+    inset-block-start: var(--s-5);
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--c-kraft-600);
+  }
+
+  .pinned__step strong {
+    display: block;
+    color: var(--c-ink-900);
+    margin-block-end: var(--s-1);
+  }
+
+  /* ── The rail ───────────────────────────────────────────────────────────
+     A hairline that fills as the section passes. Decorative, and it is the
+     one thing here that is purely ornamental — if the fill never runs, what
+     remains is a static hairline, which is what the design would have used
+     anyway.
+     ─────────────────────────────────────────────────────────────────────*/
+
+  .pinned__rail {
+    display: none;
+    height: 3px;
+    margin-block-end: var(--s-5);
+    background: var(--c-border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .pinned__rail-fill {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--c-signal-600);
+    transform: scaleX(0.06);
+    transform-origin: left center;
+  }
+
+  /* ── The pin ────────────────────────────────────────────────────────────
+     Only above 62em, which is the same breakpoint the site already uses for
+     its other sticky column (the quote panel in ContentPageBody). Below it,
+     a sticky column in a single-column layout would pin over the content it
+     is meant to introduce.
+     ─────────────────────────────────────────────────────────────────────*/
+
+  @media (min-width: 62em) {
+    .pinned__grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--s-10);
+    }
+
+    .pinned__pin {
+      position: sticky;
+      /* Clears the sticky site header. */
+      top: 8rem;
+    }
+
+    .pinned__rail {
+      display: block;
+    }
+
+    .pinned__steps {
+      gap: var(--s-6);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) and (min-width: 62em) {
+    @supports (animation-timeline: view()) {
+      .pinned {
+        view-timeline-name: --pinned-track;
+        view-timeline-axis: block;
+      }
+
+      .pinned__rail-fill {
+        animation: pinned-rail linear both;
+        animation-duration: auto;
+        animation-timeline: --pinned-track;
+        animation-range: contain 0% contain 100%;
+      }
+    }
+  }
+
+  @keyframes pinned-rail {
+    from {
+      transform: scaleX(0.06);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+</style>

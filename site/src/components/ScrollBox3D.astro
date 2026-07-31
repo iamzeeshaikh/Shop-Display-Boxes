@@ -1,0 +1,419 @@
+---
+/**
+ * Scroll-rotating display box.
+ *
+ * A real CSS cuboid — six faces inside a `transform-style: preserve-3d`
+ * container — rotated by scroll position within a `position: sticky` pane.
+ *
+ * ── Why the faces are drawn rather than photographed ─────────────────────────
+ * The brief asked for genuine per-face artwork where it exists. It does not.
+ * All 146 supplied source images are 3/4-perspective product renders on baked
+ * opaque backgrounds (verified: every file is fully opaque, no alpha cut-out,
+ * no dielines, no flat orthographic panels, no numbered frame sequence). Mapping
+ * one onto a cube face puts a photographed box, its own shadow, and its own
+ * background rectangle onto the face of a second box — two perspectives fighting
+ * each other, which reads as cheap rather than premium.
+ *
+ * So the faces are drawn from the existing design tokens instead: kraft board
+ * for the structure, ink for the printed panel, and the signal colour on a
+ * single rule. No new palette, no new image bytes, and it holds up at every
+ * angle of the rotation.
+ *
+ * ── TODO — assets to supply for a photographic result ────────────────────────
+ * Send flat, straight-on, evenly lit artwork with no perspective, no drop
+ * shadow, and no background, one file per face. Swapping to it is then a matter
+ * of importing each file here and setting `background-image` on the six
+ * `.box3d__face--*` rules below; the geometry does not change. Required aspect
+ * ratios follow the cuboid proportions (16 × 20 × 11):
+ *
+ *   front   1200 × 1500 px   the printed display panel, face on
+ *   back    1200 × 1500 px   the reverse panel
+ *   left     840 × 1500 px   the side wall
+ *   right    840 × 1500 px   the opposite side wall
+ *   top     1200 ×  840 px   looking straight down
+ *   bottom  1200 ×  840 px   looking straight up
+ *
+ * PNG or WebP, sRGB, transparent or flat white background. Kraft-toned board
+ * edges visible on the side walls sells the material more than a pure white cut.
+ *
+ * ── Mobile ──────────────────────────────────────────────────────────────────
+ * Below 48em (768px) the cuboid is not built at all. A single optimized WebP
+ * stands in, referenced from a media-scoped CSS rule so desktop never fetches
+ * it and mobile never fetches anything else.
+ */
+import { getImage } from 'astro:assets';
+import staticSource from '../assets/products/custom-display-boxes/custom-display-boxes-1.png';
+
+// The mobile stand-in. Requested at 2x the largest width it is ever displayed
+// at (360px), so it stays sharp on a high-density phone screen.
+const staticImage = await getImage({
+  src: staticSource,
+  width: 720,
+  height: 720,
+  format: 'webp',
+  quality: 70,
+});
+---
+
+<section class="box3d" data-box3d aria-labelledby="box3d-heading">
+  <div class="box3d__sticky">
+    <div class="container container--wide box3d__inner">
+      <div class="box3d__copy">
+        <p class="eyebrow">Structure</p>
+        <h2 id="box3d-heading">Six panels, and every one of them is a decision</h2>
+        <p class="lede">
+          A display box is not a printed rectangle. The front panel sells, the side walls carry the
+          load, the base decides whether the front row is still standing in a fortnight, and the
+          header card is the only part a shopper sees from across an aisle. They are drawn together
+          or they fight each other.
+        </p>
+      </div>
+
+      <!-- Decorative. The panel argument above is the content; the box is an
+           illustration of it and is hidden from assistive technology. -->
+      <div class="box3d__stage" aria-hidden="true">
+        <div class="box3d__cube">
+          <div class="box3d__face box3d__face--front">
+            <span class="box3d__print">
+              <span class="box3d__rule"></span>
+              <span class="box3d__bar box3d__bar--wide"></span>
+              <span class="box3d__bar"></span>
+            </span>
+          </div>
+          <div class="box3d__face box3d__face--back">
+            <span class="box3d__print box3d__print--muted">
+              <span class="box3d__bar"></span>
+              <span class="box3d__bar box3d__bar--short"></span>
+            </span>
+          </div>
+          <div class="box3d__face box3d__face--right"></div>
+          <div class="box3d__face box3d__face--left"></div>
+          <div class="box3d__face box3d__face--top"></div>
+          <div class="box3d__face box3d__face--bottom"></div>
+        </div>
+        <div class="box3d__shadow"></div>
+      </div>
+
+      <div class="box3d__static" style={`--box3d-static: url(${staticImage.src})`}></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ───────────────────────────────────────────────────────────────────────────
+     Track and sticky pane
+
+     The section is taller than the viewport; the pane inside it is exactly one
+     viewport tall and sticks. The difference between the two is how much scroll
+     the rotation consumes — 70vh here, a little under one screen.
+     ─────────────────────────────────────────────────────────────────────────*/
+
+  .box3d {
+    position: relative;
+    background: linear-gradient(to bottom, var(--c-paper), var(--c-paper-warm));
+    border-block-end: 1px solid var(--c-border);
+  }
+
+  .box3d__sticky {
+    display: grid;
+    align-items: center;
+  }
+
+  .box3d__inner {
+    display: grid;
+    gap: var(--s-7);
+    align-items: center;
+  }
+
+  .box3d__copy h2 {
+    margin-block: var(--s-2) var(--s-4);
+    max-width: 20ch;
+  }
+
+  .box3d__copy .lede {
+    max-width: 52ch;
+  }
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     Mobile — no 3D at all
+
+     Under 48em the track collapses to its natural height, the pane stops
+     sticking, the cuboid is removed from the box tree entirely, and a single
+     static image takes its place. The image is referenced only inside this
+     media block, so a desktop browser never requests it.
+     ─────────────────────────────────────────────────────────────────────────*/
+
+  .box3d__stage {
+    display: none;
+  }
+
+  .box3d__static {
+    /* Reserved before the image loads. Zero CLS. */
+    aspect-ratio: 1 / 1;
+    width: min(100%, 22rem);
+    margin-inline: auto;
+    border-radius: var(--r-lg);
+    background-color: var(--c-paper-warm);
+    background-size: cover;
+    background-position: center;
+  }
+
+  /*
+   * The url() lives here, and only here.
+   *
+   * `display: none` is not enough to stop the download — measured, Chrome
+   * requested the WebP on a 1440px viewport even though the element was never
+   * rendered. A background-image inside a media query that does not match is
+   * never fetched at all, which is the guarantee this needs: desktop pays
+   * nothing for the mobile stand-in.
+   */
+  @media (max-width: 47.99em) {
+    .box3d__static {
+      background-image: var(--box3d-static);
+    }
+  }
+
+  @media (min-width: 48em) {
+    .box3d {
+      height: 170vh;
+    }
+
+    .box3d__sticky {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      /* Clears the sticky site header, which overlaps the top of this pane. */
+      padding-block: 7rem 3rem;
+    }
+
+    .box3d__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+      gap: var(--s-9);
+    }
+
+    .box3d__stage {
+      display: grid;
+      place-items: center;
+      position: relative;
+      /* Reserved height. The stage never resizes, so the cuboid cannot shift
+         anything around it however far it rotates. */
+      height: clamp(20rem, 46vh, 30rem);
+      perspective: 1500px;
+      perspective-origin: 50% 42%;
+      contain: layout paint;
+    }
+
+    .box3d__static {
+      display: none;
+    }
+  }
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     The cuboid
+
+     16 × 20 × 11 in rem. Faces are sized and offset from those three numbers,
+     so changing one proportion rebuilds the whole solid correctly.
+     ─────────────────────────────────────────────────────────────────────────*/
+
+  .box3d__cube {
+    --bw: clamp(9rem, 14vw, 16rem);
+    --bh: calc(var(--bw) * 1.25);
+    --bd: calc(var(--bw) * 0.6875);
+
+    position: relative;
+    width: var(--bw);
+    height: var(--bh);
+    transform-style: preserve-3d;
+    /* Resting pose, used when no animation is running — reduced motion, or a
+       browser on neither implementation path. */
+    transform: rotateX(-12deg) rotateY(-32deg);
+  }
+
+  .box3d__face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--bw);
+    height: var(--bh);
+    backface-visibility: hidden;
+    border-radius: 2px;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .box3d__face--front {
+    background-color: var(--c-kraft-100);
+    background-image: linear-gradient(158deg, #fbf5ec 0%, var(--c-kraft-200) 100%);
+    box-shadow: inset 0 0 0 1px rgb(16 28 38 / 0.1);
+    transform: translateZ(calc(var(--bd) / 2));
+  }
+
+  .box3d__face--back {
+    background-color: var(--c-kraft-200);
+    background-image: linear-gradient(158deg, var(--c-kraft-200) 0%, var(--c-kraft-400) 100%);
+    box-shadow: inset 0 0 0 1px rgb(16 28 38 / 0.12);
+    transform: rotateY(180deg) translateZ(calc(var(--bd) / 2));
+  }
+
+  .box3d__face--right,
+  .box3d__face--left {
+    width: var(--bd);
+    left: calc((var(--bw) - var(--bd)) / 2);
+    background-color: var(--c-kraft-400);
+    background-image: linear-gradient(180deg, var(--c-kraft-400) 0%, var(--c-kraft-600) 100%);
+    box-shadow: inset 0 0 0 1px rgb(16 28 38 / 0.16);
+  }
+
+  .box3d__face--right {
+    transform: rotateY(90deg) translateZ(calc(var(--bw) / 2));
+  }
+
+  .box3d__face--left {
+    transform: rotateY(-90deg) translateZ(calc(var(--bw) / 2));
+  }
+
+  .box3d__face--top,
+  .box3d__face--bottom {
+    height: var(--bd);
+    top: calc((var(--bh) - var(--bd)) / 2);
+  }
+
+  /* The open top of a display box: kraft inner walls seen from above. */
+  .box3d__face--top {
+    background-color: var(--c-kraft-600);
+    background-image: linear-gradient(200deg, var(--c-kraft-200) 0%, var(--c-kraft-600) 100%);
+    box-shadow: inset 0 0 0 1px rgb(16 28 38 / 0.14);
+    transform: rotateX(90deg) translateZ(calc(var(--bh) / 2));
+  }
+
+  .box3d__face--bottom {
+    background-color: var(--c-kraft-800);
+    background-image: linear-gradient(20deg, var(--c-kraft-600) 0%, var(--c-kraft-800) 100%);
+    transform: rotateX(-90deg) translateZ(calc(var(--bh) / 2));
+  }
+
+  /* ── The printed panel ────────────────────────────────────────────────── */
+
+  .box3d__print {
+    position: absolute;
+    inset: auto 12% 11% 12%;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .box3d__rule {
+    display: block;
+    height: 4px;
+    width: 42%;
+    border-radius: 1px;
+    background: var(--c-signal-600);
+  }
+
+  .box3d__bar {
+    display: block;
+    height: 7px;
+    width: 74%;
+    border-radius: 1px;
+    background: var(--c-ink-900);
+    opacity: 0.82;
+  }
+
+  .box3d__bar--wide {
+    width: 100%;
+    height: 11px;
+  }
+
+  .box3d__bar--short {
+    width: 48%;
+  }
+
+  .box3d__print--muted .box3d__bar {
+    background: var(--c-ink-700);
+    opacity: 0.4;
+  }
+
+  /* ── Contact shadow ───────────────────────────────────────────────────── */
+
+  .box3d__shadow {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    width: clamp(11rem, 17vw, 19rem);
+    height: 2.6rem;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgb(16 28 38 / 0.26) 0%, transparent 68%);
+    filter: blur(7px);
+    pointer-events: none;
+  }
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     Rotation — implementation 1: native scroll-driven animation
+
+     The `contain` range covers exactly the span during which the track fully
+     covers the viewport, which is exactly the span during which the pane is
+     pinned. Rotation therefore starts the instant the box locks in place and
+     finishes the instant it lets go.
+     ─────────────────────────────────────────────────────────────────────────*/
+
+  @keyframes box3d-spin {
+    from {
+      transform: rotateX(-8deg) rotateY(0deg);
+    }
+    50% {
+      transform: rotateX(-17deg) rotateY(180deg);
+    }
+    to {
+      transform: rotateX(-8deg) rotateY(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) and (min-width: 48em) {
+    @supports (animation-timeline: view()) {
+      .box3d {
+        view-timeline-name: --box3d-track;
+        view-timeline-axis: block;
+        /*
+         * `view-timeline-inset: auto` — the initial value — makes the timeline
+         * adopt the scroller's scroll-padding. global.css sets
+         * `scroll-padding-top: 6rem` so in-page anchors clear the sticky header,
+         * and that 96px was silently shifting this range: measured, the box was
+         * already 48deg round by the time the pane pinned. Pinning it to 0 keeps
+         * the rotation aligned to the pin rather than to an unrelated
+         * anchor-scrolling offset.
+         */
+        view-timeline-inset: 0;
+      }
+
+      .box3d__cube {
+        animation: box3d-spin linear both;
+        /* Declared after the shorthand, which resets both of these. */
+        animation-duration: auto;
+        animation-timeline: --box3d-track;
+        animation-range: contain 0% contain 100%;
+      }
+
+      /*
+       * No `will-change` on this path, on purpose. A scroll-driven animation is
+       * promoted to its own compositor layer by the engine while it is in range
+       * and dropped when it leaves — scoped more tightly than any class we could
+       * toggle. Declaring `will-change` here would override that and pin the
+       * layer in memory for the life of the page. The fallback path below has no
+       * animation to trigger that promotion, so there it is applied explicitly
+       * and removed on exit.
+       */
+    }
+
+    /* ── Implementation 2: custom property written by the rAF fallback ───── */
+    @supports not (animation-timeline: view()) {
+      .box3d__cube {
+        transform: rotateX(calc(-8deg + var(--box3d-p, 0) * -9deg))
+          rotateY(calc(var(--box3d-p, 0) * 360deg));
+      }
+
+      .box3d.is-active .box3d__cube {
+        will-change: transform;
+      }
+    }
+  }
+</style>

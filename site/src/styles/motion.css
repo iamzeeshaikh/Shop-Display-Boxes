@@ -1,0 +1,219 @@
+/**
+ * Scroll-driven reveal system.
+ *
+ * Loaded only on pages that render <MotionRuntime />, which is the homepage and
+ * the slugs listed in src/data/motion.ts. Product, location, industry, blog and
+ * policy pages never receive it.
+ *
+ * ── The rule this file is built around ────────────────────────────────────────
+ * Content is visible by default. Every rule below is additive: it can only run
+ * where the browser has already proven it can finish the job. If the CSS is not
+ * supported the animation blocks never match; if the fallback script never runs
+ * the `.fx-armed` class is never applied. There is no code path where an
+ * element is left at `opacity: 0` with nothing able to bring it back.
+ *
+ * That is why the hidden state lives on `.fx-armed` — a class only JavaScript
+ * ever sets, after it has confirmed the element is below the fold — rather than
+ * on `.fx-fade-up` itself.
+ *
+ * ── Two implementations, one set of classes ──────────────────────────────────
+ *   1. Native `animation-timeline: view()`. Zero JavaScript, runs off the main
+ *      thread. This is the path almost every visitor takes.
+ *   2. An IntersectionObserver that adds `.in-view`, dynamically imported only
+ *      when the browser fails the `@supports` test.
+ *
+ * Both are gated on `prefers-reduced-motion: no-preference`, so a visitor who
+ * has asked for less motion gets a page that simply renders.
+ *
+ * ── Ranges end early on purpose ──────────────────────────────────────────────
+ * `--fx-to` is 40%, not 100%. A `view()` animation that ends at `entry 100%`
+ * only completes once the element has fully entered the viewport, which cannot
+ * happen for an element taller than the viewport or one sitting at the very
+ * bottom of a short document — it would strand mid-fade. Finishing at 40% of
+ * entry means the reveal is done while the element is still arriving, and no
+ * layout can leave it unfinished.
+ */
+
+:root {
+  /* Reveal travel. Small enough that a partial state never reads as broken. */
+  --fx-shift: 14px;
+  --fx-scale-from: 0.965;
+
+  /* Scroll range, expressed against the `entry` phase of the view timeline. */
+  --fx-from: 0%;
+  --fx-to: 40%;
+
+  /* Range offset applied per stagger step, and its time equivalent for the
+     JavaScript fallback. */
+  --fx-step: 4%;
+  --fx-step-ms: 70ms;
+
+  --fx-dur: 620ms;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Keyframes — shared by both implementations
+   ───────────────────────────────────────────────────────────────────────────*/
+
+@keyframes fx-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--fx-shift), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fx-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fx-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--fx-scale-from));
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Stagger indices
+
+   `--fx-delay` is a unitless step index, not a duration: the CSS path turns it
+   into a scroll-range offset and the JavaScript path into a transition-delay.
+   Set automatically for the first eight children, overridable inline with
+   `style="--fx-delay: 3"`.
+   ───────────────────────────────────────────────────────────────────────────*/
+
+.fx-stagger > * {
+  --fx-delay: 0;
+}
+.fx-stagger > *:nth-child(2) {
+  --fx-delay: 1;
+}
+.fx-stagger > *:nth-child(3) {
+  --fx-delay: 2;
+}
+.fx-stagger > *:nth-child(4) {
+  --fx-delay: 3;
+}
+.fx-stagger > *:nth-child(5) {
+  --fx-delay: 4;
+}
+.fx-stagger > *:nth-child(6) {
+  --fx-delay: 5;
+}
+.fx-stagger > *:nth-child(7) {
+  --fx-delay: 6;
+}
+/* Anything past the seventh shares the last step. A stagger that keeps growing
+   turns into a wait. */
+.fx-stagger > *:nth-child(n + 8) {
+  --fx-delay: 7;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. Native scroll-driven animations — no JavaScript
+   ───────────────────────────────────────────────────────────────────────────*/
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .fx-fade-up,
+    .fx-fade-in,
+    .fx-scale-in,
+    .fx-stagger > * {
+      /* On a progress-based timeline `auto` maps the animation across the
+         whole of `animation-range`. A time value would clamp it instead. */
+      animation-duration: auto;
+      animation-fill-mode: both;
+      animation-timing-function: var(--ease-out);
+      animation-timeline: view();
+      animation-range: entry calc(var(--fx-from) + var(--fx-delay, 0) * var(--fx-step))
+        entry calc(var(--fx-to) + var(--fx-delay, 0) * var(--fx-step));
+    }
+
+    .fx-fade-up,
+    .fx-stagger > * {
+      animation-name: fx-fade-up;
+    }
+
+    .fx-fade-in {
+      animation-name: fx-fade-in;
+    }
+
+    .fx-scale-in {
+      animation-name: fx-scale-in;
+    }
+
+    /* An explicit utility class always wins over the container's default. */
+    .fx-stagger > .fx-fade-in {
+      animation-name: fx-fade-in;
+    }
+    .fx-stagger > .fx-scale-in {
+      animation-name: fx-scale-in;
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. IntersectionObserver fallback
+
+   `.fx-armed` is applied by src/scripts/motion-fallback.ts, and only to
+   elements it has confirmed are below the fold. Above-the-fold content is never
+   armed, so it cannot flash.
+   ───────────────────────────────────────────────────────────────────────────*/
+
+@media (prefers-reduced-motion: no-preference) {
+  .fx-armed {
+    opacity: 0;
+    transition:
+      opacity var(--fx-dur) var(--ease-out),
+      transform var(--fx-dur) var(--ease-out);
+    transition-delay: calc(var(--fx-delay, 0) * var(--fx-step-ms));
+  }
+
+  .fx-armed.fx-fade-up,
+  .fx-stagger > .fx-armed {
+    transform: translate3d(0, var(--fx-shift), 0);
+  }
+
+  .fx-armed.fx-scale-in {
+    transform: scale(var(--fx-scale-from));
+  }
+
+  .fx-armed.in-view {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Reduced motion
+
+   Belt and braces. The two blocks above already fail to match under
+   `reduce`, but `.fx-armed` may have been applied by a script that started
+   before the preference changed, so it is explicitly neutralised here.
+   ───────────────────────────────────────────────────────────────────────────*/
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-fade-up,
+  .fx-fade-in,
+  .fx-scale-in,
+  .fx-stagger > *,
+  .fx-armed {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

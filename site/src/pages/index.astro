@@ -10,6 +10,9 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
+import MotionRuntime from '../components/MotionRuntime.astro';
+import ScrollBox3D from '../components/ScrollBox3D.astro';
+import PinnedProcess from '../components/PinnedProcess.astro';
 import { FEATURED_PRODUCTS, PRODUCTS } from '../data/products';
 import { business } from '../data/business';
 import { graph, organization, localBusiness, website, webPage, faqPage } from '../lib/schema';
@@ -87,6 +90,10 @@ const schema = graph(
 ---
 
 <BaseLayout {...seo} schema={schema}>
+  {/* Loads the reveal CSS and the feature-detect. Renders no markup, and
+      deliberately nothing above it depends on either. */}
+  <MotionRuntime />
+
   <section class="hero">
     <div class="container container--wide hero__inner">
       <div class="hero__body">
@@ -127,15 +134,17 @@ const schema = graph(
     </div>
   </section>
 
+  <ScrollBox3D />
+
   <section class="section">
     <div class="container container--wide">
-      <p class="eyebrow">Where to start</p>
-      <h2>Narrow it down in one question: where will it sit?</h2>
-      <p class="lede">
+      <p class="eyebrow fx-fade-up">Where to start</p>
+      <h2 class="fx-fade-up">Narrow it down in one question: where will it sit?</h2>
+      <p class="lede fx-fade-up">
         Placement sets the footprint you are allowed and the angle a shopper views from, and both
         constrain everything downstream. It is the most useful first filter there is.
       </p>
-      <div class="placement-grid">
+      <div class="placement-grid fx-stagger">
         <a class="placement" href="/counter-display-boxes/">
           <h3>On a counter</h3>
           <p>
@@ -165,7 +174,7 @@ const schema = graph(
     <div class="container container--wide">
       <p class="eyebrow">Display box styles</p>
       <h2>Selected formats</h2>
-      <ul class="product-grid">
+      <ul class="product-grid fx-stagger">
         {
           featured.map(({ product, image }) => (
             <li>
@@ -204,7 +213,7 @@ const schema = graph(
         Glass weight for candles. Oil migration for soap. Food-contact coatings for bakery. Warning
         copy claiming panel space before design starts. The constraint changes by category.
       </p>
-      <ul class="industry-list">
+      <ul class="industry-list fx-stagger">
         {industries.map((i) => (
           <li>
             <a href={i.href}>{i.label}</a>
@@ -218,7 +227,7 @@ const schema = graph(
     <div class="container container--wide">
       <p class="eyebrow">Specification</p>
       <h2>The four decisions that set your quote</h2>
-      <div class="spec-grid">
+      <div class="spec-grid fx-stagger">
         <article>
           <h3>Material</h3>
           <p>
@@ -256,7 +265,7 @@ const schema = graph(
   </section>
 
   <section class="section">
-    <div class="container container--wide pricing-band">
+    <div class="container container--wide pricing-band fx-fade-up">
       <div>
         <p class="eyebrow">Pricing and minimums</p>
         <h2>What it costs, honestly</h2>
@@ -279,42 +288,14 @@ const schema = graph(
     </div>
   </section>
 
-  <section class="section section--warm">
-    <div class="container container--wide">
-      <p class="eyebrow">Process</p>
-      <h2>Six stages, two of which carry the risk</h2>
-      <ol class="steps">
-        <li>
-          <strong>Specification and quote.</strong> Send the product, a quantity, and where it will
-          sit.
-        </li>
-        <li>
-          <strong>Dieline — first approval.</strong> Drawn around your real product. This fixes the
-          structure.
-        </li>
-        <li><strong>Artwork.</strong> Placed onto that dieline rather than designed to a rectangle.</li>
-        <li>
-          <strong>Proof — second approval.</strong> This fixes color and content. Changes after it
-          are a new job.
-        </li>
-        <li>
-          <strong>Production.</strong> Each stage checked against the approved proof, not the
-          previous stage.
-        </li>
-        <li><strong>Delivery.</strong> Usually flat-packed, since freight is billed on volume.</li>
-      </ol>
-      <p class="section-link">
-        The full sequence and what to check at each approval is under{' '}
-        <a href="/how-to-order/">how ordering works</a>.
-      </p>
-    </div>
-  </section>
+  {/* Same copy, same single link, sticky layout. See PinnedProcess.astro. */}
+  <PinnedProcess />
 
   <section class="section">
     <div class="container container--wide">
       <p class="eyebrow">What you get</p>
       <h2>Support that prevents reprints rather than explaining them</h2>
-      <div class="trust-grid">
+      <div class="trust-grid fx-stagger">
         <article>
           <h3>Free dielines and artwork checks</h3>
           <p>
@@ -359,7 +340,7 @@ const schema = graph(
     <div class="container container--wide">
       <p class="eyebrow">Work</p>
       <h2>Production work, by the problem it solved</h2>
-      <ul class="gallery-grid">
+      <ul class="gallery-grid fx-stagger">
         {
           gallery.map(({ slug, image }) =>
             image ? (
@@ -395,7 +376,7 @@ const schema = graph(
 
   <section class="section">
     <div class="container container--wide">
-      <div class="final-cta">
+      <div class="final-cta fx-scale-in">
         <div>
           <h2>Send the product, not the measurements</h2>
           <p>
@@ -638,18 +619,7 @@ const schema = graph(
     font-size: var(--t-base);
   }
 
-  .steps {
-    margin: var(--s-7) 0 0;
-    padding-inline-start: var(--s-5);
-    display: grid;
-    gap: var(--s-3);
-    max-width: 70ch;
-    color: var(--c-text-muted);
-  }
-
-  .steps strong {
-    color: var(--c-ink-900);
-  }
+  /* The process steps moved into PinnedProcess.astro along with their styles. */
 
   .gallery-grid {
     display: grid;

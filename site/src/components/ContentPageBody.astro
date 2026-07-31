@@ -17,6 +17,8 @@ import RelatedProducts from './RelatedProducts.astro';
 import QuotePanel from './QuotePanel.astro';
 import InquiryForm from './InquiryForm.astro';
 import QuoteFormFull from './QuoteFormFull.astro';
+import MotionRuntime from './MotionRuntime.astro';
+import { hasMotion } from '../data/motion';
 import type { PageContent } from '../data/page-content';
 import { allReviews, aggregateFor } from '../data/reviews';
 import {
@@ -90,6 +92,17 @@ const showQuoteForm = content.slug === 'request-a-quote';
 // that merely links back to it would be redundant there.
 const showQuotePanel =
   (content.kind === 'commercial' || content.kind === 'industry') && !showQuoteForm;
+
+/**
+ * Scroll reveals, on the handful of top-level landing pages listed in
+ * src/data/motion.ts and nowhere else. Guides, policies, industry pages and
+ * every product page render exactly as before and ship none of the CSS.
+ *
+ * The classes go on individual elements rather than a wrapper, so a page that
+ * is not opted in emits no extra class attributes at all — the markup it ships
+ * is byte-identical to before this change.
+ */
+const motion = hasMotion(content.slug);
 ---
 
 <BaseLayout
@@ -99,6 +112,8 @@ const showQuotePanel =
   modified={content.updated}
   schema={schema}
 >
+  {motion && <MotionRuntime />}
+
   <Breadcrumbs crumbs={crumbs} />
 
   <section class="section section--tight">
@@ -145,7 +160,7 @@ const showQuotePanel =
       <div class={isNarrow ? 'prose' : 'body-grid__content'}>
         {
           content.sections.map((section) => (
-            <section class="body-section">
+            <section class:list={['body-section', motion && 'fx-fade-up']}>
               <h2>{section.heading}</h2>
               {section.body.map((p) => (
                 <p>{p}</p>
@@ -168,7 +183,7 @@ const showQuotePanel =
 
         {
           content.tables?.map((table) => (
-            <div class="table-block">
+            <div class:list={['table-block', motion && 'fx-fade-up']}>
               <div class="table-wrap">
                 <table>
                   <caption>{table.caption}</caption>
@@ -218,7 +233,7 @@ const showQuotePanel =
               {reviewAggregate.reviewCount === 1 ? 'review' : 'reviews'}
             </p>
           )}
-          <ul class="reviews">
+          <ul class:list={['reviews', motion && 'fx-stagger']}>
             {reviews.map((r) => (
               <li class="review">
                 {r.rating && (
@@ -246,7 +261,7 @@ const showQuotePanel =
   {
     content.relatedProducts && content.relatedProducts.length > 0 && (
       <section class="section section--warm">
-        <div class="container container--wide">
+        <div class:list={['container', 'container--wide', motion && 'fx-fade-up']}>
           <RelatedProducts
             slugs={content.relatedProducts}
             heading="Display packaging for this application"
@@ -259,7 +274,7 @@ const showQuotePanel =
   {
     content.faqs && content.faqs.length > 0 && (
       <section class="section">
-        <div class="container container--wide">
+        <div class:list={['container', 'container--wide', motion && 'fx-fade-up']}>
           <FaqAccordion faqs={content.faqs} heading="Frequently asked questions" />
         </div>
       </section>
@@ -271,7 +286,7 @@ const showQuotePanel =
       <section class="section section--tight">
         <div class="container container--wide">
           <h2 class="related-pages__heading">Related reading</h2>
-          <ul class="related-pages">
+          <ul class:list={['related-pages', motion && 'fx-stagger']}>
             {content.relatedPages.map((p) => (
               <li>
                 <a href={p.href}>{p.label}</a>
@@ -297,7 +312,7 @@ const showQuotePanel =
     content.cta && (
       <section class="section">
         <div class="container container--wide">
-          <div class="page-cta">
+          <div class:list={['page-cta', motion && 'fx-scale-in']}>
             <div>
               <h2>{content.cta.heading}</h2>
               <p>{content.cta.body}</p>
