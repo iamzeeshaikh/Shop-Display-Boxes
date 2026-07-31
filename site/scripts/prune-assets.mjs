@@ -67,6 +67,20 @@ async function main() {
     for (const match of text.matchAll(/_astro\/([A-Za-z0-9._-]+)/g)) {
       referenced.add(match[1]);
     }
+
+    // A module inside _astro/ refers to its siblings relatively — Rollup emits
+    // `import("./motion-fallback.4V-uKqrP.js")`, with no _astro/ prefix for the
+    // pattern above to find. Without this, a chunk reachable only through a
+    // dynamic import looks unreferenced and gets deleted, and the import 404s
+    // at runtime in exactly the browsers the chunk exists to serve.
+    //
+    // Scoped to files already inside _astro/ so a relative path written
+    // anywhere else cannot keep a genuinely dead asset alive.
+    if (path.dirname(file) === ASSETS) {
+      for (const match of text.matchAll(/["'`(]\.\/([A-Za-z0-9._-]+\.[A-Za-z0-9]+)/g)) {
+        referenced.add(match[1]);
+      }
+    }
   }
 
   const assets = await walk(ASSETS);

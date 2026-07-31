@@ -72,14 +72,23 @@ async function main() {
       ?.find((h) => h.source === '/(.*)')
       ?.headers?.find((h) => h.key === 'Content-Security-Policy')?.value ?? '';
 
+  // Only script hashes are checked against the policy.
+  //
+  // style-src deliberately uses 'unsafe-inline' rather than per-page hashes:
+  // the chat widget builds its stylesheet at runtime, so no build-time hash can
+  // cover it, and under CSP Level 3 a single hash in the directive would make
+  // the browser ignore 'unsafe-inline' and block the widget's CSS. See the note
+  // in build-headers.mjs. Requiring the style hashes here contradicted that and
+  // failed the gate on every build that emitted an inline <style> — which is
+  // every build, since astro.config sets inlineStylesheets: 'auto'.
   const missing = [];
-  for (const h of [...scriptHashes, ...styleHashes]) {
+  for (const h of scriptHashes) {
     if (!csp.includes(h.replace(/'/g, ''))) missing.push(h);
   }
 
   if (missing.length) {
     console.error(
-      `qa:headers — FAILED: ${missing.length} inline script/style in the build is not covered\n` +
+      `qa:headers — FAILED: ${missing.length} inline script in the build is not covered\n` +
         `by the CSP in the committed vercel.json. Deploying this would block that code and\n` +
         `break the page in production.\n\n` +
         `Fix: run \`npm run build\` and commit the regenerated vercel.json.\n`
@@ -87,9 +96,18 @@ async function main() {
     process.exit(1);
   }
 
+  // A regression here would silently drop every inline stylesheet on the site.
+  if (!/style-src[^;]*'unsafe-inline'/.test(csp)) {
+    console.error(
+      `qa:headers — FAILED: style-src no longer allows inline styles, but the build\n` +
+        `emits ${styleHashes.size} inline <style> block(s). Every one of them would be blocked.\n`
+    );
+    process.exit(1);
+  }
+
   console.log(
-    `qa:headers — vercel.json CSP covers all ${scriptHashes.size} script and ` +
-      `${styleHashes.size} style hashes in the current build`
+    `qa:headers — vercel.json CSP covers all ${scriptHashes.size} script hash(es); ` +
+      `style-src permits the ${styleHashes.size} inline style block(s)`
   );
 }
 
