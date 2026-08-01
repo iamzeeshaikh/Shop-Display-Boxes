@@ -31,7 +31,7 @@ const formId = `quote-${productSlug}`;
     </p>
   </div>
 
-  <form class="quote-short__form" method="post" action="/api/quote/" novalidate>
+  <form class="quote-short__form" method="post" action="/api/quote/" enctype="multipart/form-data" novalidate>
     <input type="hidden" name="formType" value="product-quote" />
     <input type="hidden" name="product" value={productSlug} />
     <input type="hidden" name="startedAt" value="" data-started-at />
@@ -59,6 +59,11 @@ const formId = `quote-${productSlug}`;
       />
     </div>
 
+    <div class="field">
+      <label for={`${formId}-phone`}>Phone</label>
+      <input id={`${formId}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+    </div>
+
     <div class="field field--half">
       <label for={`${formId}-qty`}>Quantity <span aria-hidden="true">*</span></label>
       <input id={`${formId}-qty`} name="quantity" type="number" min="1" required inputmode="numeric" />
@@ -79,8 +84,21 @@ const formId = `quote-${productSlug}`;
     </div>
 
     <div class="field">
-      <label for={`${formId}-notes`}>What are you packing?</label>
-      <textarea id={`${formId}-notes`} name="notes" rows="3"></textarea>
+      <label for={`${formId}-notes`}>Message / instructions</label>
+      <textarea id={`${formId}-notes`} name="notes" rows="3"
+        placeholder="What are you packing, plus any print, finish or deadline detail."></textarea>
+    </div>
+
+    <div class="field">
+      <label for={`${formId}-artwork`}>Upload artwork <span class="field__optional">optional</span></label>
+      <input
+        id={`${formId}-artwork`}
+        name="artwork"
+        type="file"
+        accept=".pdf,.ai,.eps,.psd,.png,.jpg,.jpeg,.zip"
+        aria-describedby={`${formId}-artwork-hint`}
+      />
+      <p class="field__hint" id={`${formId}-artwork-hint`}>PDF, AI, EPS, PSD, PNG, JPG or ZIP.</p>
     </div>
 
     <div class="field field--consent">
@@ -204,6 +222,22 @@ const formId = `quote-${productSlug}`;
 
   .field--half {
     grid-column: span 1;
+  }
+
+  .field__optional {
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  .field__hint {
+    font-size: var(--t-xs, 0.78rem);
+    color: var(--c-paper);
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  input[type='file'] {
+    padding: var(--s-2);
   }
 
   label {

@@ -13,6 +13,7 @@ import SpecTable from './SpecTable.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import RelatedProducts from './RelatedProducts.astro';
 import QuoteFormShort from './QuoteFormShort.astro';
+import DisplayConfigurator from './DisplayConfigurator.astro';
 import InquiryForm from './InquiryForm.astro';
 import { getProduct } from '../data/products';
 import type { ProductContent } from '../data/product-content';
@@ -205,6 +206,8 @@ const schema = graph(
   </section>
 
   {/* ── FAQs ─────────────────────────────────────────────────────────── */}
+  <DisplayConfigurator productName={record.name} productSlug={content.slug} />
+
   <section class="section">
     <div class="container container--wide">
       <FaqAccordion

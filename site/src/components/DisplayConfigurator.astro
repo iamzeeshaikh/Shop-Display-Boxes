@@ -1,0 +1,811 @@
+---
+/**
+ * Step-by-step display configurator.
+ *
+ * Every step writes into a field the quote endpoint already validates
+ * (material, printing, coating, finishing, addOns, dimensions, quantity), so
+ * this posts to /api/quote/ exactly like the other forms — no new endpoint,
+ * no new server-side rules, and the same honeypot/timing protection.
+ */
+interface Props {
+  productName: string;
+  productSlug: string;
+}
+const { productName, productSlug } = Astro.props;
+const formId = `configurator-${productSlug}`;
+
+/** price is the indicative per-unit adjustment in USD. */
+const styles = [
+  { id: 'counter', label: 'Counter display', hint: 'Till-point unit', price: 1.4 },
+  { id: 'floor', label: 'Floor display', hint: 'Free-standing FSDU', price: 4.8 },
+  { id: 'pdq', label: 'PDQ tray', hint: 'Shelf-ready tray', price: 0.9 },
+  { id: 'pallet', label: 'Pallet display', hint: 'Full pallet unit', price: 9.5 },
+  { id: 'sidekick', label: 'Sidekick / power wing', hint: 'Clip-on end cap', price: 2.1 },
+  { id: 'dumpbin', label: 'Dump bin', hint: 'Bulk bin', price: 3.6 },
+];
+
+const sizes = [
+  { id: 'small', label: 'Small', hint: 'Up to 12 × 8 × 14 in' },
+  { id: 'medium', label: 'Medium', hint: 'Up to 18 × 12 × 24 in' },
+  { id: 'large', label: 'Large', hint: 'Up to 24 × 18 × 48 in' },
+  { id: 'tall', label: 'Full height', hint: 'Up to 24 × 18 × 72 in' },
+  { id: 'custom', label: 'Custom size', hint: 'Enter below' },
+];
+
+const materials = [
+  { id: 'E-flute corrugated', label: 'E-flute corrugated', hint: 'Fine flute, print-friendly', price: 0.6 },
+  { id: 'B-flute corrugated', label: 'B-flute corrugated', hint: 'Stronger shelf support', price: 0.75 },
+  { id: 'Double-wall corrugated', label: 'Double wall', hint: 'Heavy product loads', price: 1.25 },
+  { id: 'Litho-laminated SBS', label: 'Litho-laminated SBS', hint: 'Retail-grade graphics', price: 1.6 },
+  { id: 'Chipboard', label: 'Chipboard', hint: 'Light counter units', price: 0.5 },
+  { id: 'Recycled board', label: 'Recycled board', hint: 'Post-consumer stock', price: 0.7 },
+];
+
+const printings = [
+  { id: 'Unprinted', label: 'Unprinted', hint: 'Plain board', price: -0.15 },
+  { id: '1-colour flexo', label: '1 colour flexo', hint: 'Single ink', price: 0.2 },
+  { id: 'Full colour litho', label: 'Full colour litho', hint: 'Photographic quality', price: 0.75 },
+  { id: 'Digital print', label: 'Digital print', hint: 'Short runs, no plates', price: 0.55 },
+  { id: 'Both sides', label: 'Both sides', hint: 'Printed inside and out', price: 0.65 },
+];
+
+const coatings = [
+  { id: 'None', label: 'No coating', hint: 'Uncoated board', price: 0 },
+  { id: 'Gloss lamination', label: 'Gloss lamination', hint: 'High shine, scuff resistant', price: 0.3 },
+  { id: 'Matte lamination', label: 'Matte lamination', hint: 'Soft, premium look', price: 0.32 },
+  { id: 'Aqueous coating', label: 'Aqueous coating', hint: 'Fast-drying protection', price: 0.14 },
+  { id: 'UV coating', label: 'UV coating', hint: 'Hard, glossy shell', price: 0.24 },
+];
+
+const finishings = [
+  { id: 'Die-cut shelves', label: 'Die-cut shelves', hint: 'Product-fitted tiers', price: 0.45 },
+  { id: 'Tear-away perforation', label: 'Tear-away perf', hint: 'Shelf-ready opening', price: 0.18 },
+  { id: 'Hang tabs', label: 'Hang tabs', hint: 'Peg-hook ready', price: 0.12 },
+  { id: 'Foil stamping', label: 'Foil stamping', hint: 'Metallic accents', price: 0.4 },
+  { id: 'Embossing', label: 'Embossing', hint: 'Raised detail', price: 0.35 },
+  { id: 'Spot UV', label: 'Spot UV', hint: 'Selective gloss', price: 0.28 },
+];
+
+const addOnList = [
+  { id: 'Header card', label: 'Header card', hint: 'Printed top sign', price: 0.5 },
+  { id: 'Shelf trays', label: 'Extra shelf trays', hint: 'Additional tiers', price: 0.55 },
+  { id: 'Pre-assembly', label: 'Pre-assembly', hint: 'Ships built', price: 1.1 },
+  { id: 'Shrink wrap', label: 'Shrink wrap', hint: 'Transit protection', price: 0.22 },
+  { id: 'Prototype sample', label: 'Prototype sample', hint: 'White or printed mock-up', price: 0.3 },
+  { id: 'Express production', label: 'Express production', hint: 'Priority queue', price: 0.6 },
+];
+
+const quantities = [50, 100, 250, 500, 1000, 2500, 5000];
+---
+
+<section class="cfg" id="configurator" aria-labelledby={`${formId}-heading`}>
+  <div class="container container--wide">
+    <div class="cfg__head">
+      <p class="cfg__eyebrow">Interactive configurator</p>
+      <h2 id={`${formId}-heading`}>Configure your {productName.toLowerCase()}</h2>
+      <p class="cfg__intro">
+        Work through the specification below to see an indicative price range, then send it over
+        and we will confirm a firm price and structure.
+      </p>
+    </div>
+
+    <form
+      class="cfg__form"
+      id={formId}
+      method="post"
+      action="/api/quote/"
+      enctype="multipart/form-data"
+      novalidate
+      data-configurator
+    >
+      <input type="hidden" name="formType" value="configurator" />
+      <input type="hidden" name="product" value={productSlug} />
+      <input type="hidden" name="startedAt" value="" data-started-at />
+
+      {/* Honeypot: hidden from view and from assistive technology. */}
+      <div class="hp" aria-hidden="true">
+        <label for={`${formId}-company-url`}>Company website</label>
+        <input id={`${formId}-company-url`} name="companyUrl" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      {/* Values the endpoint reads, kept in step by the script below. */}
+      <input type="hidden" name="material" data-field="material" />
+      <input type="hidden" name="printing" data-field="printing" />
+      <input type="hidden" name="coating" data-field="coating" />
+      <input type="hidden" name="finishing" data-field="finishing" />
+      <input type="hidden" name="addOns" data-field="addOn" />
+      <input type="hidden" name="dimensions" data-field="size" />
+      <input type="hidden" name="quantity" data-field="quantity" />
+
+      <div class="cfg__steps">
+        <fieldset class="cfg__step" data-group="style" data-mode="single">
+          <legend><span class="cfg__num">1</span> Display style</legend>
+          <div class="cfg__options">
+            {styles.map((option) => (
+              <button type="button" class="cfg__option" data-value={option.id} data-label={option.label} data-price={option.price} aria-pressed="false">
+                <span class="cfg__option-label">{option.label}</span>
+                <span class="cfg__option-hint">{option.hint}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step" data-group="size" data-mode="single">
+          <legend><span class="cfg__num">2</span> Size</legend>
+          <div class="cfg__options">
+            {sizes.map((option) => (
+              <button type="button" class="cfg__option" data-value={option.id} data-label={option.label} aria-pressed="false">
+                <span class="cfg__option-label">{option.label}</span>
+                <span class="cfg__option-hint">{option.hint}</span>
+              </button>
+            ))}
+          </div>
+          <div class="cfg__custom">
+            <label for={`${formId}-dims`}>Dimensions (length × width × height)</label>
+            <input type="text" id={`${formId}-dims`} data-dims placeholder="e.g. 18 × 12 × 48 in" maxlength="80" />
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step" data-group="material" data-mode="single">
+          <legend><span class="cfg__num">3</span> Material</legend>
+          <div class="cfg__options">
+            {materials.map((option) => (
+              <button type="button" class="cfg__option" data-value={option.id} data-label={option.label} data-price={option.price} aria-pressed="false">
+                <span class="cfg__option-label">{option.label}</span>
+                <span class="cfg__option-hint">{option.hint}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step" data-group="printing" data-mode="multi">
+          <legend><span class="cfg__num">4</span> Printing <span class="cfg__note">Select all that apply</span></legend>
+          <div class="cfg__options">
+            {printings.map((option) => (
+              <button type="button" class="cfg__option" data-value={option.id} data-label={option.label} data-price={option.price} aria-pressed="false">
+                <span class="cfg__option-label">{option.label}</span>
+                <span class="cfg__option-hint">{option.hint}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step" data-group="coating" data-mode="single">
+          <legend><span class="cfg__num">5</span> Coating</legend>
+          <div class="cfg__options">
+            {coatings.map((option) => (
+              <button type="button" class="cfg__option" data-value={option.id} data-label={option.label} data-price={option.price} aria-pressed="false">
+                <span class="cfg__option-label">{option.label}</span>
+                <span class="cfg__option-hint">{option.hint}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step" data-group="finishing" data-mode="multi">
+          <legend><span class="cfg__num">6</span> Finishing <span class="cfg__note">Select all that apply</span></legend>
+          <div class="cfg__options">
+            {finishings.map((option) => (
+              <button type="button" class="cfg__option" data-value={option.id} data-label={option.label} data-price={option.price} aria-pressed="false">
+                <span class="cfg__option-label">{option.label}</span>
+                <span class="cfg__option-hint">{option.hint}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step" data-group="quantity" data-mode="single">
+          <legend><span class="cfg__num">7</span> Quantity</legend>
+          <div class="cfg__pills">
+            {quantities.map((value) => (
+              <button type="button" class="cfg__pill" data-value={String(value)} data-label={`${value.toLocaleString('en-US')} units`} aria-pressed="false">
+                {value.toLocaleString('en-US')}
+              </button>
+            ))}
+          </div>
+          <div class="cfg__custom">
+            <label for={`${formId}-qty`}>Or enter your own quantity</label>
+            <input type="text" inputmode="numeric" id={`${formId}-qty`} data-custom-qty placeholder="e.g. 750" maxlength="9" />
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step" data-group="addOn" data-mode="multi">
+          <legend><span class="cfg__num">8</span> Add-ons <span class="cfg__note">Optional</span></legend>
+          <div class="cfg__options">
+            {addOnList.map((option) => (
+              <button type="button" class="cfg__option" data-value={option.id} data-label={option.label} data-price={option.price} aria-pressed="false">
+                <span class="cfg__option-label">{option.label}</span>
+                <span class="cfg__option-hint">{option.hint}</span>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="cfg__step">
+          <legend><span class="cfg__num">9</span> Your details</legend>
+
+          <div class="cfg__grid">
+            <div class="cfg__field">
+              <label for={`${formId}-name`}>Your name <span aria-hidden="true">*</span></label>
+              <input id={`${formId}-name`} name="name" type="text" required autocomplete="name" />
+            </div>
+            <div class="cfg__field">
+              <label for={`${formId}-email`}>Business email <span aria-hidden="true">*</span></label>
+              <input id={`${formId}-email`} name="email" type="email" required autocomplete="email" inputmode="email" />
+            </div>
+            <div class="cfg__field">
+              <label for={`${formId}-phone`}>Phone</label>
+              <input id={`${formId}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+            </div>
+            <div class="cfg__field">
+              <label for={`${formId}-business`}>Business name</label>
+              <input id={`${formId}-business`} name="businessName" type="text" autocomplete="organization" />
+            </div>
+          </div>
+
+          <div class="cfg__field">
+            <label for={`${formId}-notes`}>Message / instructions</label>
+            <textarea id={`${formId}-notes`} name="notes" data-notes rows="3"
+              placeholder="What is going on the display, plus any deadline or delivery detail."></textarea>
+          </div>
+
+          <div class="cfg__field">
+            <label for={`${formId}-artwork`}>Upload artwork <span class="cfg__optional">optional</span></label>
+            <input
+              id={`${formId}-artwork`}
+              name="artwork"
+              type="file"
+              accept=".pdf,.ai,.eps,.psd,.png,.jpg,.jpeg,.zip"
+              aria-describedby={`${formId}-artwork-hint`}
+            />
+            <p class="cfg__hint" id={`${formId}-artwork-hint`}>PDF, AI, EPS, PSD, PNG, JPG or ZIP.</p>
+          </div>
+
+          <div class="cfg__consent">
+            <input id={`${formId}-consent`} name="consent" type="checkbox" required />
+            <label for={`${formId}-consent`}>
+              I agree that my details may be used to respond to this enquiry, as described in the
+              <a href="/privacy-policy/">privacy policy</a>.
+            </label>
+          </div>
+        </fieldset>
+      </div>
+
+      <aside class="cfg__summary" aria-label="Your specification">
+        <div class="cfg__summary-inner">
+          <p class="cfg__summary-title">Your specification</p>
+          <dl class="cfg__rows">
+            <div><dt>Style</dt><dd data-summary="style">Not selected</dd></div>
+            <div><dt>Size</dt><dd data-summary="size">Not selected</dd></div>
+            <div><dt>Material</dt><dd data-summary="material">Not selected</dd></div>
+            <div><dt>Printing</dt><dd data-summary="printing">Not selected</dd></div>
+            <div><dt>Coating</dt><dd data-summary="coating">Not selected</dd></div>
+            <div><dt>Finishing</dt><dd data-summary="finishing">None</dd></div>
+            <div><dt>Quantity</dt><dd data-summary="quantity">Not selected</dd></div>
+            <div><dt>Add-ons</dt><dd data-summary="addOn">None</dd></div>
+          </dl>
+
+          <div class="cfg__estimate">
+            <p class="cfg__estimate-label">Indicative price range</p>
+            <p class="cfg__estimate-value" data-estimate>Choose a style, material and quantity</p>
+            <p class="cfg__estimate-note">
+              Indicative only. Tooling, structural testing and freight are confirmed in writing
+              before anything is produced.
+            </p>
+          </div>
+
+          <div class="form-status" role="status" aria-live="polite" data-form-status></div>
+
+          <button class="btn btn--primary btn--lg cfg__submit" type="submit">Send this specification</button>
+        </div>
+      </aside>
+    </form>
+  </div>
+</section>
+
+<style>
+  .cfg {
+    padding-block: var(--s-9, 4rem);
+    background: var(--c-paper-sunk);
+    border-block: 1px solid var(--c-border);
+  }
+
+  .cfg__head {
+    max-width: 46rem;
+    margin-bottom: var(--s-6, 2rem);
+  }
+  .cfg__eyebrow {
+    font-size: var(--t-xs, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-kraft-600);
+    margin: 0 0 var(--s-2, 0.5rem);
+  }
+  .cfg__intro {
+    color: var(--c-text-muted);
+    margin: var(--s-2, 0.5rem) 0 0;
+  }
+
+  .cfg__form {
+    display: grid;
+    gap: var(--s-5, 1.5rem);
+    align-items: start;
+  }
+  @media (min-width: 64rem) {
+    .cfg__form {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+    }
+  }
+
+  .cfg__steps {
+    display: grid;
+    gap: var(--s-4, 1rem);
+    min-width: 0;
+  }
+
+  .cfg__step {
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    padding: var(--s-4, 1rem);
+    min-width: 0;
+  }
+  .cfg__step legend {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--s-2, 0.5rem);
+    font-weight: 700;
+    color: var(--c-ink-900);
+    margin-bottom: var(--s-3, 0.75rem);
+    padding: 0;
+  }
+  .cfg__num {
+    display: inline-grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 999px;
+    background: var(--c-ink-800);
+    color: var(--c-paper);
+    font-size: var(--t-xs, 0.78rem);
+  }
+  .cfg__note {
+    font-size: var(--t-xs, 0.72rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-text-subtle);
+    background: var(--c-paper-sunk);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .cfg__options {
+    display: grid;
+    gap: var(--s-3, 0.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  }
+
+  .cfg__option {
+    display: grid;
+    gap: 0.2rem;
+    text-align: left;
+    min-height: 3.5rem;
+    padding: var(--s-3, 0.75rem);
+    background: var(--c-paper);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+  .cfg__option:hover {
+    border-color: var(--c-kraft-400);
+  }
+  .cfg__option[aria-pressed='true'] {
+    border-color: var(--c-signal-600);
+    background: var(--c-signal-100);
+    box-shadow: inset 0 0 0 1px var(--c-signal-600);
+  }
+  .cfg__option-label {
+    font-weight: 700;
+    font-size: var(--t-sm);
+    color: var(--c-ink-900);
+  }
+  .cfg__option-hint {
+    font-size: var(--t-xs, 0.78rem);
+    color: var(--c-text-muted);
+    line-height: 1.4;
+  }
+
+  .cfg__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2, 0.5rem);
+  }
+  .cfg__pill {
+    min-height: 44px;
+    padding-inline: var(--s-4, 1rem);
+    border: 1px solid var(--c-border-strong);
+    border-radius: 999px;
+    background: var(--c-paper);
+    font: inherit;
+    font-weight: 700;
+    font-size: var(--t-sm);
+    color: var(--c-ink-900);
+    cursor: pointer;
+  }
+  .cfg__pill:hover {
+    border-color: var(--c-kraft-400);
+  }
+  .cfg__pill[aria-pressed='true'] {
+    background: var(--c-ink-800);
+    border-color: var(--c-ink-800);
+    color: var(--c-paper);
+  }
+
+  .cfg__custom {
+    margin-top: var(--s-3, 0.75rem);
+  }
+  .cfg__custom input {
+    max-width: 18rem;
+  }
+
+  .cfg__grid {
+    display: grid;
+    gap: var(--s-3, 0.75rem);
+  }
+  @media (min-width: 40rem) {
+    .cfg__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .cfg__field {
+    display: grid;
+    gap: var(--s-2, 0.5rem);
+    min-width: 0;
+    margin-top: var(--s-3, 0.75rem);
+  }
+  .cfg label {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--c-ink-900);
+  }
+  .cfg__optional {
+    font-weight: 400;
+    color: var(--c-text-subtle);
+  }
+  .cfg__hint {
+    font-size: var(--t-xs, 0.78rem);
+    color: var(--c-text-muted);
+    margin: 0;
+  }
+  .cfg input[type='text'],
+  .cfg input[type='email'],
+  .cfg input[type='tel'],
+  .cfg input[type='file'],
+  .cfg textarea {
+    width: 100%;
+    min-width: 0;
+    padding: var(--s-3, 0.75rem);
+    min-height: 44px;
+    font: inherit;
+    font-size: 16px;
+    background: var(--c-paper);
+    color: var(--c-ink-900);
+    border: 1px solid var(--c-border-strong);
+    border-radius: var(--r-md);
+  }
+  .cfg input:focus-visible,
+  .cfg textarea:focus-visible,
+  .cfg__option:focus-visible,
+  .cfg__pill:focus-visible {
+    outline: 3px solid var(--c-ink-800);
+    outline-offset: 1px;
+  }
+
+  .cfg__consent {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--s-2, 0.5rem);
+    align-items: start;
+    margin-top: var(--s-4, 1rem);
+  }
+  .cfg__consent input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+  }
+  .cfg__consent label {
+    font-weight: 400;
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+  }
+
+  .cfg__summary {
+    min-width: 0;
+  }
+  @media (min-width: 64rem) {
+    .cfg__summary-inner {
+      position: sticky;
+      top: var(--s-5, 1.5rem);
+    }
+  }
+  .cfg__summary-inner {
+    background: var(--c-paper);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    padding: var(--s-4, 1rem);
+  }
+  .cfg__summary-title {
+    font-size: var(--t-xs, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-text-subtle);
+    margin: 0 0 var(--s-3, 0.75rem);
+  }
+  .cfg__rows {
+    margin: 0;
+  }
+  .cfg__rows > div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-3, 0.75rem);
+    padding-block: 0.45rem;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .cfg__rows dt {
+    font-size: var(--t-sm);
+    color: var(--c-text-muted);
+  }
+  .cfg__rows dd {
+    margin: 0;
+    font-size: var(--t-sm);
+    font-weight: 700;
+    color: var(--c-ink-900);
+    text-align: right;
+    max-width: 60%;
+  }
+  .cfg__rows dd[data-empty='true'] {
+    font-weight: 400;
+    font-style: italic;
+    color: var(--c-text-subtle);
+  }
+
+  .cfg__estimate {
+    margin-top: var(--s-4, 1rem);
+    padding: var(--s-4, 1rem);
+    border-radius: var(--r-md);
+    background: var(--c-ink-900);
+    color: var(--c-paper);
+    text-align: center;
+  }
+  .cfg__estimate-label {
+    font-size: var(--t-xs, 0.72rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-ink-200);
+    margin: 0;
+  }
+  .cfg__estimate-value {
+    font-size: var(--t-lg, 1.25rem);
+    font-weight: 700;
+    margin: 0.35rem 0;
+  }
+  .cfg__estimate-note {
+    font-size: var(--t-xs, 0.72rem);
+    line-height: 1.5;
+    color: var(--c-ink-200);
+    margin: 0;
+  }
+
+  .cfg__submit {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--s-4, 1rem);
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  /**
+   * Mirrors the button state into the summary, the price estimate and the
+   * hidden fields the quote endpoint validates, then submits in the background
+   * so a success lands on the thank-you page instead of raw JSON.
+   */
+  const QTY_SCALE: Array<[number, number]> = [
+    [5000, 0.68],
+    [2500, 0.76],
+    [1000, 0.86],
+    [500, 1],
+    [250, 1.18],
+    [100, 1.45],
+    [50, 1.75],
+    [1, 2.1],
+  ];
+
+  const LABELS: Record<string, string> = {
+    style: 'Style',
+    size: 'Size',
+    material: 'Material',
+    printing: 'Printing',
+    coating: 'Coating',
+    finishing: 'Finishing',
+    quantity: 'Quantity',
+    addOn: 'Add-ons',
+  };
+
+  const money = (value: number) =>
+    value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+  document.querySelectorAll<HTMLFormElement>('[data-configurator]').forEach((form) => {
+    const stamp = form.querySelector<HTMLInputElement>('[data-started-at]');
+    if (stamp) stamp.value = String(Date.now());
+
+    const estimate = form.querySelector<HTMLElement>('[data-estimate]');
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const notes = form.querySelector<HTMLTextAreaElement>('[data-notes]');
+    const customQty = form.querySelector<HTMLInputElement>('[data-custom-qty]');
+    const dims = form.querySelector<HTMLInputElement>('[data-dims]');
+
+    const chosen = new Map<string, HTMLButtonElement[]>();
+    const picks = (group: string) => chosen.get(group) ?? [];
+
+    function quantity(): number {
+      const typed = Number((customQty?.value ?? '').replace(/[^0-9]/g, ''));
+      if (typed > 0) return typed;
+      const picked = picks('quantity')[0];
+      return picked ? Number(picked.dataset.value) : 0;
+    }
+
+    function priceOf(group: string): number {
+      return picks(group).reduce((total, node) => total + Number(node.dataset.price ?? 0), 0);
+    }
+
+    function labelFor(group: string): string {
+      if (group === 'quantity') {
+        const count = quantity();
+        return count > 0 ? `${count.toLocaleString('en-US')} units` : '';
+      }
+      const labels = picks(group).map((node) => node.dataset.label ?? '');
+      if (group === 'size' && dims?.value.trim()) {
+        return labels[0] ? `${labels[0]} (${dims.value.trim()})` : dims.value.trim();
+      }
+      return labels.join(', ');
+    }
+
+    /** Values sent to the endpoint use the option ids, which read as spec text. */
+    function valueFor(group: string): string {
+      if (group === 'quantity') return quantity() ? String(quantity()) : '';
+      if (group === 'size') return labelFor('size');
+      return picks(group)
+        .map((node) => node.dataset.value ?? '')
+        .join(', ');
+    }
+
+    function currentRange(): string {
+      const count = quantity();
+      const base = priceOf('style') + priceOf('material');
+      if (!base || !count) return '';
+      const scale = QTY_SCALE.find(([threshold]) => count >= threshold)?.[1] ?? 2.1;
+      const unit =
+        (base + priceOf('printing') + priceOf('coating') + priceOf('finishing') + priceOf('addOn')) * scale;
+      const total = unit * count;
+      return `${money(total * 0.88)} – ${money(total * 1.14)}`;
+    }
+
+    function refresh(): void {
+      for (const group of Object.keys(LABELS)) {
+        const cell = form.querySelector<HTMLElement>(`[data-summary="${group}"]`);
+        const value = labelFor(group);
+        if (cell) {
+          cell.textContent = value || (group === 'finishing' || group === 'addOn' ? 'None' : 'Not selected');
+          cell.dataset.empty = value ? 'false' : 'true';
+        }
+        const field = form.querySelector<HTMLInputElement>(`[data-field="${group}"]`);
+        if (field) field.value = valueFor(group);
+      }
+
+      const range = currentRange();
+      if (estimate) estimate.textContent = range || 'Choose a style, material and quantity';
+    }
+
+    form.querySelectorAll<HTMLFieldSetElement>('[data-group]').forEach((group) => {
+      const name = group.dataset.group!;
+      const multi = group.dataset.mode === 'multi';
+
+      group.querySelectorAll<HTMLButtonElement>('.cfg__option, .cfg__pill').forEach((option) => {
+        option.addEventListener('click', () => {
+          const wasOn = option.getAttribute('aria-pressed') === 'true';
+          if (!multi) {
+            group.querySelectorAll<HTMLButtonElement>('.cfg__option, .cfg__pill').forEach((sibling) => {
+              sibling.setAttribute('aria-pressed', 'false');
+            });
+          }
+          option.setAttribute('aria-pressed', wasOn ? 'false' : 'true');
+          chosen.set(name, [...group.querySelectorAll<HTMLButtonElement>('[aria-pressed="true"]')]);
+          if (name === 'quantity' && customQty) customQty.value = '';
+          refresh();
+        });
+      });
+    });
+
+    customQty?.addEventListener('input', () => {
+      if (customQty.value.trim()) {
+        form.querySelectorAll<HTMLButtonElement>('.cfg__pill[aria-pressed="true"]').forEach((pill) => {
+          pill.setAttribute('aria-pressed', 'false');
+        });
+        chosen.set('quantity', []);
+      }
+      refresh();
+    });
+
+    dims?.addEventListener('input', refresh);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      // The spec belongs in the message body too, so the email reads in full.
+      if (notes) {
+        const spec = Object.keys(LABELS)
+          .map((group) => `${LABELS[group]}: ${labelFor(group) || 'Not selected'}`)
+          .join('\n');
+        const typed = notes.value.replace(/^Configurator specification[\s\S]*?(?:\n\n|$)/, '').trim();
+        const range = currentRange();
+        notes.value = [
+          'Configurator specification',
+          spec,
+          range ? `Indicative range: ${range}` : '',
+          typed ? `\n${typed}` : '',
+        ]
+          .filter(Boolean)
+          .join('\n');
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+      if (status) status.textContent = '';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { accept: 'application/json' },
+        });
+        if (response.ok) {
+          window.location.href = '/thank-you/';
+          return;
+        }
+        const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+        if (status) {
+          status.textContent =
+            payload?.message ?? 'That did not send. Please try again or email us directly.';
+        }
+      } catch {
+        if (status) status.textContent = 'That did not send. Please check your connection and try again.';
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Send this specification';
+        }
+      }
+    });
+
+    refresh();
+  });
+</script>
