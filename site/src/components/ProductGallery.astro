@@ -136,7 +136,32 @@ const [primary, ...rest] = images;
     const avifSource = picture?.querySelector<HTMLSourceElement>('source[type="image/avif"]');
     const webpSource = picture?.querySelector<HTMLSourceElement>('source[type="image/webp"]');
 
+    /* Warm the full-resolution views so a thumbnail click swaps instantly
+       rather than starting a download. Low priority, at idle, so the first
+       paint keeps the network to itself. */
+    const warm = (thumb: HTMLButtonElement) => {
+      if (thumb.dataset.warmed) return;
+      thumb.dataset.warmed = '1';
+      const image = new Image();
+      image.fetchPriority = 'low';
+      image.sizes = main.sizes || '';
+      // Prefer the same format the browser is already showing.
+      const set = (avifSource?.srcset && thumb.dataset.avif) || thumb.dataset.webp || thumb.dataset.srcset;
+      if (set) image.srcset = set;
+      if (thumb.dataset.src) image.src = thumb.dataset.src;
+    };
+
+    const warmAll = () => thumbs.forEach(warm);
+    if ('requestIdleCallback' in window) {
+      (window as unknown as { requestIdleCallback: (cb: () => void, opts?: object) => void })
+        .requestIdleCallback(warmAll, { timeout: 2500 });
+    } else {
+      window.addEventListener('load', () => setTimeout(warmAll, 1200), { once: true });
+    }
+
     thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('pointerenter', () => warm(thumb), { once: true });
+      thumb.addEventListener('touchstart', () => warm(thumb), { once: true, passive: true });
       thumb.addEventListener('click', () => {
         const { avif, webp, src, srcset } = thumb.dataset;
         if (avifSource && avif) avifSource.srcset = avif;
