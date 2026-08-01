@@ -274,6 +274,10 @@ const quantities = [50, 100, 250, 500, 1000, 2500, 5000];
       <aside class="cfg__summary" aria-label="Your specification">
         <div class="cfg__summary-inner">
           <p class="cfg__summary-title">Your specification</p>
+          <button type="button" class="cfg__summary-toggle" data-summary-toggle aria-expanded="false">
+            <span data-summary-count>Nothing selected yet</span>
+            <span data-summary-hint>Show</span>
+          </button>
           <dl class="cfg__rows">
             <div><dt>Style</dt><dd data-summary="style">Not selected</dd></div>
             <div><dt>Size</dt><dd data-summary="size">Not selected</dd></div>
@@ -529,10 +533,65 @@ const quantities = [50, 100, 250, 500, 1000, 2500, 5000];
     min-width: 0;
   }
   @media (min-width: 64rem) {
-    .cfg__summary-inner {
+    .cfg__summary {
       position: sticky;
       top: var(--s-5, 1.5rem);
     }
+    .cfg__summary-inner {
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+    }
+  }
+
+  /* Phones: a grid item cannot travel in a single column, so the specification
+     becomes a fixed bar that shows while the configurator is on screen. */
+  @media (max-width: 63.99rem) {
+    .cfg__summary {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      transform: translateY(110%);
+      transition: transform 0.25s ease;
+      pointer-events: none;
+    }
+    .cfg__summary.is-visible {
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .cfg__summary-inner {
+      border-radius: var(--r-md) var(--r-md) 0 0;
+      box-shadow: 0 -10px 30px rgba(16, 28, 38, 0.2);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .cfg__summary-toggle { display: flex; }
+    .cfg__rows { display: none; }
+    .cfg__summary.is-open .cfg__rows { display: block; }
+    .cfg__estimate { margin-top: var(--s-2, 0.5rem); }
+    .cfg__estimate-note { display: none; }
+    .cfg__summary.is-open .cfg__estimate-note { display: block; }
+  }
+
+  .cfg__summary-toggle {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3, 0.75rem);
+    width: 100%;
+    padding-block: 0.3rem;
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: var(--t-sm);
+    font-weight: 700;
+    color: var(--c-ink-900);
+    cursor: pointer;
+  }
+  .cfg__summary-toggle span:last-child {
+    font-weight: 500;
+    color: var(--c-text-subtle);
   }
   .cfg__summary-inner {
     background: var(--c-paper);
@@ -720,7 +779,31 @@ const quantities = [50, 100, 250, 500, 1000, 2500, 5000];
 
       const range = currentRange();
       if (estimate) estimate.textContent = range || 'Choose a style, material and quantity';
+
+      const chosenCount = Object.keys(LABELS).filter((group) => labelFor(group)).length;
+      const countLabel = form.querySelector<HTMLElement>('[data-summary-count]');
+      if (countLabel) {
+        countLabel.textContent = chosenCount
+          ? `${chosenCount} option${chosenCount === 1 ? '' : 's'} selected`
+          : 'Nothing selected yet';
+      }
     }
+
+    const summaryPanel = form.querySelector<HTMLElement>('.cfg__summary');
+    const section = form.closest('section');
+    if (summaryPanel && section && window.matchMedia('(max-width: 63.99rem)').matches) {
+      new IntersectionObserver(
+        ([entry]) => summaryPanel.classList.toggle('is-visible', entry.isIntersecting),
+        { rootMargin: '-10% 0px -20% 0px' },
+      ).observe(section);
+    }
+    const summaryToggle = form.querySelector<HTMLButtonElement>('[data-summary-toggle]');
+    summaryToggle?.addEventListener('click', () => {
+      const open = summaryPanel?.classList.toggle('is-open') ?? false;
+      summaryToggle.setAttribute('aria-expanded', String(open));
+      const hint = summaryToggle.querySelector('[data-summary-hint]');
+      if (hint) hint.textContent = open ? 'Hide' : 'Show';
+    });
 
     form.querySelectorAll<HTMLFieldSetElement>('[data-group]').forEach((group) => {
       const name = group.dataset.group!;
