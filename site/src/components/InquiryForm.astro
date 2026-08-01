@@ -122,6 +122,29 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
 </section>
 
 <script>
+
+  /** Build a JSON body from the form, encoding any file as base64. */
+  async function jsonBody(form: HTMLFormElement): Promise<Record<string, string>> {
+    const data = new FormData(form);
+    const payload: Record<string, string> = {};
+    data.forEach((value, key) => {
+      if (typeof value === 'string') payload[key] = value;
+    });
+    const fileInput = form.querySelector<HTMLInputElement>('input[type="file"]');
+    const file = fileInput?.files?.[0];
+    if (file && file.size > 0) {
+      payload.artwork = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(',')[1] ?? '');
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      payload.artworkName = file.name;
+      payload.artworkType = file.type;
+    }
+    return payload;
+  }
+
   // Progressive enhancement: submit in the background and report inline, so a
   // successful send never navigates the visitor away to a raw JSON response.
   document.querySelectorAll<HTMLFormElement>('[data-inquiry-form]').forEach((form) => {
@@ -162,8 +185,8 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
       try {
         const response = await fetch(form.action, {
           method: 'POST',
-          body: new FormData(form),
-          headers: { Accept: 'application/json' },
+          body: JSON.stringify(await jsonBody(form)),
+          headers: { accept: 'application/json', 'content-type': 'application/json' },
         });
         const data = await response.json().catch(() => ({}));
 

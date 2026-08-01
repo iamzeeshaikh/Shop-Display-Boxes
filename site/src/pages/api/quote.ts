@@ -41,18 +41,58 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return reject(429, 'Too many submissions. Please wait a moment and try again.');
   }
 
-  let form: FormData;
-  try {
-    form = await request.formData();
-  } catch {
-    return reject(400, 'We could not read that submission. Please try again.');
-  }
-
+  /**
+   * Bodies arrive as JSON. Multipart is still accepted for a no-JavaScript
+   * submit, but the browser forms post JSON with the artwork base64-encoded:
+   * parsing multipart in this runtime is unreliable and took the function down
+   * with a 502 rather than returning a usable error.
+   */
   const fields: Record<string, unknown> = {};
   const files: File[] = [];
-  for (const [key, value] of form.entries()) {
-    if (typeof value === 'string') fields[key] = value;
-    else files.push(value as File);
+  const contentType = request.headers.get('content-type') ?? '';
+
+  if (contentType.includes('application/json')) {
+    let body: Record<string, unknown>;
+    try {
+      body = (await request.json()) as Record<string, unknown>;
+    } catch {
+      return reject(400, 'We could not read that submission. Please try again.');
+    }
+
+    for (const [key, value] of Object.entries(body)) {
+      if (typeof value === 'string') fields[key] = value;
+    }
+
+    // Artwork travels as { artworkName, artworkType, artwork: base64 }.
+    const encoded = typeof body.artwork === 'string' ? body.artwork : '';
+    const name = typeof body.artworkName === 'string' ? body.artworkName : '';
+    if (encoded && name) {
+      try {
+        const bytes = Buffer.from(encoded, 'base64');
+        files.push(
+          new File([new Uint8Array(bytes)], name, {
+            type: typeof body.artworkType === 'string' ? body.artworkType : 'application/octet-stream',
+          }),
+        );
+      } catch {
+        return reject(422, 'That file could not be read. Please try a different file.');
+      }
+    }
+    delete fields.artwork;
+    delete fields.artworkName;
+    delete fields.artworkType;
+  } else {
+    let form: FormData;
+    try {
+      form = await request.formData();
+    } catch {
+      return reject(400, 'We could not read that submission. Please try again.');
+    }
+
+    for (const [key, value] of form.entries()) {
+      if (typeof value === 'string') fields[key] = value;
+      else files.push(value as File);
+    }
   }
 
   // ── Anti-automation. Return 200 on honeypot so bots learn nothing. ────────
