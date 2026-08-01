@@ -157,7 +157,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
     }
-    return reject(502, 'We could not send that just now. Please try again or email us directly.');
+    // 503, not 502: a 502 reads as a crashed function and gets masked by the
+    // CDN's own error page, hiding the real reason from the logs and the visitor.
+    return reject(
+      503,
+      'We could not send that just now. Please email us directly and we will pick it up.',
+    );
   }
 
   return new Response(
