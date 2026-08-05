@@ -219,6 +219,17 @@ export type VerifiedRating = {
   worstRating: number;
 };
 
+/**
+ * Offer expiry for priceValidUntil: one year from the build date. Computed at
+ * build time so every deploy pushes the horizon forward — a hardcoded date
+ * would silently lapse and drop the price from Merchant listing results.
+ */
+function priceValidUntil(): string {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 export function product(opts: {
   name: string;
   slug: string;
@@ -246,6 +257,7 @@ export function product(opts: {
     // Quotation workflow: the visible page states this is a "from" price for
     // qualifying large-volume orders, so the offer is modeled the same way.
     price: opts.priceFrom.amount,
+    priceValidUntil: priceValidUntil(),
     priceSpecification: {
       '@type': 'UnitPriceSpecification',
       price: opts.priceFrom.amount,
@@ -255,7 +267,12 @@ export function product(opts: {
     },
     availability: 'https://schema.org/InStock',
     itemCondition: 'https://schema.org/NewCondition',
-    seller: { '@id': ORG_ID },
+    // Inline the identifying fields rather than a bare `{ '@id': … }` pointer:
+    // the full Organization node only appears in the homepage graph, and each
+    // page's JSON-LD is parsed on its own, so a pointer alone would leave the
+    // seller unnamed on every product page. The shared @id still ties this to
+    // the homepage Organization for consumers that do merge across pages.
+    seller: { '@type': 'Organization', '@id': ORG_ID, name: site.name, url: absolute('/') },
     // The site sells made-to-order goods through a quote, not a cart. There is
     // no checkout URL to advertise, so no potentialAction is claimed.
     businessFunction: 'http://purl.org/goodrelations/v1#Sell',
@@ -322,6 +339,10 @@ export function product(opts: {
     url,
     image: opts.images.map((i) => asset(i)),
     brand: { '@type': 'Brand', name: site.name },
+    // The catalog has no separate SKU system — the slug IS the product's
+    // stable unique identifier, so it is used verbatim rather than inventing
+    // a parallel code that maps to nothing.
+    sku: path(opts.slug).replace(/^\/|\/$/g, ''),
     offers: offer,
   };
 
