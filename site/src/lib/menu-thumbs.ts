@@ -16,9 +16,13 @@ import type { PageContent } from '../data/page-content';
 import { PRODUCT_MENU } from '../data/navigation';
 import { PUBLISHED_STATES, PUBLISHED_CITIES } from '../data/locations';
 
-const pngs = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png', {
-  eager: true,
-});
+// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob —
+// critical here because this glob is eager, so a sidecar would be imported as
+// an image at build time and crash the build.
+const pngs = import.meta.glob<{ default: ImageMetadata }>(
+  ['../assets/products/**/*.png', '!**/._*'],
+  { eager: true }
+);
 const industryContent = import.meta.glob<{ default: PageContent }>(
   '../content/pages/industries/*.ts',
   { eager: true }

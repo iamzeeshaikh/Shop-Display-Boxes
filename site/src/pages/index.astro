@@ -13,7 +13,7 @@ import FaqAccordion from '../components/FaqAccordion.astro';
 import MotionRuntime from '../components/MotionRuntime.astro';
 import ScrollBox3D from '../components/ScrollBox3D.astro';
 import PinnedProcess from '../components/PinnedProcess.astro';
-import { FEATURED_PRODUCTS, PRODUCTS } from '../data/products';
+import { FEATURED_PRODUCTS, PRODUCTS, getProduct } from '../data/products';
 import { business } from '../data/business';
 import { graph, organization, localBusiness, website, webPage, faqPage } from '../lib/schema';
 import manifest from '../assets/products/manifest.json';
@@ -27,7 +27,11 @@ const seo = {
 
 const price = business.startingPricePerPiece.value;
 
-const imageModules = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png');
+// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob.
+const imageModules = import.meta.glob<{ default: ImageMetadata }>([
+  '../assets/products/**/*.png',
+  '!**/._*',
+]);
 const files = manifest as Record<string, Array<{ file: string }>>;
 
 async function loadFirst(slug: string) {
@@ -51,7 +55,7 @@ const gallery = await Promise.all(
     'counter-display-boxes',
     'soap-display-boxes',
     'display-trays',
-  ].map(async (slug) => ({ slug, image: await loadFirst(slug) }))
+  ].map(async (slug) => ({ slug, name: getProduct(slug).name, image: await loadFirst(slug) }))
 );
 
 const industries = [
@@ -182,7 +186,7 @@ const schema = graph(
                 {image && (
                   <Image
                     src={image}
-                    alt=""
+                    alt={`${product.name} — custom printed display box`}
                     widths={[280, 560]}
                     sizes="(min-width: 60em) 18rem, 45vw"
                     format="webp"
@@ -342,13 +346,13 @@ const schema = graph(
       <h2>Production work, by the problem it solved</h2>
       <ul class="gallery-grid fx-stagger">
         {
-          gallery.map(({ slug, image }) =>
+          gallery.map(({ slug, name, image }) =>
             image ? (
               <li>
                 <a href={`/${slug}/`}>
                   <Image
                     src={image}
-                    alt=""
+                    alt={`${name} — production example`}
                     widths={[260, 520]}
                     sizes="(min-width: 60em) 16rem, 45vw"
                     format="webp"

@@ -18,9 +18,11 @@ const posts = Object.values(
   .map((m) => m.default)
   .sort((a, b) => (a.published < b.published ? 1 : -1));
 
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '../../assets/products/**/*.png'
-);
+// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob.
+const imageModules = import.meta.glob<{ default: ImageMetadata }>([
+  '../../assets/products/**/*.png',
+  '!**/._*',
+]);
 
 const cards = await Promise.all(
   posts.map(async (post) => {
@@ -95,11 +97,12 @@ const [lead, ...rest] = cards;
             {lead.image && (
               <Image
                 src={lead.image}
-                alt=""
+                alt={lead.post.image.alt}
                 widths={[520, 1040]}
                 sizes="(min-width: 60em) 34rem, 94vw"
                 format="webp"
                 loading="eager"
+                fetchpriority="high"
                 class="lead-card__img"
               />
             )}
@@ -127,7 +130,7 @@ const [lead, ...rest] = cards;
                 {image && (
                   <Image
                     src={image}
-                    alt=""
+                    alt={post.image.alt}
                     widths={[300, 600]}
                     sizes="(min-width: 60em) 20rem, 45vw"
                     format="webp"

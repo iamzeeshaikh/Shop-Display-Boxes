@@ -41,9 +41,11 @@ const crumbs: Crumb[] = [
 ];
 
 // Resolve the featured image from the shared product asset library.
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '../../assets/products/**/*.png'
-);
+// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob.
+const imageModules = import.meta.glob<{ default: ImageMetadata }>([
+  '../../assets/products/**/*.png',
+  '!**/._*',
+]);
 const loader = imageModules[`../../assets/products/${post.image.productSlug}/${post.image.file}`];
 if (!loader) {
   throw new Error(

@@ -55,7 +55,11 @@ const rating = aggregateFor(productReviews);
  * Open Graph tag point at files that actually exist. Astro writes optimized,
  * content-hashed assets, so the source filename is not the delivered URL.
  */
-const imageModules = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png');
+// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob.
+const imageModules = import.meta.glob<{ default: ImageMetadata }>([
+  '../assets/products/**/*.png',
+  '!**/._*',
+]);
 
 const schemaImages = await Promise.all(
   content.imageAlts.slice(0, 4).map(async (entry) => {

@@ -14,7 +14,11 @@ interface Props {
 }
 const { slugs, heading = 'Related display packaging' } = Astro.props;
 
-const modules = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png');
+// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob.
+const modules = import.meta.glob<{ default: ImageMetadata }>([
+  '../assets/products/**/*.png',
+  '!**/._*',
+]);
 
 const items = await Promise.all(
   slugs.map(async (slug) => {
@@ -36,7 +40,7 @@ const items = await Promise.all(
             {image && (
               <Image
                 src={image}
-                alt=""
+                alt={`${product.name} — custom printed display packaging`}
                 widths={[220, 440]}
                 sizes="(min-width: 48em) 15rem, 45vw"
                 format="webp"

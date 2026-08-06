@@ -22,7 +22,12 @@ const { slug, imageAlts, productName } = Astro.props;
 // Eagerly collect this product's images from the assets directory.
 // Lazy glob: only the images this product actually renders are imported, so
 // unused source PNGs are never emitted into the build output.
-const modules = import.meta.glob<{ default: ImageMetadata }>('../assets/products/**/*.png');
+// The '!**/._*' negation excludes macOS AppleDouble sidecar files, which the
+// exFAT drive creates next to every image — they match *.png but are not PNGs.
+const modules = import.meta.glob<{ default: ImageMetadata }>([
+  '../assets/products/**/*.png',
+  '!**/._*',
+]);
 
 const images = await Promise.all(
   imageAlts.map(async (entry) => {
@@ -99,13 +104,13 @@ const [primary, ...rest] = images;
               data-srcset={built[i].srcset}
             >
               {/*
-                The thumbnail image is decorative: the button's aria-label
-                already carries the description, so alt text here would be
-                announced twice.
+                The thumbnail carries its descriptive alt for image SEO. It is
+                not announced twice: the button's aria-label overrides its
+                content in the accessible-name computation.
               */}
               <Image
                 src={img.src}
-                alt=""
+                alt={img.alt}
                 widths={[72, 144]}
                 sizes="72px"
                 format="webp"

@@ -34,7 +34,11 @@ async function pngsIn(folder) {
   if (!existsSync(dir)) {
     throw new Error(`Source folder missing: ${folder}`);
   }
-  const files = (await readdir(dir)).filter((f) => /\.png$/i.test(f)).sort(naturalSort);
+  // `!f.startsWith('._')` excludes macOS AppleDouble sidecars, which exFAT
+  // drives create next to every file — they match *.png but are not images.
+  const files = (await readdir(dir))
+    .filter((f) => /\.png$/i.test(f) && !f.startsWith('._'))
+    .sort(naturalSort);
   return files.map((f) => path.join(dir, f));
 }
 
