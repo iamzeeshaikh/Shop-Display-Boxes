@@ -7,6 +7,7 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import Analytics from '../components/Analytics.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { buildSeo, type SeoInput } from '../lib/seo';
 import { site, analytics } from '../data/business';
 
@@ -89,6 +90,7 @@ const seo = buildSeo(seoInput);
       <slot />
     </main>
     <SiteFooter />
+    <WhatsAppButton />
     <!-- ZeeOps live chat — conversations land in the dashboard at
          chat.zeeops.dev under the shopdisplayboxes site. -->
     <script is:inline>
