@@ -84,7 +84,7 @@ const content: PageContent = {
       link: {
         text: 'What affects shipping cost and risk is covered under',
         href: '/shipping-information/',
-        anchor: 'shipping information',
+        anchor: 'shipping and delivery information',
       },
     },
     {

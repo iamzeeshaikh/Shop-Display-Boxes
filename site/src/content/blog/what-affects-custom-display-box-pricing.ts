@@ -86,7 +86,7 @@ const post: BlogPost = {
       link: {
         text: 'What drives freight on this product is covered under',
         href: '/shipping-information/',
-        anchor: 'shipping information',
+        anchor: 'shipping and delivery information',
       },
     },
     {

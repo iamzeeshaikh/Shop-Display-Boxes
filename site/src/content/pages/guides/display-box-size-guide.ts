@@ -76,7 +76,7 @@ const content: PageContent = {
       link: {
         text: 'What drives freight cost is covered under',
         href: '/shipping-information/',
-        anchor: 'shipping information',
+        anchor: 'shipping and delivery information',
       },
     },
   ],
