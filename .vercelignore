@@ -1,0 +1,30 @@
+# Deliberately minimal — NOT a mirror of .gitignore.
+#
+# Once this file exists Vercel uses it instead of .gitignore, so anything the
+# remote build needs must keep uploading. In particular site/src/assets/products/
+# is gitignored (it is generated from Images/ by `npm run images`) but the remote
+# build reads it, so it must NOT be listed here.
+
+# Vercel installs dependencies and runs the build.
+node_modules
+site/node_modules
+site/dist
+site/.astro
+site/.vercel
+
+# Real values come from the project's environment variables.
+.env
+.env.*
+site/.env
+site/.env.*
+
+# The exFAT drive writes an AppleDouble `._name` sidecar next to every file.
+# Without this they upload and get served as 4KB junk with a real image
+# Content-Type — /brand/._shop-display-boxes-logo.png returned 200 as image/png
+# before this was added.
+._*
+.DS_Store
+
+*.log
+.vscode
+.idea
