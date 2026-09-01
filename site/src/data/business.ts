@@ -70,7 +70,7 @@ export const business = {
    * That is plausible for a ported or VOIP number, but worth re-confirming —
    * it is rendered on every page.
    */
-  phone: verified({ e164: '+15033580443', display: '(503) 358-0443' }),
+  phone: verified({ e164: '+15034614788', display: '(503) 461-4788' }),
   email: verified('info@shopdisplayboxes.com'),
   supportEmail: unverified('Artwork/dieline inbox, if separate from sales.', false),
   /**
