@@ -15,6 +15,8 @@
  */
 
 import nodemailer from 'nodemailer';
+
+const LEAD_RECIPIENTS = ['shanimazhar82@gmail.com', 'dev@zeecustomboxes.com'] as const;
 import type { QuoteSubmission } from './form-validation';
 
 export type AdapterName = 'console' | 'resend' | 'sendgrid' | 'smtp' | 'webhook';
@@ -98,7 +100,6 @@ export function activeAdapter(): AdapterName {
 
 export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult> {
   const adapter = activeAdapter();
-  const to = env('FORM_TO_EMAIL');
   const from = env('FORM_FROM_EMAIL');
   const subject = `${payload.submission.formType}: ${payload.submission.name}${
     payload.submission.businessName ? ` — ${payload.submission.businessName}` : ''
@@ -108,13 +109,13 @@ export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult>
   switch (adapter) {
     case 'resend': {
       const key = env('RESEND_API_KEY');
-      if (!key || !to || !from) {
+      if (!key || !from) {
         return { delivered: false, adapter, detail: 'resend selected but not fully configured' };
       }
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from, to: [to], subject, text, reply_to: payload.submission.email }),
+        body: JSON.stringify({ from, to: [...LEAD_RECIPIENTS], subject, text, reply_to: payload.submission.email }),
       });
       return {
         delivered: res.ok,
@@ -125,14 +126,14 @@ export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult>
 
     case 'sendgrid': {
       const key = env('SENDGRID_API_KEY');
-      if (!key || !to || !from) {
+      if (!key || !from) {
         return { delivered: false, adapter, detail: 'sendgrid selected but not fully configured' };
       }
       const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          personalizations: [{ to: [{ email: to }] }],
+          personalizations: [{ to: LEAD_RECIPIENTS.map((email) => ({ email })) }],
           from: { email: from },
           reply_to: { email: payload.submission.email },
           subject,
@@ -178,15 +179,10 @@ export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult>
         };
       }
 
-      // Recipient and sender, with the FORM_* names as fallbacks.
-      const recipient = env('SMTP_TO') || to;
+      // Sender configuration remains environment-specific; recipients are fixed.
       const senderEmail = env('SMTP_FROM_EMAIL') || from || user;
       const senderName = env('SMTP_FROM_NAME') || '';
       const sender = senderName ? `"${senderName}" <${senderEmail}>` : senderEmail;
-
-      if (!recipient) {
-        return { delivered: false, adapter, detail: 'smtp selected but SMTP_TO is unset' };
-      }
 
       try {
         const transport = nodemailer.createTransport({
@@ -204,7 +200,7 @@ export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult>
 
         await transport.sendMail({
           from: sender,
-          to: recipient,
+          to: [...LEAD_RECIPIENTS],
           subject,
           text,
           // Replies go to the customer, not to the mailbox that sent it.

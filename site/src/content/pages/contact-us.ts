@@ -48,7 +48,7 @@ const content: PageContent = {
     {
       heading: 'Contact details',
       body: [
-        'Call (503) 358-0443 or email info@shopdisplayboxes.com. Our registered address is 1639 70th St, Brooklyn, NY 11204.',
+        'Call (503) 461-4788 or email info@shopdisplayboxes.com. Our registered address is 1639 70th St, Brooklyn, NY 11204.',
         'Enquiries are handled 24/7. That is contact availability rather than a walk-in counter — the Brooklyn address is not a collection point, and production still runs to the stated 5–7 business day schedule from proof approval.',
       ],
     },
@@ -56,7 +56,7 @@ const content: PageContent = {
 
   faqs: [
     { question: 'How quickly will you reply?', answer: 'We aim to come back promptly. We are not publishing a guaranteed response time we have not committed to — if your enquiry is tied to a deadline, say so and we will tell you whether it is achievable.' },
-    { question: 'Can I call instead of using a form?', answer: 'Yes — (503) 358-0443, and enquiries are handled 24/7. For anything involving dimensions or quantities, a form usually still gets you a faster and more accurate answer, because it captures the details we would otherwise have to ask for on a second call.' },
+    { question: 'Can I call instead of using a form?', answer: 'Yes — (503) 461-4788, and enquiries are handled 24/7. For anything involving dimensions or quantities, a form usually still gets you a faster and more accurate answer, because it captures the details we would otherwise have to ask for on a second call.' },
     { question: 'Do you have a showroom or trade counter?', answer: 'Our registered address is in Brooklyn, New York, but it is not a published showroom or collection point and we are not going to describe it as one. Orders are produced to specification and shipped to your business address.' },
     { question: 'What information should I include in a general enquiry?', answer: 'What the enquiry concerns, and if it relates to a job, the product and quantity. Those two answer most of the follow-up questions before they are asked.' },
     { question: 'Can I send artwork through the contact form?', answer: 'The quote and dieline forms accept artwork uploads with file type and size validation. For a general enquiry it is usually better to describe what you need first and send files once we know what is relevant.' },

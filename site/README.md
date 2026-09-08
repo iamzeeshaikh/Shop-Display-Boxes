@@ -13,7 +13,7 @@ change them there and every page and schema block updates on the next build.
 | Fact | Value |
 | --- | --- |
 | Legal / trading name | Shop Display Boxes |
-| Phone | (503) 358-0443 |
+| Phone | (503) 461-4788 |
 | Email | info@shopdisplayboxes.com |
 | Address | 1639 70th St, Brooklyn, NY 11204, USA |
 | Hours | 24/7 (contact availability) |
