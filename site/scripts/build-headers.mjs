@@ -53,6 +53,15 @@ const DIST = resolveOutDir(DIST_ROOT);
 const ANALYTICS = 'https://www.googletagmanager.com https://www.google-analytics.com';
 
 /**
+ * GA4 does not always beacon to www.google-analytics.com: gtag picks a regional
+ * collector (region1.google-analytics.com) and Google Signals uses
+ * *.analytics.google.com. connect-src and img-src have to cover both or the
+ * hits are blocked silently and the property records nothing.
+ */
+const ANALYTICS_TRANSPORT =
+  `${ANALYTICS} https://*.google-analytics.com https://*.analytics.google.com`;
+
+/**
  * ZeeOps live-chat widget host. It loads widget.js, then talks to the same
  * origin for config/messages/uploads and renders visitor image attachments
  * from it — so it needs script-src, connect-src and img-src.
@@ -108,8 +117,8 @@ async function main() {
     `style-src 'self' 'unsafe-inline'`,
     // Fonts are self-hosted; no external font host is permitted.
     `font-src 'self'`,
-    `img-src 'self' data: blob: ${ANALYTICS} ${CHAT}`,
-    `connect-src 'self' ${ANALYTICS} ${CHAT}`,
+    `img-src 'self' data: blob: ${ANALYTICS_TRANSPORT} ${CHAT}`,
+    `connect-src 'self' ${ANALYTICS_TRANSPORT} ${CHAT}`,
     `manifest-src 'self'`,
     `upgrade-insecure-requests`,
   ].join('; ');

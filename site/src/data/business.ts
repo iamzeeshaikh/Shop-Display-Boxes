@@ -195,7 +195,7 @@ function publicEnv(key: string): string {
 
 /** Analytics IDs. Integrations load ONLY when a real ID is present in env. */
 export const analytics = {
-  ga4MeasurementId: publicEnv('PUBLIC_GA4_MEASUREMENT_ID'),
+  ga4MeasurementId: publicEnv('PUBLIC_GA4_MEASUREMENT_ID') || 'G-LBYLH6MBQQ',
   gtmContainerId: publicEnv('PUBLIC_GTM_CONTAINER_ID'),
   googleSiteVerification: publicEnv('PUBLIC_GOOGLE_SITE_VERIFICATION'),
   googleAdsConversionId: publicEnv('PUBLIC_GOOGLE_ADS_CONVERSION_ID'),
