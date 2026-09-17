@@ -38,6 +38,7 @@ const hasGtm = /^GTM-[A-Z0-9]+$/.test(gtmContainerId);
         is:inline
         set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4MeasurementId}',{anonymize_ip:true});`}
       />
+      <script is:inline defer src="/ga4-events.js" />
     </>
   )
 }
