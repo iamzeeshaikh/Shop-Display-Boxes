@@ -68,6 +68,15 @@ const ANALYTICS_TRANSPORT =
  */
 const CHAT = 'https://chat.zeeops.dev';
 
+/**
+ * Microsoft Clarity (heatmaps + session recordings). The tag is fetched from
+ * www.clarity.ms and then beacons to a regional subdomain (*.clarity.ms) and to
+ * Microsoft's collector hosts, so script-src, connect-src and img-src all have
+ * to permit it or the tag is dropped with no visible error.
+ */
+const CLARITY_SCRIPT = 'https://www.clarity.ms https://*.clarity.ms';
+const CLARITY_TRANSPORT = 'https://*.clarity.ms https://*.microsoft.com https://c.bing.com';
+
 async function walk(dir, out = []) {
   for (const e of await readdir(dir, { withFileTypes: true })) {
     const full = path.join(dir, e.name);
@@ -108,7 +117,7 @@ async function main() {
     // than the legacy X-Frame-Options header.
     `frame-ancestors 'none'`,
     `object-src 'none'`,
-    `script-src 'self' ${ANALYTICS} ${CHAT} ${[...scriptHashes].join(' ')}`,
+    `script-src 'self' ${ANALYTICS} ${CLARITY_SCRIPT} ${CHAT} ${[...scriptHashes].join(' ')}`,
     // 'unsafe-inline' rather than the page's own style hashes: the chat widget
     // builds its stylesheet at runtime (the brand colour is fetched per-site),
     // so no build-time hash can cover it. CSP Level 3 ignores 'unsafe-inline'
@@ -117,8 +126,8 @@ async function main() {
     `style-src 'self' 'unsafe-inline'`,
     // Fonts are self-hosted; no external font host is permitted.
     `font-src 'self'`,
-    `img-src 'self' data: blob: ${ANALYTICS_TRANSPORT} ${CHAT}`,
-    `connect-src 'self' ${ANALYTICS_TRANSPORT} ${CHAT}`,
+    `img-src 'self' data: blob: ${ANALYTICS_TRANSPORT} ${CLARITY_TRANSPORT} ${CHAT}`,
+    `connect-src 'self' ${ANALYTICS_TRANSPORT} ${CLARITY_TRANSPORT} ${CHAT}`,
     `manifest-src 'self'`,
     `upgrade-insecure-requests`,
   ].join('; ');
