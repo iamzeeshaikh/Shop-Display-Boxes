@@ -32,12 +32,21 @@ export interface DeliveryPayload {
   submission: QuoteSubmission;
   attachments: Array<{ filename: string; size: number; content?: Buffer }>;
   receivedAt: string;
+  /** Path of the page the form was sent from ("/" when unknown). */
+  sourcePath?: string;
+  /** Set when an anti-spam check tripped. The lead is still delivered, labelled. */
+  spamReason?: string;
 }
 
 function env(key: string): string {
-  // import.meta.env is populated at build; process.env at runtime on the server.
-  return (import.meta.env?.[key] as string) ?? process.env?.[key] ?? '';
+  // Runtime env first: Vercel holds the live values in process.env. A build-time
+  // empty string in import.meta.env must not shadow them.
+  return process.env?.[key] || (import.meta.env?.[key] as string) || '';
 }
+
+/** The intake script files a lead under this site only when the mail names it. */
+const SITE_ORIGIN = 'https://shopdisplayboxes.com';
+const SITE_HOST = 'shopdisplayboxes.com';
 
 /**
  * Plain-text body. Values are inserted as text, never as HTML.
@@ -53,6 +62,8 @@ function renderBody(payload: DeliveryPayload): string {
   const lines = [
     `New ${s.formType} submission`,
     `Received: ${payload.receivedAt}`,
+    `Submitted from: ${SITE_ORIGIN}${payload.sourcePath || '/'}`,
+    ...(payload.spamReason ? [`Spam check: ${payload.spamReason}`] : []),
     '',
     `${label('Name')}${s.name}`,
     `${label('Email')}${s.email}`,
@@ -93,17 +104,22 @@ function renderBody(payload: DeliveryPayload): string {
 }
 
 export function activeAdapter(): AdapterName {
-  const configured = env('FORM_ADAPTER').toLowerCase();
-  const known: AdapterName[] = ['console', 'resend', 'sendgrid', 'smtp', 'webhook'];
-  return (known as string[]).includes(configured) ? (configured as AdapterName) : 'console';
+  const configured = env('FORM_ADAPTER').trim().toLowerCase();
+  const known: AdapterName[] = ['resend', 'sendgrid', 'smtp', 'webhook'];
+  if ((known as string[]).includes(configured)) return configured as AdapterName;
+  // Unset, "console" or a typo: if SMTP credentials exist, send with them rather
+  // than logging the lead and dropping it.
+  if (env('SMTP_HOST') && env('SMTP_USER') && (env('SMTP_PASS') || env('SMTP_PASSWORD'))) return 'smtp';
+  return 'console';
 }
 
 export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult> {
   const adapter = activeAdapter();
   const from = env('FORM_FROM_EMAIL');
-  const subject = `${payload.submission.formType}: ${payload.submission.name}${
-    payload.submission.businessName ? ` — ${payload.submission.businessName}` : ''
-  }`;
+  const s = payload.submission;
+  const subject = `${payload.spamReason ? '[Possible spam] ' : ''}Quote request — ${s.product || s.formType} — ${s.name}${
+    s.businessName ? ` (${s.businessName})` : ''
+  } — ${SITE_HOST}`.replace(/[\r\n]+/g, ' ');
   const text = renderBody(payload);
 
   switch (adapter) {

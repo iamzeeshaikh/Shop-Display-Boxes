@@ -95,21 +95,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     }
   }
 
-  // ── Anti-automation. Return 200 on honeypot so bots learn nothing. ────────
-  const honeypot = checkHoneypot(fields);
-  if (honeypot) {
-    console.warn(`[form] rejected: ${honeypot}`);
-    return new Response(JSON.stringify({ ok: true, message: 'Thank you.' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  const timing = checkTiming(fields.startedAt);
-  if (timing) {
-    console.warn(`[form] rejected: ${timing}`);
-    return reject(400, 'That submission could not be processed. Please try again.');
-  }
+  // ── Anti-automation. A tripped check never drops the lead: it is still
+  // delivered, labelled "[Possible spam]", and the visitor sees the normal reply.
+  const spamReason = checkHoneypot(fields) ?? checkTiming(fields.startedAt) ?? undefined;
+  if (spamReason) console.warn(`[form] possible spam: ${spamReason}`);
 
   // ── Field validation ──────────────────────────────────────────────────────
   const result = validateQuote(fields);
@@ -138,33 +127,39 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // ── Delivery ──────────────────────────────────────────────────────────────
+  let sourcePath = '/';
+  try {
+    const ref = new URL(request.headers.get('referer') ?? '');
+    if (ref.hostname.endsWith('shopdisplayboxes.com')) sourcePath = ref.pathname;
+  } catch {
+    /* no or foreign referer: keep "/" */
+  }
+
   const delivery = await deliver({
     submission: result.data!,
     attachments,
     receivedAt: new Date().toISOString(),
+    sourcePath,
+    spamReason,
   });
 
   if (!delivery.delivered) {
-    // Log the reason; tell the visitor something true and useful.
-    console.error(`[form] not delivered via ${delivery.adapter}: ${delivery.detail}`);
-    if (delivery.adapter === 'console') {
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          message: 'Thank you — your enquiry has been received.',
-          note: 'Delivery is not configured on this environment.',
-        }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+    // Never tell the visitor "sent" when nothing was sent. The full submission is
+    // logged so the lead can still be recovered from the runtime logs.
+    console.error(`[form] NOT delivered via ${delivery.adapter}: ${delivery.detail}`, {
+      ...result.data,
+      sourcePath,
+      spamReason,
+    });
     // 503, not 502: a 502 reads as a crashed function and gets masked by the
     // CDN's own error page, hiding the real reason from the logs and the visitor.
     return reject(
       503,
-      'We could not send that just now. Please email us directly and we will pick it up.',
+      'We could not send that just now. Please email info@shopdisplayboxes.com or call (503) 358-0443 and we will pick it up.',
     );
   }
 
+  console.log(`[form] delivered via ${delivery.adapter}${spamReason ? ' (possible spam)' : ''}`);
   return new Response(
     JSON.stringify({ ok: true, message: 'Thank you — your enquiry has been received.' }),
     { status: 200, headers: { 'Content-Type': 'application/json' } }
