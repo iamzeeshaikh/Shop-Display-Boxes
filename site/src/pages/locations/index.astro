@@ -1,4 +1,6 @@
 ---
+import { withExtras, extraFaqs, extraHeading } from '../../lib/page-faqs';
+import FaqAccordion from '../../components/FaqAccordion.astro';
 /**
  * Location hub — the only site-wide entry point to location pages.
  *
@@ -13,7 +15,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { PUBLISHED_STATES, PUBLISHED_CITIES } from '../../data/locations';
-import { graph, webPage, breadcrumbs as breadcrumbSchema, type Crumb } from '../../lib/schema';
+import { graph, webPage, breadcrumbs as breadcrumbSchema, type Crumb, faqPage } from '../../lib/schema';
 
 const url = '/locations/';
 const crumbs: Crumb[] = [
@@ -30,7 +32,8 @@ const seo = {
 
 const schema = graph(
   webPage({ url, name: 'Locations we ship to', description: seo.description, type: 'CollectionPage' }),
-  breadcrumbSchema(crumbs)
+  breadcrumbSchema(crumbs),
+  extraFaqs(Astro.url.pathname).length ? faqPage(extraFaqs(Astro.url.pathname)) : null
 );
 
 const statesWithCities = PUBLISHED_STATES.filter((s) => s.cities.length > 0);
@@ -142,6 +145,11 @@ const statesWithoutCities = PUBLISHED_STATES.filter((s) => s.cities.length === 0
       </div>
     </div>
   </section>
+  {extraFaqs(Astro.url.pathname).length > 0 && (
+    <section class="section"><div class="container container--prose">
+      <FaqAccordion faqs={extraFaqs(Astro.url.pathname)} heading={extraHeading(Astro.url.pathname)} />
+    </div></section>
+  )}
 </BaseLayout>
 
 <style>

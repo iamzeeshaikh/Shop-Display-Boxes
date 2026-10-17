@@ -1,4 +1,5 @@
 ---
+import { withExtras, extraFaqs, extraHeading } from '../lib/page-faqs';
 /**
  * Product page body. Rendered by the root [slug] route when the slug resolves
  * to a product. Owns its own <BaseLayout> so each page type controls its own
@@ -85,7 +86,7 @@ const schema = graph(
     aggregateRating: rating,
     reviews: productReviews,
   }),
-  faqPage(content.faqs)
+  faqPage(withExtras(Astro.url.pathname, content.faqs))
 );
 ---
 
@@ -215,7 +216,7 @@ const schema = graph(
   <section class="section">
     <div class="container container--wide">
       <FaqAccordion
-        faqs={content.faqs}
+        faqs={withExtras(Astro.url.pathname, content.faqs)}
         heading={`${record.name} — questions we get asked`}
         intro="Answers specific to this style. For ordering, artwork, and shipping questions that apply across the range, see the general FAQ."
       />

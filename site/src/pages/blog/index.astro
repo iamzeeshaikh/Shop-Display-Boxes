@@ -1,4 +1,6 @@
 ---
+import { withExtras, extraFaqs, extraHeading } from '../../lib/page-faqs';
+import FaqAccordion from '../../components/FaqAccordion.astro';
 /**
  * Blog index.
  *
@@ -10,7 +12,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { readingTime, type BlogPost, type BlogTag } from '../../data/blog';
-import { graph, webPage, breadcrumbs as breadcrumbSchema, type Crumb } from '../../lib/schema';
+import { graph, webPage, breadcrumbs as breadcrumbSchema, type Crumb, faqPage } from '../../lib/schema';
 
 const posts = Object.values(
   import.meta.glob<{ default: BlogPost }>('../../content/blog/*.ts', { eager: true })
@@ -56,7 +58,8 @@ const seo = {
 
 const schema = graph(
   webPage({ url, name: 'Display Packaging Blog', description: seo.description, type: 'CollectionPage' }),
-  breadcrumbSchema(crumbs)
+  breadcrumbSchema(crumbs),
+  extraFaqs(Astro.url.pathname).length ? faqPage(extraFaqs(Astro.url.pathname)) : null
 );
 
 const [lead, ...rest] = cards;
@@ -150,6 +153,11 @@ const [lead, ...rest] = cards;
       </ul>
     </div>
   </section>
+  {extraFaqs(Astro.url.pathname).length > 0 && (
+    <section class="section"><div class="container container--prose">
+      <FaqAccordion faqs={extraFaqs(Astro.url.pathname)} heading={extraHeading(Astro.url.pathname)} />
+    </div></section>
+  )}
 </BaseLayout>
 
 <style>

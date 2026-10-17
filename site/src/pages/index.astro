@@ -1,4 +1,5 @@
 ---
+import { withExtras, extraFaqs, extraHeading } from '../lib/page-faqs';
 /**
  * Homepage.
  *
@@ -89,7 +90,7 @@ const schema = graph(
   localBusiness(),
   website(),
   webPage({ url: '/', name: seo.title, description: seo.description }),
-  faqPage(faqs)
+  faqPage(withExtras('/', faqs))
 );
 ---
 
@@ -374,7 +375,7 @@ const schema = graph(
 
   <section class="section">
     <div class="container container--wide">
-      <FaqAccordion faqs={faqs} heading="Common questions" />
+      <FaqAccordion faqs={withExtras('/', faqs)} heading="Common questions" />
     </div>
   </section>
 

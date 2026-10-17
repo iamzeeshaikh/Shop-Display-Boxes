@@ -1,4 +1,5 @@
 ---
+import { withExtras, extraFaqs, extraHeading } from '../lib/page-faqs';
 /**
  * Location page body, used for both state and city pages.
  *
@@ -68,7 +69,7 @@ const isHomeLocation = (() => {
   return addr.addressRegion === state!.abbr;
 })();
 
-const faqs = LOCATION_FAQS[location.slug] ?? [];
+const faqs = withExtras(Astro.url.pathname, LOCATION_FAQS[location.slug] ?? []);
 if (faqs.length < 8) {
   throw new Error(
     `Location "${location.slug}" has ${faqs.length} FAQs; at least 8 are required. ` +

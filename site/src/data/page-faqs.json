@@ -1,0 +1,1960 @@
+{
+ "/": {
+  "h2": "More questions about custom display boxes",
+  "faqs": [
+   {
+    "q": "Can Shop Display Boxes size a display box from the product itself?",
+    "a": "Yes. Send a real unit and we draw the dieline around it, measuring at the widest point, which is usually the cap rather than the body. Internal dimensions are the ones that decide fit, and board thickness changes them."
+   },
+   {
+    "q": "Should a custom display box start from counter, shelf or floor placement?",
+    "a": "Placement is the most useful first filter. It sets the footprint a retailer allows and the angle a shopper views from. Counters favor building upward, shelves are planogram constrained, and floor units carry the most stock and their own load."
+   }
+  ]
+ },
+ "/about-us/": {
+  "h2": "How Shop Display Boxes works with you",
+  "faqs": [
+   {
+    "q": "Will Shop Display Boxes recommend a cheaper board than the one I requested?",
+    "a": "If a lighter board, a simpler structure or a different quantity break meets the same requirement for less money, we say so at quoting stage rather than quoting the more expensive route silently."
+   },
+   {
+    "q": "How does Shop Display Boxes decide which board a display needs?",
+    "a": "We specify against the weight of a full assortment relative to the unsupported span of the base, and how the display travels. Category does not decide it, and we plan for sustained load because paperboard bows gradually over days."
+   },
+   {
+    "q": "What display formats does Shop Display Boxes make for retail brands?",
+    "a": "Counter displays, floor-standing units, shelf-ready cases, trays, mailers that convert to displays, and category formats for candles, soap, food and regulated products. Everything is printed to your artwork and sized to your product."
+   },
+   {
+    "q": "Will Shop Display Boxes refuse a display specification that will fail?",
+    "a": "We will tell you before producing it. If a board is too light for glass or a structure will not survive transit, you hear that at quoting stage, together with what would work instead, rather than after the run."
+   }
+  ]
+ },
+ "/artwork-guidelines/": {
+  "h2": "More display box artwork questions",
+  "faqs": [
+   {
+    "q": "How should I prepare display box artwork for printing on kraft board?",
+    "a": "Design for the brown substrate from the start. Ink is not opaque, so colors print warmer and darker than on white board, and light colors may need a white underprint to read at all."
+   },
+   {
+    "q": "Can artwork graphics cross a crease on a display box?",
+    "a": "Images and background colors can cross a crease without trouble, though a hard-edged graphic shows a slight break at the fold. Live text should stay clear, and anything that must stay readable belongs on a panel face, not a tuck flap."
+   }
+  ]
+ },
+ "/bakery-display-packaging/": {
+  "h2": "More bakery display packaging questions",
+  "faqs": [
+   {
+    "q": "Does a paper band count as direct contact on bakery packaging?",
+    "a": "Yes, treat it that way. Paper bands and partial sleeves leave exposed faces touching the board, so food-grade material, compliant coatings and migration limits still apply to anything that is not fully sealed."
+   }
+  ]
+ },
+ "/best-material-for-display-boxes/": {
+  "h2": "More questions on choosing display box material",
+  "faqs": [
+   {
+    "q": "Why can a display box pass a bench test and still fail in store?",
+    "a": "Paperboard fails by creep, a gradual deformation under sustained weight, rather than sudden collapse. Load the display, lift it by one edge, then check again after several days loaded, because a day-one result misleads."
+   },
+   {
+    "q": "In what order should I work through display box material choices?",
+    "a": "Start with filled weight against base span, then how it travels, what the print must do, whether anything attacks the board, and recyclability. Later steps constrain the finish, so settling them first tends to produce a structure that fails."
+   }
+  ]
+ },
+ "/blog/": {
+  "h2": "About the Shop Display Boxes blog",
+  "faqs": [
+   {
+    "q": "Who are the Shop Display Boxes blog articles written for?",
+    "a": "They are written for the person specifying packaging, not for search engines. Each article covers a decision you will actually face on materials, printing, structure or cost, so you can brief a supplier with fewer surprises."
+   },
+   {
+    "q": "Which Shop Display Boxes blog article explains what a display box is?",
+    "a": "Start with <a href=\"/blog/what-are-display-boxes/\">what display boxes are and do</a>. It explains how a display box does merchandising work rather than only containing product, and why that changes how it is designed, specified and paid for."
+   },
+   {
+    "q": "Does the display packaging blog cover corrugated flute types?",
+    "a": "Yes. The corrugated flute article explains that flute height trades stacking strength against print surface, and understanding which way that trade runs tells you most of what you need to know when specifying corrugated."
+   },
+   {
+    "q": "Which blog guide helps me choose display box board thickness?",
+    "a": "The cardboard thickness guide covers it. Board is measured in points, and going heavier is not always better, because above a certain caliper creasing and cracking become the limiting problems on a display."
+   },
+   {
+    "q": "Does the Shop Display Boxes blog compare CMYK and Pantone printing?",
+    "a": "Yes. That article explains that a brand color built from four process inks shifts with press conditions, stock and coating, while a spot ink is mixed to a reference, and that difference decides which one to specify."
+   },
+   {
+    "q": "Which blog articles cover display box pricing and cost reduction?",
+    "a": "Two do. One walks through what each element of a display box quote represents and which parts move. The other ranks the cost levers by impact, including two common moves that tend to backfire."
+   },
+   {
+    "q": "Is there a blog guide on display packaging production timelines?",
+    "a": "Yes. The timeline article explains that lead time depends on the job, but not evenly, because most of the variability sits in one stage, and it is not the stage most buyers plan around."
+   },
+   {
+    "q": "Does the display packaging blog cover recyclable display materials?",
+    "a": "The sustainable materials article does. It explains that recyclability is decided mostly by the coating rather than the board or its recycled content, and that the coating is usually the decision made last."
+   },
+   {
+    "q": "Is there a blog article about QR codes on retail display boxes?",
+    "a": "Yes. It explains that a QR code that does not scan is worse than none, and that most failures come from four printing decisions rather than from the code itself."
+   },
+   {
+    "q": "Which display packaging blog post covers common retail mistakes?",
+    "a": "The mistakes article covers the handful of predictable errors that cause most display failures. They are rarely aesthetic and are usually made early, often before anything has been drawn."
+   }
+  ]
+ },
+ "/blog/cardboard-thickness-guide-for-display-boxes/": {
+  "h2": "Cardboard thickness questions answered",
+  "faqs": [
+   {
+    "q": "How is cardboard thickness measured for display boxes?",
+    "a": "Folding boxboard is measured in points, where one point is one thousandth of an inch. A 24 pt board is 0.024 inches thick, and display work generally falls between 14 pt and 28 pt."
+   },
+   {
+    "q": "Does a higher point caliper mean a stronger display box board?",
+    "a": "Not necessarily. Caliper measures thickness, not strength, and two boards of the same caliper in different grades behave differently. That is why a specification should name the grade as well as the thickness."
+   },
+   {
+    "q": "What is 14 pt to 18 pt boxboard best used for?",
+    "a": "Light structures such as small counter displays, header cards, sleeves and inserts. It creases very cleanly and folds into fine detail, but large unsupported panels flex noticeably at this weight, so it suits small formats."
+   },
+   {
+    "q": "Which board caliper suits most cardboard counter displays?",
+    "a": "The 20 pt to 24 pt range is the most common for counter displays and retail cartons. It gives enough rigidity for a base carrying light product while still creasing well and taking finishing processes cleanly."
+   },
+   {
+    "q": "When does a display box need 26 pt to 28 pt board?",
+    "a": "For heavier structures, larger panels and bases that must stay flat under some weight. It is also where trade-offs start, since very heavy board resists folding, creases less cleanly at small radii and can crack through a laminate."
+   },
+   {
+    "q": "Why can thicker board crack on a display box fold?",
+    "a": "On a tight fold radius, heavy board puts strain on the outer surface, which can crack visibly and through a laminate. On displays with fine die-cut detail, a lighter board with better structural design usually performs better."
+   },
+   {
+    "q": "How can I stiffen a flimsy cardboard display without thicker board?",
+    "a": "Change the geometry first. Returned edges stiffen a panel along its weakest axis, doubled panels add rigidity for one extra fold, full-area inserts support a flexing base, and internal risers move load into the walls."
+   },
+   {
+    "q": "At what point should I switch from thick boxboard to corrugated?",
+    "a": "Once the assortment is heavy, such as glass, dense liquids or bulk product. Adding caliper only delays creep, the slow bowing under sustained load, so beyond that point corrugated is the answer rather than thicker boxboard."
+   },
+   {
+    "q": "What happens if I change board caliper after approving a dieline?",
+    "a": "The folds stop sitting where they should, because allowances are calculated for one thickness. A tuck flap that held at 18 pt may buckle at 24 pt. Raise any board change before approval, since it means a redraw."
+   },
+   {
+    "q": "Do SBS, kraft-back and recycled board behave alike at one caliper?",
+    "a": "No. At the same thickness they crease differently and take a laminate differently, so specify the grade alongside the caliper. The guide to <a href=\"/box-materials/\">display box board materials</a> compares each grade in more detail."
+   }
+  ]
+ },
+ "/blog/cmyk-vs-pantone-printing-for-display-boxes/": {
+  "h2": "CMYK and Pantone questions answered",
+  "faqs": [
+   {
+    "q": "What is the difference between CMYK and Pantone on display boxes?",
+    "a": "CMYK builds a color by overlaying cyan, magenta, yellow and black at varying densities. A Pantone spot ink is mixed as a single ink to a defined reference before it reaches the press and printed as its own layer."
+   },
+   {
+    "q": "Why does a CMYK brand color drift between display box print runs?",
+    "a": "A built color depends on four variables landing correctly at once. Ink density, press conditions, stock absorbency and coating each shift it slightly, and combined across four inks the same file can print visibly differently on different days."
+   },
+   {
+    "q": "Which brand colors drift most in CMYK display box printing?",
+    "a": "Corporate blues, oranges and greens, because a small change in one ink moves the perceived hue noticeably in those regions. Neutral grays built from process inks are also unstable and can turn warm or cold."
+   },
+   {
+    "q": "When is a Pantone spot ink worth the extra cost on a display?",
+    "a": "When the color is the brand and shoppers recognize it before the name, when the same color appears on the product beside the display, or when the display will be reprinted repeatedly and must match across runs."
+   },
+   {
+    "q": "Should my display box color match a swatch or my product carton?",
+    "a": "Your product. Shoppers judge the display against the unit sitting on or beside it in store lighting, so where both exist, supply the product itself as the color reference rather than a digital value or swatch."
+   },
+   {
+    "q": "When is CMYK the right choice for display box printing?",
+    "a": "For photographic imagery, gradients and many-color artwork, where building from spot inks would be impractical and very costly. It also suits short runs and versioned artwork, since digital printing removes plate setup and rarely offers spot inks."
+   },
+   {
+    "q": "Can I combine CMYK and Pantone inks on one display box?",
+    "a": "Yes, and it is a common professional specification: CMYK for imagery plus one or two spot inks for elements that must hold, such as a logo or brand field. Beyond three or four spots the economics deteriorate."
+   },
+   {
+    "q": "Does a Pantone color print accurately on kraft display board?",
+    "a": "Not as it would on white. A Pantone reference assumes a white substrate, and on brown kraft every ink prints warmer and darker. Light colors may need a white underprint, otherwise the color is technically correct but visually wrong."
+   },
+   {
+    "q": "How do gloss and matte lamination change a printed Pantone or CMYK color?",
+    "a": "Gloss lifts saturation and deepens dark areas, while matte softens and slightly lightens. Both change a color that was approved uncoated, which is why a physical proof on the actual coated stock is worth having."
+   },
+   {
+    "q": "Why approve display box color on a physical coated proof?",
+    "a": "Screens and uncoated proofs cannot show how lamination shifts color. On a header card, where the color is largest, the difference is most visible. The guide to <a href=\"/display-box-printing-methods/\">display box printing methods</a> compares routes and substrates."
+   }
+  ]
+ },
+ "/blog/corrugated-flute-types-for-retail-displays/": {
+  "h2": "Corrugated flute questions answered",
+  "faqs": [
+   {
+    "q": "How does the flute make corrugated stronger than flat board?",
+    "a": "The flute is a series of arches glued between two liners, and an arch converts downward load into force spread sideways. That is why corrugated carries weight that flat board of the same thickness cannot."
+   },
+   {
+    "q": "What is the trade-off between tall and short corrugated flutes?",
+    "a": "Taller flutes give more stacking strength and cushioning. Shorter flutes give a smoother surface that prints better, creases cleanly and folds into finer detail. No flute wins at both ends, so each choice is a position on that spectrum."
+   },
+   {
+    "q": "When should a retail display use F-flute corrugated?",
+    "a": "F-flute is the thinnest in common use and behaves closest to folding boxboard while adding rigidity. Choose it for small retail displays and cartons that need to look visually light where boxboard alone would flex."
+   },
+   {
+    "q": "Why is E-flute the default for corrugated counter displays?",
+    "a": "E-flute is thin enough to crease cleanly and print sharply yet rigid enough for typical counter and shelf loads. It is usually the right starting point for a corrugated display and the default for litho-laminated work."
+   },
+   {
+    "q": "What retail displays suit B-flute corrugated board?",
+    "a": "Floor displays, heavier assortments and cases that will be stacked. B-flute steps up thickness and compression strength, but its surface ribbing is more visible, and direct print starts to show flute telegraphing across large tonal areas."
+   },
+   {
+    "q": "Is C-flute corrugated suitable for a brand-led retail display?",
+    "a": "Usually not. C-flute is the common shipping-carton flute, strong and well cushioned, but its visibly ribbed surface reads as industrial. That is fine for a bulk bin and wrong for a refined, brand-led unit."
+   },
+   {
+    "q": "When does a retail display need double-wall corrugated?",
+    "a": "For floor bins, tall free-standing units and anything carrying serious weight. Double wall uses two fluted layers, commonly BC or EB, and can lose most of an inch of internal width, so the dieline must allow for it."
+   },
+   {
+    "q": "Why do corrugated floor displays that pass a bench test rack out of shape?",
+    "a": "Often the flute direction is wrong. Vertical flutes in a wall panel carry far more compression than horizontal ones, so a unit with flutes running the wrong way can pass on the bench and still rack out of square mid-promotion."
+   },
+   {
+    "q": "How do I get B-flute strength with E-flute print quality?",
+    "a": "Use litho-lamination rather than a compromise flute. A sheet is printed offset with boxboard detail and color control, then laminated onto the corrugated, so it prints like a carton and carries like a shipper, with one extra stage."
+   },
+   {
+    "q": "Why is there no weight limit table for corrugated flute types?",
+    "a": "Actual capacity depends on liner grade, panel size and load distribution as much as flute. Start from filled weight, base span and stacking instead, as covered on <a href=\"/corrugated-display-boxes/\">our corrugated display boxes</a> product page."
+   }
+  ]
+ },
+ "/blog/display-box-color-selection-guide/": {
+  "h2": "Display box color questions answered",
+  "faqs": [
+   {
+    "q": "Does this guide explain display box color psychology?",
+    "a": "No, deliberately. Much of what is written about colors and shopper feelings is contested and depends on culture and context. The guide sticks to what is reliably true: how color behaves against a shelf, on a substrate and across a range."
+   },
+   {
+    "q": "How should I test a display box color against a real shelf?",
+    "a": "Look at a photograph of the actual aisle or counter rather than a swatch. A color that looks distinctive on screen can vanish on a shelf where three competitors use something similar."
+   },
+   {
+    "q": "Should my display box use the usual color for its category?",
+    "a": "It is a trade-off. Category palettes, such as greens for natural products or black for premium, make a display legible as belonging there but harder to pick out within it. Decide consciously which side you want."
+   },
+   {
+    "q": "Why do display box colors look different on kraft and white board?",
+    "a": "Ink is translucent, so the board beneath affects the result. On white board a color prints close to its reference, while on kraft every color comes out warmer and darker and pale colors may barely register."
+   },
+   {
+    "q": "Should I choose the board or the display box palette first?",
+    "a": "The board. A palette that works on kraft is usually a different palette, not the same one adjusted, so decide the substrate before the colors rather than trying to reconcile them afterward."
+   },
+   {
+    "q": "How does lamination change an approved display box color?",
+    "a": "Gloss lifts saturation and deepens dark areas, while matte softens and slightly lightens. A color approved on an uncoated proof is not what arrives laminated, so approve on a physical proof with the intended finish."
+   },
+   {
+    "q": "How do I make variant colors on a display range easy to tell apart?",
+    "a": "Test them side by side at arm's length, vary lightness as well as hue, add a text or icon differentiator for color vision deficiency, and check them under warm store lighting rather than a daylight-balanced monitor."
+   },
+   {
+    "q": "Why does variant color matter more on supplement or pharmacy displays?",
+    "a": "Where picking the wrong strength or formulation matters, quick variant recognition at distance under store lighting becomes a safety consideration rather than a design preference, and subtle on-screen differences often fail on a shelf."
+   },
+   {
+    "q": "What is the most common legibility mistake in display box color?",
+    "a": "Mid-tone text on a mid-tone background. It is invisible in a full-screen design review, so view artwork at actual size before approval, since a header readable on a monitor may be unreadable from three feet away."
+   },
+   {
+    "q": "In what order should I make display box color decisions?",
+    "a": "Decide the substrate, look at the real retail context, choose a palette that separates from it, specify a spot ink for anything that must hold, then approve a physical proof. The <a href=\"/custom-printing-options/\">custom printing options</a> compare ink systems."
+   }
+  ]
+ },
+ "/blog/display-packaging-mistakes-retail-brands-should-avoid/": {
+  "h2": "Display packaging mistakes questions answered",
+  "faqs": [
+   {
+    "q": "What is the most expensive display packaging mistake brands make?",
+    "a": "Designing and approving a display before checking the retailer footprint. The retailer then declines it for taking more counter or shelf space than they will concede. Get the footprint first, in their measurements, and design inside it."
+   },
+   {
+    "q": "Why does a display approved from a straight-on render fail in store?",
+    "a": "Shoppers look down at roughly forty-five degrees at a counter and approach floor units at a shallow angle, so they often see caps and lids instead of the product face. Angling the tier or stepping rows fixes it."
+   },
+   {
+    "q": "How long should I load-test a display packaging sample?",
+    "a": "For days, not an afternoon. Paperboard fails by creep, so a base that holds flat when filled can bow a week later. Same-day approval is close to useless for predicting how the display behaves in a store."
+   },
+   {
+    "q": "How do I stop store staff assembling a display packaging unit wrongly?",
+    "a": "Design for thirty seconds and no instructions: fewer components, lock bottoms that erect in one motion, and locating tabs that refuse to engage when a panel is reversed. Complex kits often end up half-built or abandoned."
+   },
+   {
+    "q": "Why do display inserts sized from a spec sheet often not fit?",
+    "a": "The widest point is usually not the body. Caps, pumps and sprayers are often wider, and wrap labels add thickness. Send the product itself, and several units if it varies between batches, so tolerance reflects reality."
+   },
+   {
+    "q": "Is choosing display board by product category a mistake?",
+    "a": "Yes. A cosmetics display holding glass droppers needs corrugated, and a food display holding wrapped snacks does not. Copying a competitor is the same error, since the weight on its base cannot be seen in a photograph."
+   },
+   {
+    "q": "Why is designing display artwork before the dieline a costly mistake?",
+    "a": "Panel proportions on a flat dieline rarely match what a designer assumes from a photo of a finished box, which makes it the most common origin of a reprint. Get the free dieline first and keep live copy off creases."
+   },
+   {
+    "q": "How can a half-empty display avoid looking picked-over?",
+    "a": "Print the inner base so bare board never shows. Where depletion is rapid and restocking irregular, a dispenser structure that looks identical at half stock is usually worth its added complexity."
+   },
+   {
+    "q": "Should every SKU get equal facings on a retail display?",
+    "a": "No. Below a certain width a product stops registering as a distinct item, so six SKUs at equal facings communicate none of them. Three to five SKUs, weighted toward the leading seller, is the workable pattern."
+   },
+   {
+    "q": "When should recyclability be decided on display packaging?",
+    "a": "Before the finish is chosen. The coating decides recyclability, and a film laminate takes board out of the paper stream in most municipalities. The <a href=\"/sustainability/\">sustainable packaging options</a> list which combinations stay recyclable."
+   }
+  ]
+ },
+ "/blog/how-custom-display-boxes-increase-product-visibility/": {
+  "h2": "Product visibility questions answered",
+  "faqs": [
+   {
+    "q": "Does this article quote sales lift figures for custom display boxes?",
+    "a": "No. The confident percentages that circulate about display sales lift are rarely traceable to anything. The article describes observable mechanisms of how displays work rather than measurements that have not been taken."
+   },
+   {
+    "q": "What is the biggest factor in custom display box visibility?",
+    "a": "Whether the retailer places the display at all, since an unplaced display has zero visibility. Placement is won on footprint, arriving ready to put out and needing no assembly nobody has time for."
+   },
+   {
+    "q": "How does angling a display tier improve product visibility?",
+    "a": "A flat tray shows shoppers the tops of units, such as caps and lids. Angling the tier forward or stepping the rows rotates the printed face into their line of sight, costing only a fold."
+   },
+   {
+    "q": "Does a taller display box always increase product visibility?",
+    "a": "No. Height helps on a floor unit seen from down an aisle but matters much less at a counter, where the shopper is already standing. That is why header cards earn their place on floor units more than counters."
+   },
+   {
+    "q": "Why can more SKUs on one display reduce product visibility?",
+    "a": "Below a certain width a product becomes part of a texture rather than an item a shopper identifies. Three to five SKUs, with the leading seller given more facings, communicate far more than an equal split."
+   },
+   {
+    "q": "How does a half-empty display lose product visibility?",
+    "a": "A partly sold display reads as picked-over, and shoppers pass over what looks like remaindered stock. A dispenser structure that looks identical at half stock and a printed inner base keep visibility up as units sell."
+   },
+   {
+    "q": "How does custom sizing make a display box more visible than stock?",
+    "a": "A stock box holds product approximately, so the front row leans and the display looks disordered. Custom sizing fixes the fit and lets the display match the footprint the retailer actually conceded, which affects placement."
+   },
+   {
+    "q": "Does adding more printed content increase display box visibility?",
+    "a": "Usually the opposite. Panels shrink once bleed, safe area and mandated copy are deducted, and a full brand story becomes unreadable at viewing distance. Choose the one thing the display must say at a glance."
+   },
+   {
+    "q": "How can I check whether my display box is actually visible?",
+    "a": "Put the loaded display at its real height, stand where a shopper would, and look for two seconds. If you took in the product face and brand, it works. If you saw cap tops, the sightline is wrong."
+   },
+   {
+    "q": "Can better printing fix a display box with a poor sightline?",
+    "a": "No. If shoppers see the tops of caps, that is a geometry problem, and no amount of print fixes it. The guide to <a href=\"/blog/how-to-design-counter-display-packaging/\">designing counter display packaging</a> covers angles and tiers."
+   }
+  ]
+ },
+ "/blog/how-long-does-custom-display-packaging-take/": {
+  "h2": "Display packaging timeline questions answered",
+  "faqs": [
+   {
+    "q": "Why won't this guide give one lead time for custom display packaging?",
+    "a": "A simple digitally printed tray and a multi-component litho-laminated floor unit do not share a timeline, and averaging them misleads in both directions. Knowing which stages consume time and which slip lets you plan backward instead."
+   },
+   {
+    "q": "How can I speed up the quote stage for custom display packaging?",
+    "a": "Include the product, a quantity and where the display will sit in your first message. Most delay at the quote stage is a round trip asking for information the initial brief did not contain."
+   },
+   {
+    "q": "What holds up the dieline stage of a custom display order?",
+    "a": "Structural complexity, and whether we are still waiting for a physical sample of your product. For anything with a cavity insert, the sample is the gating item, because the drawing cannot be finished without it."
+   },
+   {
+    "q": "Which stage of custom display packaging most often runs late?",
+    "a": "Artwork approval. It often involves a designer, brand owner, marketing lead and sometimes a regulatory reviewer who rarely respond together, so a week budgeted can become three. No supplier can absorb that for you."
+   },
+   {
+    "q": "How much time does a physical proof add to a display packaging order?",
+    "a": "Real days, including transit to you and back, while a digital proof is fast. Where color carries commercial weight it is almost always worth it, and it is a deliberate choice rather than an unavoidable delay."
+   },
+   {
+    "q": "Is production the slowest part of custom display packaging?",
+    "a": "Usually not, though people assume so. Production runs five to seven business days from proof approval, and printing, coating, die-cutting, gluing and folding each take a known time, so variability comes from how many stages a structure needs."
+   },
+   {
+    "q": "How do I work backward from an in-store date for display packaging?",
+    "a": "Start from the in-store date and subtract delivery, production, proofing, artwork and dieline approval. What remains is when artwork must be finished, usually earlier than expected. The <a href=\"/how-to-order/\">six ordering stages explained</a> show each step."
+   },
+   {
+    "q": "What can I do myself to shorten a custom display packaging timeline?",
+    "a": "Send a product sample with your first request, choose digital printing on short runs, simplify the structure, line up artwork approvers before the file exists, and accept a digital proof where color is not commercially critical."
+   },
+   {
+    "q": "Is a reorder of custom display packaging faster than the first order?",
+    "a": "Yes. Once a dieline and proof are approved and on file, the development stages disappear and a repeat order is a print job. A smaller proving run followed by volume can suit a date-driven launch."
+   },
+   {
+    "q": "When should I mention a deadline for custom display packaging?",
+    "a": "When you request a quote, not after specifications are agreed. If the date is tight, trade-offs such as a simpler structure, a different print route or a digital proof can be chosen deliberately rather than under pressure."
+   }
+  ]
+ },
+ "/blog/how-many-products-should-a-counter-display-hold/": {
+  "h2": "Counter display capacity questions answered",
+  "faqs": [
+   {
+    "q": "Is there a standard number of products a counter display should hold?",
+    "a": "No. Capacity is set by three constraints that vary by retailer and product: the footprint you are given, how often the display is actually restocked, and how it looks half sold. The guide shows how to reach your number."
+   },
+   {
+    "q": "Why does retailer footprint set counter display capacity?",
+    "a": "A counter display competes with the register, card terminal and everything else already there. The footprint comes from the retailer, and a display that exceeds it does not get placed however well it would sell."
+   },
+   {
+    "q": "How does restocking frequency affect counter display capacity?",
+    "a": "Match capacity to how often the display really gets refilled, not how often it should. If it holds a day of stock but is checked twice a week, it will spend most of its life empty."
+   },
+   {
+    "q": "Why is a counter display's effective capacity lower than its physical capacity?",
+    "a": "A tray at half stock reads as picked-over and stops selling well before it is empty. So the useful capacity is lower than the number of units that physically fit, unless the structure hides depletion."
+   },
+   {
+    "q": "Which counter display structures hide depletion as stock sells?",
+    "a": "A dispenser, where units draw from a front opening, looks the same at half stock as full. A stepped tier with a full front row also reads better than an open tray with visible gaps."
+   },
+   {
+    "q": "How can printing help a counter display look full for longer?",
+    "a": "Print the inner base so bare board never shows as stock depletes, and keep rows narrow so a gap in one row is less conspicuous than a gap across a wide, flat layout."
+   },
+   {
+    "q": "How many SKUs should one counter display carry?",
+    "a": "Three to five in practice. Beyond that each product gets too little frontage to register as a distinct item. Give the leading seller more facings rather than splitting the counter display equally across the range."
+   },
+   {
+    "q": "How do I calculate the right unit count for a counter display?",
+    "a": "Fit the most units into the conceded footprint that still lets a shopper take one without disturbing the rest. Then check it against restocking; if it falls short, renegotiate footprint, build upward through tiers, or hide depletion better."
+   },
+   {
+    "q": "Should a counter display grow taller or wider for more capacity?",
+    "a": "Taller first. Building upward through tiers adds capacity without asking the retailer for more counter area, which is the space they are least willing to concede. See our <a href=\"/counter-display-boxes/\">custom counter display boxes</a> for tiered formats."
+   },
+   {
+    "q": "When is a counter display the wrong choice for my product?",
+    "a": "When the arithmetic keeps producing a display too large for any footprint a retailer will concede. A counter is a place of transaction, so assortments needing real capacity belong on a shelf or floor unit."
+   }
+  ]
+ },
+ "/blog/how-product-weight-affects-display-box-material/": {
+  "h2": "Product weight and material questions answered",
+  "faqs": [
+   {
+    "q": "Why is total product weight the wrong number for display box material?",
+    "a": "What breaks a display is weight relative to the unsupported span beneath it, applied for weeks. Two displays with the same total weight can behave completely differently depending on how that weight is distributed."
+   },
+   {
+    "q": "Why can a small candle display fail where a bigger bulk display holds?",
+    "a": "Weight concentrated over a small unsupported area does more damage than the same weight spread across a supported one. A compact display of heavy units focuses load on a short base span."
+   },
+   {
+    "q": "How does glass change the material choice for a display box?",
+    "a": "A filled glass jar can weigh several times a same-sized plastic container, and a dozen concentrate that load onto a base that looks identical. That invisible weight is the most common reason a display copied from a photo fails."
+   },
+   {
+    "q": "What is creep and why do display boxes fail in week two?",
+    "a": "Creep is the gradual deformation of paperboard under sustained load. A base that holds flat when filled can bow a week later, the front row leans, and a leaning row stops selling."
+   },
+   {
+    "q": "How should I test a display box for weight before approving it?",
+    "a": "Load a sample to its full intended assortment and leave it standing for days rather than hours. Then check the base and whether the front row is still upright. That predicts more failures than any specification review."
+   },
+   {
+    "q": "Which display box materials suit light, dense and heavy product weights?",
+    "a": "Folding boxboard handles light units on modest spans. E-flute corrugated takes over as assortments get dense or spans grow. B and C flute and double wall come in for floor units, bulk bins and palletized stacking."
+   },
+   {
+    "q": "Can thicker boxboard replace corrugated for heavy display products?",
+    "a": "No. No caliper of boxboard substitutes for corrugated under sustained heavy load, because adding thickness only delays creep rather than preventing it. Once the load is heavy, the answer is corrugated."
+   },
+   {
+    "q": "How does transit change the board needed for a heavy display box?",
+    "a": "A flat-shipped display never carries transit load, while one shipped assembled or pre-loaded carries it throughout. On pallets, compression from the stack above, not product weight, sets the board."
+   },
+   {
+    "q": "How can I strengthen a marginal display box without heavier board?",
+    "a": "Use structure. Internal risers or partitions move load into the walls, a doubled base adds resistance for one fold, a divider shortens the unsupported span, and heavier stock on lower tiers lowers the center of gravity."
+   },
+   {
+    "q": "What weight details should I send for a display box specification?",
+    "a": "The weight of one filled unit and how many the display holds, not the empty container weight. Also say whether it ships loaded or stacked. See the guide to the <a href=\"/best-material-for-display-boxes/\">best material for display boxes</a>."
+   }
+  ]
+ },
+ "/blog/how-to-calculate-the-right-display-box-size/": {
+  "h2": "Display box sizing questions answered",
+  "faqs": [
+   {
+    "q": "Where should I measure a product when sizing a display box?",
+    "a": "At its widest point, which is often not the body. Caps, pumps, sprayers and closures are frequently wider than the container, and a wrap label adds thickness all round. Record height to the top of the closure."
+   },
+   {
+    "q": "How many units should I measure when calculating display box size?",
+    "a": "Several, then size against the largest. Handmade and batch-made items such as soap bars and bath bombs vary between batches, and an insert sized to an average unit fits roughly half your stock."
+   },
+   {
+    "q": "Why must fragile units in a sized display box never touch?",
+    "a": "Fragile units need clearance so they never touch each other, because contact in transit or as shoppers replace units causes chips and scuffs. That clearance is part of the tolerance decision, alongside loading method and how firmly units must be held."
+   },
+   {
+    "q": "How do I work out display box size for a full assortment?",
+    "a": "Decide units across and units deep, then add the internal structure between them. Divider thicknesses, partition walls and riser steps all consume internal space, which is often where an assortment becomes too wide."
+   },
+   {
+    "q": "What if my display box size exceeds the retailer footprint?",
+    "a": "The footprint wins, because an oversized display does not get placed. Reduce the assortment or build upward through tiers, since height is cheaper than width on a counter and suits the viewing angle better."
+   },
+   {
+    "q": "How do I convert internal to external display box dimensions?",
+    "a": "External dimensions are internal plus the board. On thin boxboard the difference is minor, but double-wall corrugated can lose most of an inch of internal width, so always state which figure you are quoting."
+   },
+   {
+    "q": "Why check pallet fit when calculating display box size?",
+    "a": "Freight is billed on volume, so unused pallet space costs money on every shipment. Adjusting a dimension slightly to gain a unit per layer is free while the dieline is drawn and impossible once approved."
+   },
+   {
+    "q": "Why does Shop Display Boxes ask for the product instead of measurements?",
+    "a": "The dimensions that decide fit are ones a spec sheet does not record, such as a cap flare, a tapered base, label thickness or batch variation. Measurements scope a display well but cut a cavity poorly."
+   },
+   {
+    "q": "What order should the display box sizing steps follow?",
+    "a": "Work outward from the product: widest point, variation, tolerance, assortment, retailer footprint, internal to external conversion, then pallet fit. Following that order removes most sizing mistakes before they reach a dieline."
+   },
+   {
+    "q": "Is there a fuller reference for sizing custom display boxes?",
+    "a": "Yes. The <a href=\"/display-box-size-guide/\">full display box size guide</a> covers what to measure and what to send. For anything with an insert, though, a physical unit always beats a list of measurements."
+   }
+  ]
+ },
+ "/blog/how-to-design-counter-display-packaging/": {
+  "h2": "Counter display design questions answered",
+  "faqs": [
+   {
+    "q": "What is the first design input for counter display packaging?",
+    "a": "A number: how much counter area the retailer will concede. Ask for it before anything is drawn. The buyer is weighing square inches against the register and card terminal, not your brand."
+   },
+   {
+    "q": "Why should counter display packaging build up rather than out?",
+    "a": "Retailers judge the footprint a display occupies, not the volume it fills. A tall, narrow unit with stepped tiers holding the same stock in less area is easier to place and suits the shopper's viewing angle."
+   },
+   {
+    "q": "What viewing angle should counter display packaging be designed for?",
+    "a": "About forty-five degrees downward, since a shopper at a counter looks down. A straight-on render hides that, and from above a flat tray shows the tops of units rather than the printed product face."
+   },
+   {
+    "q": "How does tilting the platform improve counter display packaging?",
+    "a": "Tilting the product platform toward the shopper rotates the printed face into their line of sight. It costs one fold, and it is the single change that most improves how a counter display performs."
+   },
+   {
+    "q": "Why raise the back rows on deep counter display packaging?",
+    "a": "Raising each back row above the one in front keeps every unit visible. Without it, only the front row sells and the rows behind it act as storage."
+   },
+   {
+    "q": "How should counter display packaging handle being half empty?",
+    "a": "Expect it, since busy counters empty fast and are refilled by whoever is on shift. Use a dispenser structure for single-SKU impulse lines and always print the inner base so bare board never shows."
+   },
+   {
+    "q": "How do I make counter display packaging quick for staff to assemble?",
+    "a": "Assume thirty seconds and no instructions. Use an auto-lock or crash-lock bottom that erects in one motion without tape or tools, cut the component count, and add locating tabs that refuse to engage when reversed."
+   },
+   {
+    "q": "Why does gloss beat heavier board on counter display packaging in week four?",
+    "a": "Counter units fail through abrasion rather than load, so gloss lamination, which resists scuffing best, does more for week-four appearance than heavier board. Matte shows fingerprints on dark solids. Compare them under <a href=\"/finishes-and-add-ons/\">display box finishes and add-ons</a>."
+   },
+   {
+    "q": "What products are wrong for counter display packaging?",
+    "a": "Products needing real capacity or consideration before purchase. Counters suit small, light, inexpensive impulse buys. If the assortment needs more than a shallow tier or two, a shelf or floor placement is the honest answer."
+   },
+   {
+    "q": "How should I test a counter display packaging sample?",
+    "a": "Give it to someone who has never seen it, say nothing, and watch them assemble it. Then load it, set it at counter height and view it standing up, where sightline problems show in seconds."
+   }
+  ]
+ },
+ "/blog/how-to-order-display-boxes-in-bulk/": {
+  "h2": "Bulk display box ordering questions answered",
+  "faqs": [
+   {
+    "q": "Should I run a small order before a bulk display box order?",
+    "a": "Yes. Displays fail for reasons a screen cannot show, such as a rejected footprint, a hidden product face, a skipped assembly step or a bowing base. Finding those across a small run is inexpensive, and reorders afterward are better value."
+   },
+   {
+    "q": "Where does the saving on bulk display box orders come from?",
+    "a": "Fixed costs such as dieline, tooling, plates and make-ready divide across the run. The per-piece price falls sharply at first, then flattens once the fixed portion stops being significant."
+   },
+   {
+    "q": "Is ordering very large display box quantities always cheaper?",
+    "a": "Not always. Moving from a small run to a moderate one often changes the price a lot, but large to very large frequently does not, and storing the extra stock can cost more than the saving."
+   },
+   {
+    "q": "Why work out storage before a bulk display box order?",
+    "a": "Display packaging is bulky even flat-packed, so a quantity that looks efficient on a quote can take far more space than expected. Calculate the pallet count before committing, because paid storage erodes the saving."
+   },
+   {
+    "q": "Why does pallet fit matter more on bulk display box orders?",
+    "a": "Freight is billed on volume, and unused pallet space costs money on every shipment, which repeats many times at bulk quantities. A small dimension change to gain a unit per layer is free at dieline stage."
+   },
+   {
+    "q": "Should I send annual volume when asking for bulk display box pricing?",
+    "a": "Yes. Combining several runs of the same specification into fewer larger ones usually saves more than any negotiated rate. Our <a href=\"/wholesale-display-boxes/\">wholesale display box programs</a> explain how program pricing differs."
+   },
+   {
+    "q": "When is a bulk display box order a bad idea?",
+    "a": "Where artwork has a shelf life, such as seasonal ranges, promotions or regulated categories with changing rules. Superseded packaging becomes a write-off, so use a separately printed sleeve or header over a constant base."
+   },
+   {
+    "q": "What if my SKUs differ too much in size for one bulk display insert?",
+    "a": "Use separate tier inserts against a shared base. Forcing dissimilar products into one well gives a display that holds some and drops others, while a shared base still lets one tooling investment serve the whole portfolio."
+   },
+   {
+    "q": "What should I include when requesting bulk display box pricing?",
+    "a": "Annual volume, how many SKUs the structure serves, a physical sample for anything with an insert, any retailer footprint or shelf-ready specification, how often artwork changes, and whether you can store the quantity."
+   },
+   {
+    "q": "How should I set up reorders when placing a bulk display box order?",
+    "a": "Agree what stays fixed and what changes. Base and tier tooling is the fixed investment, while artwork and quantity vary. With dieline and proof on file, each reorder becomes a print job rather than new development."
+   }
+  ]
+ },
+ "/blog/how-to-prepare-artwork-for-display-box-printing/": {
+  "h2": "Display box artwork preparation questions answered",
+  "faqs": [
+   {
+    "q": "Why should display box artwork start from the dieline, not a rectangle?",
+    "a": "Panel proportions on a flat dieline rarely match what a designer infers from a photo of a finished box, so fitting artwork afterward almost never works cleanly. Get the free dieline first and place artwork onto it."
+   },
+   {
+    "q": "Which file formats are accepted for display box print artwork?",
+    "a": "Print-ready vector as PDF, AI or EPS. Fonts must be outlined or fully embedded, because a missing font substitutes silently and reflows the layout. Keep the dieline layers preserved and clearly named."
+   },
+   {
+    "q": "Why must display box artwork stay at full scale?",
+    "a": "Allowances, tuck tolerances and crease positions do not scale with the panels. A file rescaled even slightly to fit a page produces a box that no longer matches its own drawing, so never rescale the dieline."
+   },
+   {
+    "q": "How much bleed and safe area does display box artwork need?",
+    "a": "Extend edge-to-edge artwork 3 mm beyond the cut line so a cutting drift does not leave a white sliver, and keep logos and copy at least 3 mm inside it. The usable panel is narrower than it looks."
+   },
+   {
+    "q": "How do I check image resolution in display box artwork?",
+    "a": "Check after scaling. Images need 300 DPI at final printed size, so a 300 DPI image at two inches enlarged to six becomes effectively 100 DPI and prints soft, whatever the file properties say."
+   },
+   {
+    "q": "When should display box artwork be converted from RGB to CMYK?",
+    "a": "Before internal approval. RGB has a wider gamut than print, so bright blues, oranges and greens shift on conversion. Converting late means the real colors are first seen on a proof, when changes are expensive."
+   },
+   {
+    "q": "Can text in display box artwork run across a fold?",
+    "a": "No. Text crossing a crease breaks when the box is erected. Images and backgrounds survive a fold, but type does not, and tuck flaps disappear into the box, so readable content belongs on panel faces."
+   },
+   {
+    "q": "How should display box artwork be prepared for kraft board?",
+    "a": "Design for kraft from the start. Every color prints warmer and darker on brown board, and light colors may not read without a white underprint. A kraft palette is usually a different palette, not a corrected one."
+   },
+   {
+    "q": "Does Shop Display Boxes check display box artwork for regulatory compliance?",
+    "a": "No. We print exactly what you supply, including ingredient lists, warnings, safety marks and claims, and do not verify any of it against the rules where you sell. Confirm compliance with your own advisers."
+   },
+   {
+    "q": "Is there a checklist of file requirements for display box artwork?",
+    "a": "Yes, the <a href=\"/artwork-guidelines/\">full artwork guidelines checklist</a> lists format, resolution, color, bleed and crease rules. Where color matters commercially, also request a physical proof on the actual stock with its finish."
+   }
+  ]
+ },
+ "/blog/how-to-reduce-the-cost-of-custom-display-boxes/": {
+  "h2": "Display box cost reduction questions answered",
+  "faqs": [
+   {
+    "q": "Why can consolidating reorders beat a negotiated custom display box rate?",
+    "a": "Setup costs are incurred per run, so ordering the same specification four times a year pays dieline, plate and make-ready costs four times. Where storage allows, fewer larger runs usually save more than any rate you could negotiate on the same volume."
+   },
+   {
+    "q": "How does simplifying structure cut custom display box costs?",
+    "a": "Every extra glue point, insert, die-cut window or perforation adds a production step, and steps cost more than material at most quantities. Ask what a simpler structure would save and what it would cost functionally."
+   },
+   {
+    "q": "How does an oversized custom display box raise costs?",
+    "a": "It costs three times over: more board, a larger shipping carton and more pallet space. Because freight is billed on volume, the penalty repeats on every consignment, while tight sizing is free at dieline stage."
+   },
+   {
+    "q": "Is digital or offset printing cheaper for custom display boxes?",
+    "a": "Digital has no plate setup, so it wins on short runs and versioned artwork. Offset carries plate cost but runs cheaper, so it overtakes digital as quantity grows. Ask where the crossover falls for your job."
+   },
+   {
+    "q": "How can spot colors on custom display boxes be made cheaper?",
+    "a": "Each Pantone spot ink adds a plate. Beyond three or four, a CMYK build plus one or two critical spot inks is usually more economical. Keep spot inks for the logo or brand field that must hold."
+   },
+   {
+    "q": "Should I drop foil and embossing to cut custom display box costs?",
+    "a": "Defer rather than remove. Their tooling behaves like setup, significant on a small run and minor across a large one. Running the proving order plain and adding finishing at volume is often the better sequence."
+   },
+   {
+    "q": "Does flat-packing reduce freight on custom display boxes?",
+    "a": "Substantially. A pallet of assembled displays is mostly air, and you pay for the air. A lock-bottom structure that erects in one motion ships flat at no cost to the display, provided someone at the destination assembles it."
+   },
+   {
+    "q": "Is downgrading the board a good way to cut display box costs?",
+    "a": "Usually not. Material is a smaller share of the total than expected, so the saving is modest, while creep means a lighter base can bow a week after filling. A bowed display stops selling and costs more to replace."
+   },
+   {
+    "q": "Is skipping the sample a false economy on custom display boxes?",
+    "a": "Yes. A sample costs a fraction of a run and is the only reliable way to find that the product does not fit, the base fails or staff cannot erect it. See <a href=\"/sample-request/\">how to request a sample</a>."
+   },
+   {
+    "q": "How does a first order make later custom display boxes cheaper?",
+    "a": "Most first-order cost is development: dieline, proofing and approvals. Once approved and on file, tooling is retained and reorders are print jobs, so a smaller proving run followed by volume usually beats committing everything upfront."
+   }
+  ]
+ },
+ "/blog/kraft-vs-white-cardboard-display-packaging/": {
+  "h2": "Kraft and white cardboard questions answered",
+  "faqs": [
+   {
+    "q": "What is the difference between kraft and white cardboard display board?",
+    "a": "White board, usually SBS, is bleached through its thickness for a bright, uniform printing surface. Kraft is unbleached and keeps the natural brown of the pulp, available as full kraft or kraft-back with a white face."
+   },
+   {
+    "q": "When does kraft-back board make sense for display packaging?",
+    "a": "When the inside of the display is never visible. Kraft-back has a white printing face and a brown reverse, costs less than full SBS, and looks identical from the front."
+   },
+   {
+    "q": "Why do colors print darker on kraft display packaging?",
+    "a": "Printing ink is translucent and takes its appearance partly from what sits beneath. On brown kraft every color comes out warmer and darker. That is not a printing fault and cannot be corrected in the file."
+   },
+   {
+    "q": "Can pale colors work on kraft cardboard display packaging?",
+    "a": "Only with help. A soft pink or pale blue may barely register on kraft. A white underprint solves it, but adds an ink station and cost, and leaves a visible transition where it stops short of the artwork."
+   },
+   {
+    "q": "Is kraft a good substrate for a strict brand color?",
+    "a": "Usually not. A Pantone reference assumes white board, so on kraft it is technically correct but visually wrong. Either accept the shift or add a white underprint, which partly defeats the point of choosing kraft."
+   },
+   {
+    "q": "Which colors and print styles suit kraft display packaging best?",
+    "a": "Deep, saturated and earthy colors sit well on kraft, and black prints richly. Single-color and two-color work often looks better than full-color imagery. Brands that succeed designed for kraft early rather than switching late."
+   },
+   {
+    "q": "Does kraft display packaging look premium or economical?",
+    "a": "It depends on the category. Handmade soap, candles, artisan food and natural personal care use kraft to real effect, but conventional luxury relies on weight, gloss and depth of color, which kraft does not deliver."
+   },
+   {
+    "q": "Is kraft cheaper than white cardboard for display packaging?",
+    "a": "Generally yes, with kraft-back in between, but the saving is modest relative to the whole job. A white underprint across most of the surface erodes it, so price should not be the deciding factor."
+   },
+   {
+    "q": "Does kraft display packaging automatically contain recycled fiber?",
+    "a": "No. Kraft describes the pulping process and unbleached look, not the fiber source. Recycled content exists in kraft and white grades and should be specified explicitly. See <a href=\"/sustainability/\">our packaging sustainability approach</a> for what decides recyclability."
+   },
+   {
+    "q": "How should I test colors before launching a kraft display range?",
+    "a": "Print a sample of the worst-case color, usually the palest. Screen previews on kraft are approximations, and the gap between preview and printed result is routinely larger than people expect."
+   }
+  ]
+ },
+ "/blog/matte-vs-gloss-lamination-for-retail-packaging/": {
+  "h2": "Matte and gloss lamination questions answered",
+  "faqs": [
+   {
+    "q": "What is lamination on retail packaging, and how is it different from coating?",
+    "a": "Lamination is a thin plastic film bonded to the printed sheet under heat and pressure, a separate layer on the paper. Aqueous coatings and varnishes sit in the paper, which is why lamination protects more."
+   },
+   {
+    "q": "Why is gloss lamination the default for retail display packaging?",
+    "a": "It resists scuffing better than any other common finish, which suits displays handled continuously and restocked repeatedly. It also lifts saturation and deepens darks, flattering photos but sometimes overwhelming a subtle palette."
+   },
+   {
+    "q": "What is the downside of matte lamination on retail packaging?",
+    "a": "Marking. Matte reads as more considered and premium, but on dark solids it shows fingerprints and handling marks readily, so a display handled by many shoppers looks worn sooner than the same design in gloss."
+   },
+   {
+    "q": "When does soft-touch lamination suit retail packaging?",
+    "a": "For gift and higher-value packs bought and taken away. Its velvet texture changes how a pack feels more than any print decision, but it is the most easily marked finish, so it suits shelves less than gift packs."
+   },
+   {
+    "q": "Should I choose matte or gloss from how retail packaging photographs?",
+    "a": "No. Ask how it will look in week four. Displays fail through abrasion far more than collapse, and a scuffed, fingerprinted display halfway through a campaign undermines the brand regardless of how it photographed."
+   },
+   {
+    "q": "Does matte or gloss lamination affect retail packaging recyclability?",
+    "a": "Both laminates bond plastic to paperboard, which in most municipalities takes the pack out of curbside paper recycling. That single finish decision affects recyclability more than board grade or recycled content."
+   },
+   {
+    "q": "What can replace lamination on recyclable retail packaging?",
+    "a": "An aqueous coating or a varnish. UV varnish gives moderate protection and usually stays recyclable, aqueous gives light protection and stays recyclable, and both keep the board repulpable, though neither protects as well as a laminate."
+   },
+   {
+    "q": "Does spot UV work better over matte or gloss lamination?",
+    "a": "Over matte, where the contrast between coated and uncoated areas is visible. Against gloss the effect is largely lost, making spot UV an expensive addition with little to show."
+   },
+   {
+    "q": "Can foil and embossing be combined with matte or gloss lamination?",
+    "a": "Foil works over both, with stronger metallic contrast on matte. Embossing holds well on laminated boxboard but less so on fluted board, where the flute can crush. Compare options in <a href=\"/finishes-and-add-ons/\">our finishes and add-ons guide</a>."
+   },
+   {
+    "q": "How should I approve color for laminated retail packaging?",
+    "a": "On a physical proof of the actual stock with the intended finish applied, because both matte and gloss shift color. It adds days, but it costs a fraction of a reprint."
+   }
+  ]
+ },
+ "/blog/sustainable-materials-for-retail-display-packaging/": {
+  "h2": "Sustainable display material questions answered",
+  "faqs": [
+   {
+    "q": "Why can a late finish choice override a display sustainability commitment?",
+    "a": "Because the coating decides recyclability more than the board or recycled content, and finish is usually chosen last. A film laminate in gloss, matte or soft-touch takes paperboard out of curbside paper recycling in most municipalities."
+   },
+   {
+    "q": "Why do paperboard and corrugated start well for sustainable displays?",
+    "a": "They are among the most widely recycled packaging materials, and corrugated typically carries substantial recycled content as standard rather than as a premium. Most of the work is not losing that advantage through later choices."
+   },
+   {
+    "q": "Which display packaging finishes keep board in the recycling stream?",
+    "a": "Uncoated board is fully recyclable with no protection, aqueous coating is recyclable with light protection, and UV varnish usually stays recyclable with moderate protection. Film lamination protects best but leaves the paper stream."
+   },
+   {
+    "q": "Is a recyclable finish a free choice on retail display packaging?",
+    "a": "No. An aqueous coating protects less than a laminate, so the display shows handling marks sooner, which is a real cost on a campaign running several months. Weigh it against how long the display must stay presentable."
+   },
+   {
+    "q": "How do windows and labels affect sustainable display packaging?",
+    "a": "Plastic windows, film laminates and labels of another substrate stop a pack separating into one material stream. Paper-based window films exist for single-stream specifications, though their clarity is lower than PET, so check a sample."
+   },
+   {
+    "q": "Can recycled board be used in sustainable food display packaging?",
+    "a": "Yes, with a functional barrier for direct food contact, because contaminants from recovered fiber can migrate into food. For wrapped product the issue does not arise, and recycled grades print acceptably with a warmer surface."
+   },
+   {
+    "q": "Is brown kraft display packaging always made from recycled fiber?",
+    "a": "No. Kraft describes the pulping process and unbleached appearance, not the fiber source, and recycled content is available in white grades too. If recycled fiber matters, specify it explicitly rather than inferring it from color."
+   },
+   {
+    "q": "What is the most overlooked sustainable choice in display packaging?",
+    "a": "Size. A display drawn generously uses more board, a larger carton and more pallet space. A dieline drawn tightly around the real product is the most reliable material saving, and it costs nothing."
+   },
+   {
+    "q": "How does flat-packing make retail display packaging more sustainable?",
+    "a": "A pallet of assembled displays is mostly air, so flat-packing cuts both freight cost and transport footprint substantially. Checking pallet fit at dieline stage can add a unit per layer on every shipment."
+   },
+   {
+    "q": "Does Shop Display Boxes publish sustainability certifications or carbon figures?",
+    "a": "No. We do not publish certification marks, audit results or carbon figures without verified evidence. If your job needs certified stock or chain of custody, raise it at quoting via <a href=\"/request-a-quote/\">our display box quote form</a>."
+   }
+  ]
+ },
+ "/blog/using-qr-codes-on-retail-display-packaging/": {
+  "h2": "QR code packaging questions answered",
+  "faqs": [
+   {
+    "q": "Why do shoppers ignore QR codes on retail display packaging?",
+    "a": "Usually because nothing says what scanning gets them. A short line of copy beside the code stating the benefit in plain terms matters more than the code itself; without it, the print area is wasted."
+   },
+   {
+    "q": "How big should a QR code be on a retail display?",
+    "a": "Large enough to scan from where the shopper actually stands. On a counter display that is close; on a floor unit it may be a step back. Decide the scanning distance first, then size the code to it."
+   },
+   {
+    "q": "What is the quiet zone around a QR code on packaging?",
+    "a": "The clear space a scanner needs to find the code's boundaries. Artwork, rules or other elements crowding the edge stop it resolving, which is a common and purely layout-driven cause of unreliable codes."
+   },
+   {
+    "q": "Should a QR code on display packaging use brand colors?",
+    "a": "Usually not. Dark code on a light background is the reliable arrangement. Inverted codes read less reliably on some scanners, and mid-tone brand colors on similar backgrounds often fail outright, so treat the code as functional."
+   },
+   {
+    "q": "Will a QR code scan reliably on kraft display packaging?",
+    "a": "A dark code prints acceptably on kraft, but colored codes often lack separation from the brown board. Test on a printed sample, since the screen preview looks considerably better than the printed result will."
+   },
+   {
+    "q": "Where should a QR code not be placed on a display box?",
+    "a": "Not across a crease, where the fold distorts the modules, not on a tuck flap that disappears into the box, and not across a die-cut edge. Like live copy, it belongs flat on a panel face."
+   },
+   {
+    "q": "Does gloss lamination stop QR codes on packaging from scanning?",
+    "a": "It can. Gloss is highly reflective, and under retail lighting it can throw enough glare to defeat a scanner at some angles. A matte patch behind the code on an otherwise gloss display solves it cheaply."
+   },
+   {
+    "q": "How should I test a QR code on retail display packaging?",
+    "a": "Scan the physical proof with an ordinary phone in normal indoor lighting from the shopper's real distance, including at an angle. Use more than one phone on large runs, and confirm the destination works on mobile."
+   },
+   {
+    "q": "Where should a QR code on display packaging point?",
+    "a": "To a stable URL you control and can redirect, not a temporary campaign address. Packaging stays in circulation long after a campaign ends, and a code that later hits a 404 is a dead link in permanent ink."
+   },
+   {
+    "q": "Why do QR codes that scan on screen fail on printed packaging?",
+    "a": "Size, contrast, substrate and finish all change between the file and the printed box. The guide to <a href=\"/blog/how-to-prepare-artwork-for-display-box-printing/\">preparing display box artwork</a> covers the file rules that sit around it."
+   }
+  ]
+ },
+ "/blog/what-affects-custom-display-box-pricing/": {
+  "h2": "Display box pricing questions answered",
+  "faqs": [
+   {
+    "q": "What fixed and variable costs make up a custom display box quote?",
+    "a": "Fixed costs, such as dieline development, cutting dies, printing plates and make-ready, occur once. Variable costs, such as board, ink, running time and finishing passes, scale with quantity, which explains most of the quote."
+   },
+   {
+    "q": "Why does halving my display box quantity not halve the price?",
+    "a": "The fixed portion does not move. On a small run it may be most of the total, so halving quantity removes half of the smaller variable part and none of the larger fixed part."
+   },
+   {
+    "q": "Why is a reorder of custom display boxes priced differently?",
+    "a": "A cutting die is a physical object made for your structure and retained for reorders. A second order against the same dieline does not pay for it again, which makes it a fundamentally different proposition."
+   },
+   {
+    "q": "Why does each spot ink raise a custom display box price?",
+    "a": "On offset, printing plates are made per color per job, so each additional spot ink adds a plate and its cost. Digital printing uses no plates, which is why it changes short-run economics so completely."
+   },
+   {
+    "q": "What part of a display box quote is most often underestimated?",
+    "a": "Structural complexity. Each glue point, insert, die-cut window or perforation is a production step, and steps usually cost more than material. A simpler box in slightly heavier board is often cheaper than a complicated one."
+   },
+   {
+    "q": "How much does board choice change custom display box pricing?",
+    "a": "Material scales with area and grade: corrugated above boxboard, double wall above single, and litho-lamination adding material and a stage. It is usually a smaller lever than assumed, and downgrading risks a bowing display."
+   },
+   {
+    "q": "Why does finishing look expensive on small custom display box orders?",
+    "a": "Lamination adds a pass, while foil and embossing add a pass plus tooling that behaves like setup. That is significant on a short run and almost incidental on a long one, so per-piece figures vary widely."
+   },
+   {
+    "q": "Which display box cost can appear on the invoice but not the quote?",
+    "a": "Freight, usually. Display freight is billed on volume, so bulky displays cost more to ship than their weight suggests. Ask how goods will ship; our <a href=\"/shipping-information/\">shipping and delivery information</a> explains how ours is handled."
+   },
+   {
+    "q": "How should I read quantity breaks on a display box quote?",
+    "a": "They show the fixed portion diluting. The gap between the first tiers is usually large and between the last tiers small, so a very small to moderate run changes price most, while extra volume may cost more to store."
+   },
+   {
+    "q": "What should I ask a supplier about a custom display box quote?",
+    "a": "Which parts are fixed and which scale, what a simpler structure would save and cost functionally, where digital and offset flip, what a reorder involves, and whether the design flat-packs and palletizes efficiently."
+   }
+  ]
+ },
+ "/blog/what-are-display-boxes/": {
+  "h2": "Display box basics questions answered",
+  "faqs": [
+   {
+    "q": "What is a display box, and how does it differ from a shipping carton?",
+    "a": "A display box presents product at the point of sale rather than only containing or transporting it. A shipping carton is judged on arriving intact; a display box is judged on whether shoppers notice it and take something."
+   },
+   {
+    "q": "Why are display boxes designed for the shopper's viewing angle?",
+    "a": "Shoppers look down at about forty-five degrees at a counter and approach floor units from a distance. A straight-on design often shows the tops of units in use, so angling a tier or stepping rows fixes it."
+   },
+   {
+    "q": "Why do display boxes need inserts when ordinary cartons often do not?",
+    "a": "A carton only needs contents to survive transit, but a display must keep units exactly in place through weeks of shoppers picking them up and putting them back. Without a good fit, the front row leans."
+   },
+   {
+    "q": "Why must display boxes be quick for store staff to assemble?",
+    "a": "Staff build displays with little time and no briefing, so a structure needing instructions gets built wrong or left in the stockroom. That drives fewer components, parts that fit one way, and one-motion lock bottoms."
+   },
+   {
+    "q": "What are the main types of display boxes?",
+    "a": "Counter displays, assembled counter display units, floor-standing units, shelf-ready cases, open trays, shipper-displays that convert on arrival, and pre-glued pop-up displays. They differ mainly in where they sit and how open they are."
+   },
+   {
+    "q": "What is the difference between a CDU and an FSDU display box?",
+    "a": "A counter display unit is an assembled counter format with a base, tiers and a printed header card. A floor-standing display unit is free-standing with high stock capacity and is usually tied to a promotion."
+   },
+   {
+    "q": "What materials are display boxes usually made from?",
+    "a": "Folding boxboard, a smooth single-ply paperboard that prints beautifully but carries limited load, and corrugated, whose fluted arch carries weight flat board cannot. The choice depends on assortment weight, base span and transit."
+   },
+   {
+    "q": "How do display boxes typically fail in retail use?",
+    "a": "Through creep, where paperboard bows gradually under sustained weight so the front row leans, and through abrasion, as displays are pushed, handled and cleaned around until they look scuffed while still structurally sound."
+   },
+   {
+    "q": "Who decides whether a display box gets used in a store?",
+    "a": "The retailer, before any shopper sees it. They weigh the display against the counter or shelf space it costs, and reject displays that ignore their footprint, arrive unplaceable, or need assembly nobody has time for."
+   },
+   {
+    "q": "Where can I compare every display box format in one place?",
+    "a": "The <a href=\"/display-box-packaging/\">overview of display box packaging</a> covers each format and where it belongs, from counter displays to shelf-ready cases and floor-standing units, so you can shortlist structures before asking for a dieline."
+   }
+  ]
+ },
+ "/box-materials/": {
+  "h2": "More display box materials questions",
+  "faqs": [
+   {
+    "q": "Which boxboard grade gives a display the best print surface?",
+    "a": "SBS is bleached white throughout, with the best print surface and highest cost. Kraft-back has a white printing face and a brown reverse, a common compromise. Recycled gray board costs least but has a warmer surface with visible fiber variation."
+   },
+   {
+    "q": "When should a display use rigid board instead of folding boxboard?",
+    "a": "Rigid board suits higher-value gift and presentation packaging where the recipient is expected to keep the box. It gives weight and lid behavior folding board cannot, but ships assembled or two-piece, so freight volume costs considerably more."
+   },
+   {
+    "q": "Can recycled board be used for food display boxes?",
+    "a": "It can, with care. Contaminants from the recovered fiber stream can migrate into food, so direct contact usually needs a functional barrier layer between the recycled fibers and the product."
+   },
+   {
+    "q": "Why can't you quote a load rating for display box board from a table?",
+    "a": "Load capacity is relative. Actual capacity depends on flute, liner grade, panel size and how weight is distributed, so we specify the board against your product and assortment rather than a generic figure."
+   }
+  ]
+ },
+ "/candle-packaging/": {
+  "h2": "More candle display packaging questions",
+  "faqs": [
+   {
+    "q": "How do I keep candle scent labels visible in a display?",
+    "a": "Keep the label band clear of the display wall with a cut-down or angled front, and use a stepped riser when the assortment runs more than one row deep, so back-row scent names stay readable."
+   }
+  ]
+ },
+ "/cannabis-display-packaging/": {
+  "h2": "More cannabis display packaging questions",
+  "faqs": [
+   {
+    "q": "Can a light cannabis display board meet an opacity requirement?",
+    "a": "Not always. Board thickness and print coverage both contribute to opacity, and an uncoated light stock may not achieve it alone. Confirm the requirement with your compliance adviser so we can specify board and coverage to suit."
+   }
+  ]
+ },
+ "/cardboard-vs-corrugated-display-boxes/": {
+  "h2": "More cardboard versus corrugated questions",
+  "faqs": [
+   {
+    "q": "Which takes foil and embossing better, cardboard or corrugated?",
+    "a": "Folding boxboard takes foil, embossing and spot UV well because there is no flute to crush under the impression. Corrugated is softer, so heavy finishing risks crushing the flute."
+   },
+   {
+    "q": "Is corrugated better than cardboard for a display passing through distribution?",
+    "a": "Yes. Corrugated cushions where cardboard does not, and it is the only sensible option for a display that must survive a distribution center, stacking or loaded transit before it reaches the shop floor."
+   }
+  ]
+ },
+ "/case-studies/": {
+  "h2": "Questions about Shop Display Boxes case studies",
+  "faqs": [
+   {
+    "q": "Why has Shop Display Boxes not published case studies yet?",
+    "a": "A case study claims outcomes such as units, timelines and results on shelf, and those figures cannot be estimated. Until we have written permission to name brands alongside verified figures, publishing one would mean inventing its substance."
+   },
+   {
+    "q": "What will each Shop Display Boxes case study contain?",
+    "a": "The brief and its constraints, including any retailer footprint, the structural decisions and their reasoning, the material and print specification as produced, and what was actually delivered."
+   },
+   {
+    "q": "Will Shop Display Boxes case studies include sales results?",
+    "a": "Only where a client agrees to share them, in which case outcomes will be attributed and quantified. Otherwise the case study describes the packaging problem and its solution without implying results that were never measured."
+   },
+   {
+    "q": "Where can I see Shop Display Boxes work while case studies are pending?",
+    "a": "The product pages show photography of work produced along with the constraints behind each format. For work arranged by format, start from <a href=\"/portfolio/\">our display box portfolio</a>."
+   },
+   {
+    "q": "Can I be featured in a Shop Display Boxes case study?",
+    "a": "If you have worked with us and are willing, we would like to hear from you. A case study needs your permission to be named and your figures to be meaningful to anyone reading it."
+   },
+   {
+    "q": "Will I approve a Shop Display Boxes case study before it goes live?",
+    "a": "Yes. We send the draft before anything is published, and nothing goes live without your sign-off on both the wording and the numbers, so nothing about your brand appears that you have not seen."
+   },
+   {
+    "q": "Do Shop Display Boxes case studies name the client brand?",
+    "a": "Only where the brand has given written permission. Without that, a case study can still describe the brief, structure and material decisions without identifying who the work was for."
+   },
+   {
+    "q": "What can I read instead of a display packaging case study?",
+    "a": "The buyer guides go into the reasoning behind specific choices, such as board, print route and size, which is usually what a reader wants from a case study in the first place."
+   },
+   {
+    "q": "Can Shop Display Boxes work through my own display packaging brief?",
+    "a": "Yes. Send the brief and the product, including any retailer footprint. We would rather work through your actual problem than show you someone else's, and the dieline comes before you commit."
+   },
+   {
+    "q": "Why don't Shop Display Boxes case studies estimate project outcomes?",
+    "a": "Estimated outcomes would read as evidence without being evidence. We would rather show nothing than write claims we cannot back, so figures appear only when they are verified and the client permits them."
+   }
+  ]
+ },
+ "/confectionery-display-packaging/": {
+  "h2": "More confectionery display packaging questions",
+  "faqs": [
+   {
+    "q": "Does pick-and-mix confectionery need different display board from wrapped sweets?",
+    "a": "Yes. Unwrapped or loose confectionery is direct contact and needs food-grade board with compliant coatings, while wrapped product makes the display secondary packaging. Tell us which at quoting stage, since it cannot be corrected after printing."
+   }
+  ]
+ },
+ "/contact-us/": {
+  "h2": "More questions about contacting Shop Display Boxes",
+  "faqs": [
+   {
+    "q": "Which Shop Display Boxes form should I use for a sample or dieline?",
+    "a": "Use the dedicated sample request or dieline request form. Quotes, samples and dielines each need different information, so the matching form collects it upfront and avoids a round trip of follow-up questions."
+   },
+   {
+    "q": "How do I ask Shop Display Boxes about an order already in progress?",
+    "a": "Use the general contact form and say what it concerns, whether that is an order in progress, an invoice or something else. Including your order details helps us route it quickly."
+   },
+   {
+    "q": "Should I send a retailer planogram when I contact Shop Display Boxes?",
+    "a": "Yes. A footprint, planogram dimension or shelf-ready specification is a hard constraint, and it changes what is worth suggesting. Send it with the product and quantity so the reply is an answer rather than questions."
+   },
+   {
+    "q": "Does contacting Shop Display Boxes around the clock speed up production?",
+    "a": "No. Messages are handled at any hour, but that is contact availability rather than faster manufacturing. Production still runs to the stated schedule from proof approval, and the registered address is not a collection point."
+   }
+  ]
+ },
+ "/cosmetic-packaging/": {
+  "h2": "More cosmetic display packaging questions",
+  "faqs": [
+   {
+    "q": "Should I send every SKU for a cosmetic display, or only the largest?",
+    "a": "Send a physical unit of every SKU. Sizing an insert to the biggest item and assuming the rest will sit still is the most common reason a cosmetic display arrives and does not work."
+   }
+  ]
+ },
+ "/counter-display-boxes-vs-floor-display-boxes/": {
+  "h2": "More counter versus floor display questions",
+  "faqs": [
+   {
+    "q": "How long does a counter display stay in store compared with a floor unit?",
+    "a": "Counter units tend to be semi-permanent, placed and left until they look tired, so they sell year-round. Floor units are usually tied to a promotional window and removed at the end of it."
+   },
+   {
+    "q": "Which needs restocking more often, a counter or floor display box?",
+    "a": "A counter display. A floor unit holds many times as much stock, so it needs restocking far less often relative to sales, while a small counter display in a busy store may empty daily."
+   }
+  ]
+ },
+ "/custom-box-sizes/": {
+  "h2": "More custom box size questions",
+  "faqs": [
+   {
+    "q": "Does a hand-loaded custom size box need different tolerance from machine loading?",
+    "a": "Often, yes. Tolerance depends on the product, how it is loaded, whether a shopper removes one unit at a time and whether the display moves when full, so we set it from a physical sample rather than a drawing."
+   },
+   {
+    "q": "Can a custom box size be adjusted to fit more per pallet layer?",
+    "a": "Yes, if it is checked at the dieline stage. Adjusting a dimension slightly to gain another unit per pallet layer is free then and impossible later, and on large volumes it lowers freight on every shipment."
+   }
+  ]
+ },
+ "/custom-display-box-manufacturer/": {
+  "h2": "More questions about choosing a manufacturer",
+  "faqs": [
+   {
+    "q": "Should a display box manufacturer produce a sample before a full run?",
+    "a": "Yes. A sample shows whether your product fits, whether the base holds when loaded and whether staff can erect it. Keep it loaded and standing for longer than feels necessary, since that predicts store behavior."
+   },
+   {
+    "q": "What does Shop Display Boxes not claim as a display box manufacturer?",
+    "a": "We do not review artwork for compliance in any market, publish unconfirmed transit times, or display certification marks we cannot evidence. A supplier claiming those things without proof is telling you how the relationship will go."
+   }
+  ]
+ },
+ "/custom-display-boxes-arizona/": {
+  "h2": "More questions about display boxes in Arizona",
+  "faqs": [
+   {
+    "q": "Should Arizona display boxes shipped on pallets be specified for stacking?",
+    "a": "Yes. Display packaging that travels palletized from Arizona fulfillment operations needs board specified against stack compression, since the bottom case carries everything above it, rather than against the weight of its own contents."
+   }
+  ]
+ },
+ "/custom-display-boxes-austin-tx/": {
+  "h2": "More questions about display boxes in Austin",
+  "faqs": [
+   {
+    "q": "How should Austin market and festival displays be built for repeated setup?",
+    "a": "Favor assembly speed and crease durability over finish. A structure that folds flat without tearing will outlast a more elaborate one, because Austin event displays get erected and packed down repeatedly rather than placed once."
+   }
+  ]
+ },
+ "/custom-display-boxes-boston-ma/": {
+  "h2": "More questions about display boxes in Boston",
+  "faqs": [
+   {
+    "q": "Where should the budget go on Boston research vial display packaging?",
+    "a": "On the insert. A small glass vial that can move will eventually break, so cavity geometry cut from a physical sample deserves the specification budget, while the outer can stay clean, restrained and accurately registered."
+   }
+  ]
+ },
+ "/custom-display-boxes-california/": {
+  "h2": "More questions about display boxes in California",
+  "faqs": [
+   {
+    "q": "Which California product sectors rely most on custom display packaging?",
+    "a": "Beauty and personal care, natural and organic food and beverage, regulated cannabis, and apparel and accessories all lean heavily on displays in California, sold through a large independent retail base, national chains and farmers markets."
+   }
+  ]
+ },
+ "/custom-display-boxes-chicago-il/": {
+  "h2": "More questions about display boxes in Chicago",
+  "faqs": [
+   {
+    "q": "What sets the board grade for Chicago cases moving through rail freight?",
+    "a": "Pallet compression, not the weight of the contents. A case at the bottom of a full pallet passing through Chicago's rail and distribution network carries everything above it, so the board is specified for that load."
+   }
+  ]
+ },
+ "/custom-display-boxes-colorado/": {
+  "h2": "More questions about display boxes in Colorado",
+  "faqs": [
+   {
+    "q": "Why do pale colors fail on kraft display boxes for Colorado natural brands?",
+    "a": "Kraft is brown and ink is not opaque, so every color prints warmer and darker, and pale colors may not register at all. A white underprint fixes it, or the palette can be designed for kraft from the start."
+   }
+  ]
+ },
+ "/custom-display-boxes-dallas-tx/": {
+  "h2": "More questions about display boxes in Dallas",
+  "faqs": [
+   {
+    "q": "What does a Dallas wholesale market buyer check first on a display?",
+    "a": "Practical questions: whether the unit will place in their stores, assemble without fuss and hold up through a season. A Dallas showroom buyer is deciding whether to stock the line, so function outranks looks."
+   }
+  ]
+ },
+ "/custom-display-boxes-houston-tx/": {
+  "h2": "More questions about display boxes in Houston",
+  "faqs": [
+   {
+    "q": "Do Houston independent stores suit one display format or several smaller runs?",
+    "a": "Smaller runs usually fit better. With fewer formal planogram constraints and more variety in counter space across Houston independent stores, flexible short-run displays tend to work better than one rigid format built to a chain specification."
+   }
+  ]
+ },
+ "/custom-display-boxes-illinois/": {
+  "h2": "More questions about display boxes in Illinois",
+  "faqs": [
+   {
+    "q": "What do Illinois grocery chain shelf-ready specifications usually govern?",
+    "a": "Opening method, case dimensions and how much product face must remain visible. Those chain specifications, common across Illinois grocery and pharmacy retail, constrain the design before branding, so share them before the dieline is drawn."
+   }
+  ]
+ },
+ "/custom-display-boxes-los-angeles-ca/": {
+  "h2": "More questions about display boxes in Los Angeles",
+  "faqs": [
+   {
+    "q": "Why do Los Angeles beauty launches often find the cavity will not fit?",
+    "a": "The display was designed around the product as photographed, not as measured. Caps are often wider than the body and wrap labels add thickness, so send several physical units and let cavity tolerance be cut from them."
+   }
+  ]
+ },
+ "/custom-display-boxes-massachusetts/": {
+  "h2": "More questions about display boxes in Massachusetts",
+  "faqs": [
+   {
+    "q": "Do Massachusetts coastal tourism shops need different display packaging?",
+    "a": "Seasonal tourism retail favors tooling the structure once and changing only printed artwork or a sleeve between seasons. That turns each cycle for Massachusetts coastal stockists into a print job rather than a new development."
+   }
+  ]
+ },
+ "/custom-display-boxes-michigan/": {
+  "h2": "More questions about display boxes in Michigan",
+  "faqs": [
+   {
+    "q": "How should Michigan food producers plan displays around a seasonal cycle?",
+    "a": "Choose a structure where the printed element updates on its own, such as a separate sleeve or header card. A seasonal change for a Michigan food brand then becomes a print run on the existing structure rather than a new tooling development."
+   }
+  ]
+ },
+ "/custom-display-boxes-missouri/": {
+  "h2": "More questions about display boxes in Missouri",
+  "faqs": [
+   {
+    "q": "What should a Missouri brand send to get a display quote?",
+    "a": "Send the product or its dimensions at the widest point, how many units the display should hold, whether it sits on a counter, shelf or floor, and any retailer footprint. We draw the dieline before you commit to a Missouri order."
+   }
+  ]
+ },
+ "/custom-display-boxes-new-jersey/": {
+  "h2": "More questions about display boxes in New Jersey",
+  "faqs": [
+   {
+    "q": "Can New Jersey displays ship straight to our contract packer?",
+    "a": "Yes. We ship to business addresses, and a contract packer or fulfillment site in New Jersey counts as one. Agree the filling sequence at quoting stage so the unit can be loaded flat or open rather than through a narrow opening."
+   }
+  ]
+ },
+ "/custom-display-boxes-new-york-ny/": {
+  "h2": "More questions about display boxes in New York City",
+  "faqs": [
+   {
+    "q": "Can New York City businesses collect display orders from Brooklyn?",
+    "a": "No. Our registered address is in Brooklyn, but it is not a trade counter or collection point and has no published opening hours. Orders for New York City businesses are produced to specification and shipped to your business address."
+   }
+  ]
+ },
+ "/custom-display-boxes-new-york/": {
+  "h2": "More questions about display boxes in New York",
+  "faqs": [
+   {
+    "q": "Which print route suits a brand-led display in New York stores?",
+    "a": "Where a display is doing brand work in New York, offset or litho-lamination usually suits it better than direct-printed corrugated. Shoppers and buyers here see a very high standard routinely, so print that holds up close carries more weight."
+   }
+  ]
+ },
+ "/custom-display-boxes-pennsylvania/": {
+  "h2": "More questions about display boxes in Pennsylvania",
+  "faqs": [
+   {
+    "q": "Should Pennsylvania chocolate displays use an open tray or enclosed box?",
+    "a": "Packaging cannot refrigerate chocolate, but it can avoid trapping warmth. For a Pennsylvania confectionery display near a window or light fixture, an open tray lets heat dissipate, while an enclosed structure holds that warmth against the product."
+   }
+  ]
+ },
+ "/custom-display-boxes-philadelphia-pa/": {
+  "h2": "More questions about display boxes in Philadelphia",
+  "faqs": [
+   {
+    "q": "How does ordering work for a Philadelphia display box project?",
+    "a": "Send the product and a quantity, and we draw a dieline before you commit. You approve that and a print proof, then the run follows and ships to your Philadelphia business address. Changes before those approvals cost nothing."
+   }
+  ]
+ },
+ "/custom-display-boxes-phoenix-az/": {
+  "h2": "More questions about display boxes in Phoenix",
+  "faqs": [
+   {
+    "q": "What should a Phoenix fulfillment business include in a display quote request?",
+    "a": "Send the product, the unit count and the placement, then tell us whether it ships by parcel or pallet and whether it sits in non-climate-controlled storage. Phoenix heat and single-parcel handling both change the specification."
+   }
+  ]
+ },
+ "/custom-display-boxes-san-diego-ca/": {
+  "h2": "More questions about display boxes in San Diego",
+  "faqs": [
+   {
+    "q": "What should a San Diego life-sciences supplier send for a vial display?",
+    "a": "Send physical vials rather than dimensions, plus the unit count and where batch data will go. Cavities for a San Diego life-sciences display are drawn tight enough that inverting it does not release a vial, with an uncoated area planned in."
+   }
+  ]
+ },
+ "/custom-display-boxes-san-jose-ca/": {
+  "h2": "More questions about display boxes in San Jose",
+  "faqs": [
+   {
+    "q": "Should San Jose accessory packs print compatibility above the brand logo?",
+    "a": "Usually, yes. Electronics accessories are bought on compatibility rather than appearance, so a San Jose brand gains more from device compatibility shown large at the top of the pack than from a dominant logo a shopper cannot act on."
+   }
+  ]
+ },
+ "/custom-display-boxes-seattle-wa/": {
+  "h2": "More questions about display boxes in Seattle",
+  "faqs": [
+   {
+    "q": "Will an aqueous-coated Seattle coffee display show handling marks sooner?",
+    "a": "Yes. An aqueous coating keeps the board in the paper recycling stream, which Seattle retailers often ask about, but it gives less scuff resistance than a film laminate. On a campaign running several months, that wear is a real cost to weigh."
+   }
+  ]
+ },
+ "/custom-display-boxes-texas/": {
+  "h2": "More questions about display boxes in Texas",
+  "faqs": [
+   {
+    "q": "What should a Texas brand send to quote a display?",
+    "a": "Send the product or its widest dimensions, the unit count, the placement, and any planogram or shelf-ready specification a Texas chain has issued. Those retailer constraints are hard limits, so they shape the structure before the dieline is drawn."
+   }
+  ]
+ },
+ "/custom-display-boxes-washington/": {
+  "h2": "More questions about display boxes in Washington",
+  "faqs": [
+   {
+    "q": "How does a Washington brand order custom display packaging?",
+    "a": "The process is the same across Washington: send the product and a quantity, we draw a dieline before you commit, and you approve it and a print proof. The run then follows and ships to your business address anywhere in the state."
+   }
+  ]
+ },
+ "/custom-printing-options/": {
+  "h2": "More questions about custom printing options",
+  "faqs": [
+   {
+    "q": "Which custom printing option puts carton-grade print on corrugated board?",
+    "a": "Litho-lamination, where a sheet is printed offset and laminated onto corrugated. It costs more and adds a production stage. It is worth specifying where print quality does commercial work, such as a brand-led display in a competitive aisle, and not on a plain bulk bin."
+   },
+   {
+    "q": "Is digital printing suited to testing a display before volume?",
+    "a": "Yes. Digital printing has no plates and no setup, which makes it the practical route for short runs, for testing a display before committing to volume, and for versioned artwork where each variant would otherwise need its own plates."
+   },
+   {
+    "q": "Does CMYK or a Pantone spot suit photographic display artwork?",
+    "a": "CMYK suits photographic imagery and multicolor artwork, because it builds any color from four process inks. A Pantone spot is for a brand color that must match exactly across reprints. The trade-offs are set out in <a href=\"/blog/cmyk-vs-pantone-printing-for-display-boxes/\">CMYK versus Pantone for display boxes</a>."
+   }
+  ]
+ },
+ "/custom-vs-stock-display-boxes/": {
+  "h2": "More on custom versus stock display boxes",
+  "faqs": [
+   {
+    "q": "Can a stock display box be used to test a new format?",
+    "a": "Yes. Using a stock box to check whether a display format sells is a sensible early test before investing in custom tooling. Once the format is proven, a custom structure can fix the fit, footprint and presentation problems a stock size leaves."
+   },
+   {
+    "q": "Does a printed stock box look as designed as a custom shape?",
+    "a": "Not quite. A stock box printed with your artwork is still a stock shape, and shape is a large part of what makes packaging look designed rather than bought. Where the box is doing brand work, custom usually earns its cost."
+   }
+  ]
+ },
+ "/customer-reviews/": {
+  "h2": "Questions about Shop Display Boxes customer reviews",
+  "faqs": [
+   {
+    "q": "Why do Shop Display Boxes customer reviews show only one review?",
+    "a": "Because it is the only review collected so far. We would rather show one real review than a page of invented ones, so as orders complete we ask customers for feedback and publish whatever comes back."
+   },
+   {
+    "q": "Who is allowed to leave a review for Shop Display Boxes?",
+    "a": "Only customers who have actually placed an order, and only after delivery. That keeps every published review tied to a real job rather than to someone who never received display packaging from us."
+   },
+   {
+    "q": "Are Shop Display Boxes reviews edited into shorter excerpts before publishing?",
+    "a": "No. Reviews are published whole rather than edited into favorable fragments. Excerpting lets a supplier choose the kindest sentence from a mixed review, and a reader cannot tell what was left out."
+   },
+   {
+    "q": "Does Shop Display Boxes publish critical customer reviews as well?",
+    "a": "Yes. Critical reviews are published alongside positive ones and are not filtered out. A review section with no criticism in it tells a reader only that criticism was removed, which makes the positive reviews worth less too."
+   },
+   {
+    "q": "Does Shop Display Boxes offer incentives in exchange for customer reviews?",
+    "a": "No. Feedback is requested with no incentive attached to leaving a positive review. Incentivized reviews are worth less than no reviews, because everyone reading them knows how they were obtained."
+   },
+   {
+    "q": "How are star ratings for Shop Display Boxes reviews calculated?",
+    "a": "Ratings are computed only from scores customers actually gave in their reviews. A rating cannot be typed in by hand anywhere on the site, so an average either comes from real reviews or does not exist."
+   },
+   {
+    "q": "Why does Shop Display Boxes avoid star ratings without displayed reviews?",
+    "a": "Review markup without genuine reviews shown alongside it misrepresents the business to search engines and buyers, and it breaches search engine guidelines. So the site emits review markup only for reviews that are actually displayed."
+   },
+   {
+    "q": "Will Shop Display Boxes product pages carry a company-wide review rating?",
+    "a": "No. Product-specific ratings attach only to the product they relate to. Applying one company-wide rating across unrelated product pages would mislead buyers, and the site is built so that it cannot happen."
+   },
+   {
+    "q": "How can buyers judge Shop Display Boxes before more reviews arrive?",
+    "a": "Look at the specifics. Product pages set out what each structure can and cannot do, including where materials fail, and the guides show the reasoning. A clear example is the <a href=\"/cardboard-vs-corrugated-display-boxes/\">cardboard versus corrugated comparison</a>."
+   },
+   {
+    "q": "What does the published Shop Display Boxes customer review say?",
+    "a": "Briana of The Buckin' thanked Jennifer at Shop Display Boxes for her help through designing and ordering the boxes her business needed. She said they turned out amazing and have received several compliments."
+   }
+  ]
+ },
+ "/dieline-templates/": {
+  "h2": "More questions about dieline templates",
+  "faqs": [
+   {
+    "q": "Is a dieline template useful for exploring display layout early?",
+    "a": "Yes. Placing artwork roughly on a template shows how much room the panels actually give you before a specification is settled. Request a custom dieline in parallel so the final artwork lands on something drawn for your real product."
+   },
+   {
+    "q": "Will a standard dieline template match a retailer-specified display footprint?",
+    "a": "Rarely. Retailer footprints seldom match a standard size, and rescaling a template breaks its allowances. For a footprint set by a retailer, <a href=\"/get-a-free-dieline/\">request a free custom dieline</a> drawn to that limit and your product."
+   }
+  ]
+ },
+ "/display-box-packaging/": {
+  "h2": "More questions about display box packaging",
+  "faqs": [
+   {
+    "q": "Which display box packaging placement has the smallest footprint?",
+    "a": "Counter units. They compete for a few square inches beside a register, which makes them the easiest placement to win, and the shopper looks down at a steep angle. They place best when they grow upward through tiers rather than outward."
+   },
+   {
+    "q": "When does display box packaging need rigid board instead of boxboard?",
+    "a": "Rigid board gives the weight and lid behavior that gift and presentation packaging depends on. Folding boxboard prints best and suits light units, while corrugated carries load. Each option is compared on the <a href=\"/box-materials/\">box materials and board options</a> guide."
+   }
+  ]
+ },
+ "/display-box-printing-methods/": {
+  "h2": "More about display box printing methods",
+  "faqs": [
+   {
+    "q": "Which display box printing method suits short runs with several versions?",
+    "a": "Digital printing. It needs no plates, so there is no setup to pay for each variant, which makes short runs and versioned artwork practical. Offset overtakes it as quantity grows, so we compare both on your job."
+   },
+   {
+    "q": "Is flexographic printing on corrugated suited to bulk display bins?",
+    "a": "Yes. A flexible relief plate prints directly onto corrugated and suits solid colors, line work and type, which is why it is the standard route for shipping cases and bulk displays. It is weaker on fine photographic detail."
+   }
+  ]
+ },
+ "/display-box-size-guide/": {
+  "h2": "More questions about display box sizing",
+  "faqs": [
+   {
+    "q": "Does a wrap label change the size a display box needs?",
+    "a": "Yes. A wrap label adds thickness all the way around the product, and caps or pumps are often wider than the body. Measure the product at its widest point with the label on, or send the product so the cavity is sized to the real unit."
+   },
+   {
+    "q": "Should display box tolerance be set from a physical product sample?",
+    "a": "Yes. The right tolerance depends on product variation, how units are loaded, and whether a shopper removes one at a time, and spec sheets omit those details. It is set from a sample, as explained under <a href=\"/custom-box-sizes/\">how custom box sizes are set</a>."
+   }
+  ]
+ },
+ "/display-boxes-vs-display-trays/": {
+  "h2": "More on display boxes versus display trays",
+  "faqs": [
+   {
+    "q": "Is a low-front display box a middle ground between trays and boxes?",
+    "a": "Yes. A low-front box keeps three walls and cuts down the fourth, so it retains stock while improving access and visibility. An angled or stepped front on a tray works the same way, and most real displays sit somewhere between the extremes."
+   },
+   {
+    "q": "Does a display tray or a display box carry dense regulatory copy better?",
+    "a": "A display box. It gives far more printable surface for a story, a range explanation or dense regulatory copy, while a tray has almost nowhere to put it. If the packaging has to carry information, an enclosed box usually wins."
+   }
+  ]
+ },
+ "/display-packaging-design-guide/": {
+  "h2": "More questions about display packaging design",
+  "faqs": [
+   {
+    "q": "What should a display header card communicate to shoppers down an aisle?",
+    "a": "One thing at a glance, usually the brand and the offer rather than ingredients. Display panels are smaller than designers expect once bleed, safe area and mandated copy are deducted, so the header should carry the single message that matters."
+   },
+   {
+    "q": "What belongs on the tuck flaps of display packaging artwork?",
+    "a": "A tuck flap disappears into the box once it is closed, so anything that must stay readable belongs on a panel face. The flap is better used for an opening instruction or a batch area that does not need to be seen on shelf."
+   }
+  ]
+ },
+ "/electronics-display-packaging/": {
+  "h2": "More questions about electronics display packaging",
+  "faqs": [
+   {
+    "q": "Do electronics accessory packs need space for a retailer security tag?",
+    "a": "Where a retailer requires security tagging, the pack needs a flat, unobstructed area that accepts a tag. Plan that area into the electronics accessory dieline alongside an oversized footprint, rather than finding space for it after the artwork is finished."
+   }
+  ]
+ },
+ "/finishes-and-add-ons/": {
+  "h2": "More questions about finishes and add-ons",
+  "faqs": [
+   {
+    "q": "Does soft-touch lamination suit display boxes that are handled constantly?",
+    "a": "Usually not. Soft-touch is the most distinctive finish in the hand but marks most easily of the three laminates, and it takes the board out of the paper stream. Gloss lamination resists scuffing best on displays that are restocked repeatedly."
+   },
+   {
+    "q": "Are tear perforations and hand holes worth adding to a display?",
+    "a": "They are among the add-ons that repay their cost most reliably. A tear perforation lets a case open without a knife, and a hand hole makes a loaded display liftable. Each adds a die feature and sometimes a production stage."
+   }
+  ]
+ },
+ "/food-display-packaging/": {
+  "h2": "More questions about food display packaging",
+  "faqs": [
+   {
+    "q": "Which grease barriers keep food display packaging in the paper stream?",
+    "a": "Greaseproof coatings and barrier boards resist fat migration while remaining repulpable. Plastic-based barriers stop grease more absolutely but take the food display out of the paper recycling stream, so the choice depends on how oily the product is."
+   }
+  ]
+ },
+ "/free-design-support/": {
+  "h2": "More questions about free design support",
+  "faqs": [
+   {
+    "q": "Does free design support include choosing the display structure itself?",
+    "a": "Yes. We draw the dieline around your product, choose a structure suited to how the display will be used, and specify a board against the actual load rather than the product category. That structural work is included rather than charged."
+   },
+   {
+    "q": "Can free design support start before I have finished artwork?",
+    "a": "Yes, and earlier is better. If you are still choosing between formats, send the product and the placement. The cheapest moment to change a structure is before the dieline is approved, not after artwork has been built around it."
+   }
+  ]
+ },
+ "/get-a-free-dieline/": {
+  "h2": "More questions about getting a free dieline",
+  "faqs": [
+   {
+    "q": "Is a free dieline drawn for one specific board caliper?",
+    "a": "Yes. Board thickness changes the allowances, so each dieline is drawn for a stated caliper. A dieline drawn for 18 pt board will not fold correctly at 24 pt, which is why changing board later means revisiting the drawing."
+   },
+   {
+    "q": "What should I send when requesting a free dieline?",
+    "a": "Send the product itself, especially for anything with an insert, because a cap flare, tapered base or wrap label decides fit. If the product varies between batches, send more than one so tolerance is set against the real variation."
+   },
+   {
+    "q": "Does requesting a free dieline commit me to ordering a run?",
+    "a": "No. The dieline is drawn around your product before you commit to anything. You receive a layered vector file to place artwork onto or hand to your designer, and the decision to order comes afterward."
+   }
+  ]
+ },
+ "/health-and-beauty-display-packaging/": {
+  "h2": "More on health and beauty display packaging",
+  "faqs": [
+   {
+    "q": "When should health and beauty claims copy be settled for a display?",
+    "a": "Before the dieline is drawn. Ingredient lists, directions, warnings and claims compete with brand design for the same panels, so establish what must appear first. We print the supplied artwork and do not review claims for compliance."
+   }
+  ]
+ },
+ "/how-much-do-custom-display-boxes-cost/": {
+  "h2": "More about what custom display boxes cost",
+  "faqs": [
+   {
+    "q": "Do foil stamping and embossing raise the cost of custom display boxes?",
+    "a": "Yes. Each finish adds a pass, and foil and embossing also need their own tooling, which behaves like setup. That tooling is significant on a short run and minor across a long one, so the effect depends heavily on quantity."
+   },
+   {
+    "q": "Does flat-packing lower the delivered cost of custom display boxes?",
+    "a": "Yes. Freight on display packaging is billed on volume rather than weight, and shipping is included in the quoted price, so a display that ships flat costs substantially less to deliver than the same display shipped assembled."
+   }
+  ]
+ },
+ "/how-to-choose-retail-display-packaging/": {
+  "h2": "More on choosing retail display packaging",
+  "faqs": [
+   {
+    "q": "Why does the order of retail display packaging decisions matter?",
+    "a": "Each decision narrows the next: channel, placement, open or enclosed, insert, then how it arrives. Taken out of order, you design something and then discover it cannot be placed. Choosing material first is the most frequent version of that mistake."
+   },
+   {
+    "q": "Who assembles retail display packaging, and why does it matter?",
+    "a": "Store staff with limited time often assemble displays, and who builds it decides which arrival method is realistic. Flat-packed is cheapest but needs assembly, a shipper-display converts on arrival, and pre-assembled costs the most in freight."
+   }
+  ]
+ },
+ "/how-to-order/": {
+  "h2": "More questions about how ordering works",
+  "faqs": [
+   {
+    "q": "What file format is the dieline supplied in during ordering?",
+    "a": "A layered vector file with cut, crease and bleed on separate layers, drawn at actual size. For anything with an insert, the dieline comes from a physical sample rather than from dimensions, so the fit is checked against the real product."
+   },
+   {
+    "q": "How should artwork be supplied at the artwork stage of an order?",
+    "a": "Supply print-ready vector artwork placed on the supplied dieline, with fonts outlined, placed images at 300 DPI at final size, and a 3 mm bleed. The full list is in the <a href=\"/artwork-guidelines/\">artwork guidelines for print files</a>."
+   },
+   {
+    "q": "Do display box orders arrive flat-packed or assembled?",
+    "a": "Most displays ship flat, which cuts freight volume and pairs with a lock-bottom structure that erects without tape or tools. Pre-assembled and pre-loaded shipping are both possible where the structure and destination justify the extra cost."
+   }
+  ]
+ },
+ "/jewelry-display-packaging/": {
+  "h2": "More questions about jewelry display packaging",
+  "faqs": [
+   {
+    "q": "Do jewelry counter displays need individual recesses for rings and studs?",
+    "a": "Usually, yes. Individual recesses stop rings and studs migrating into each other through a day of handling, and angled tiers or raised platforms put each piece into the line of sight of a shopper looking down at the counter."
+   }
+  ]
+ },
+ "/locations/": {
+  "h2": "Questions about our display box locations",
+  "faqs": [
+   {
+    "q": "Which states have their own Shop Display Boxes location page?",
+    "a": "California, Texas, New York, Illinois, Pennsylvania, Washington, Arizona, Massachusetts, Michigan, New Jersey, Missouri and Colorado each have one. Each covers the sectors and retail conditions that shape display packaging decisions in that market."
+   },
+   {
+    "q": "Do you ship display boxes to states without a location page?",
+    "a": "Yes. We ship to business addresses in all fifty states, and the process is identical wherever you are. A location page exists only where there is something genuinely specific to say about that market, not as a condition of delivery."
+   },
+   {
+    "q": "Where is Shop Display Boxes actually based among these locations?",
+    "a": "Our registered address is in Brooklyn, New York, and that is the one place we are actually based. It is not a published trade counter you can collect from, and every order is produced to specification and shipped to you."
+   },
+   {
+    "q": "Why are there not display box location pages for every state?",
+    "a": "Writing the same page fifty times with only the name changed would help nobody. We publish a location page only where a market has sectors or retail conditions specific enough to change how display packaging should be specified."
+   },
+   {
+    "q": "Do the location pages mean you have facilities in those states?",
+    "a": "No. The location pages are context, not a branch network. Outside our registered address in Brooklyn, we have no facility or collection point in any listed state, and every order ships to your business address."
+   },
+   {
+    "q": "Does my state change how a display box order works?",
+    "a": "No. Send the product and a quantity, and the dieline follows before you commit to anything. You approve the dieline and a proof, the run follows, and it ships to your business address in any state."
+   },
+   {
+    "q": "What do the state and city display box location pages cover?",
+    "a": "They cover the sectors and retail conditions in each market, such as freight hubs, high-rent retail cities or regulated categories. Those factors genuinely change packaging decisions, so each page explains what matters for display boxes in that market."
+   },
+   {
+    "q": "Are there city pages within the state display box location pages?",
+    "a": "Yes. Several states link to city pages covering local sectors and retail conditions, including Los Angeles, Chicago, Houston, Philadelphia, Phoenix and Seattle. One example is the guide to <a href=\"/custom-display-boxes-new-york-ny/\">display boxes in New York City</a>."
+   },
+   {
+    "q": "Do the location pages list display box delivery times by state?",
+    "a": "No. We do not publish transit times or delivery guarantees for any state. If your order depends on a fixed in-store date, say so when you request a quote and we will tell you whether it is achievable before you commit."
+   },
+   {
+    "q": "Is shipping to my location included in a display box quote?",
+    "a": "Yes. Shipping is included in the quoted price to business addresses across all fifty states, so there is no separate freight line to settle afterward. Free shipping is a cost commitment rather than a guaranteed delivery date."
+   }
+  ]
+ },
+ "/low-minimum-orders/": {
+  "h2": "More questions about low minimum orders",
+  "faqs": [
+   {
+    "q": "Do low minimum orders suit seasonal or limited-edition display runs?",
+    "a": "Yes. Seasonal and limited-edition runs that will not repeat are one of the clearest uses for short runs, along with multiple variants that each need their own artwork. Digital printing removes plate setup, which keeps those small runs viable."
+   },
+   {
+    "q": "Do low minimum orders still go through a dieline and proof?",
+    "a": "Yes. A first order of any size includes development: the dieline, the proof cycle and the approvals. That is where most of the cost and elapsed time sits, which is why a second small run is cheaper than the first."
+   }
+  ]
+ },
+ "/minimum-order-quantity-for-display-boxes/": {
+  "h2": "More on minimum orders for display boxes",
+  "faqs": [
+   {
+    "q": "Is a display box minimum order a technical limit or a commercial one?",
+    "a": "Mostly commercial. A minimum is the point below which fixed costs make the per-piece price unreasonable, not the point below which production is impossible. That means it is a threshold you can sometimes work around by changing the specification."
+   },
+   {
+    "q": "Does digital printing change the minimum order for display boxes?",
+    "a": "Yes. Digital printing removes plates entirely, and plate setup is what used to push minimums high. If a quoted minimum is higher than you need, asking whether the job can run digitally is the first thing to try."
+   }
+  ]
+ },
+ "/pet-product-display-packaging/": {
+  "h2": "More questions about pet product display packaging",
+  "faqs": [
+   {
+    "q": "Does a counter display for plush pet toys need corrugated board?",
+    "a": "Usually not. Folding boxboard suits light pet goods such as plush toys on a counter. Corrugated becomes necessary as the load approaches bulk, and floor bins for treats that shoppers reach into often need double wall."
+   }
+  ]
+ },
+ "/pharmaceutical-display-packaging/": {
+  "h2": "More on pharmaceutical display packaging",
+  "faqs": [
+   {
+    "q": "Will a laminated pharmaceutical display panel accept serialization labels?",
+    "a": "Not reliably. A fully laminated panel will not consistently accept most overprint inks or label adhesives, so serialization codes or variable data need a clear uncoated area planned into the artwork and agreed before print."
+   }
+  ]
+ },
+ "/pop-up-vs-counter-display-boxes/": {
+  "h2": "More on pop-up versus counter displays",
+  "faqs": [
+   {
+    "q": "Is a pop-up or a counter display better for one store?",
+    "a": "For a single display set up once by someone with time, a conventional lock-bottom counter flat-pack usually does the same job for less. The pop-up premium pays off across large rollouts where assembly is unsupervised."
+   },
+   {
+    "q": "Does a pop-up display still work after weeks on a pallet?",
+    "a": "Not always. A pop-up that has sat under compression for weeks does not always behave like one opened the day it was made. Test a sample after time under load, because that failure only appears if you look for it."
+   }
+  ]
+ },
+ "/portfolio/": {
+  "h2": "Questions about our display box portfolio",
+  "faqs": [
+   {
+    "q": "Why is the display box portfolio organized by problem, not client?",
+    "a": "A display holding glass candle jars and one holding lipsticks look different because they solve different problems. Grouping the portfolio by industry or client hides that, so each section is organized by the constraint the structure had to solve."
+   },
+   {
+    "q": "Does the display box portfolio name any client brands?",
+    "a": "No. Naming a brand requires its written permission, and we do not have that for publication. The portfolio shows the work itself without attaching client names, project outcomes or claims we cannot support with figures."
+   },
+   {
+    "q": "Are the images in the display box portfolio real production work?",
+    "a": "Yes. Every image across the site is production work, and the portfolio sets out the formats behind them. The structures are grouped by the problem each one solved rather than presented as stand-alone showcase pieces."
+   },
+   {
+    "q": "What do the counter displays in the portfolio have in common?",
+    "a": "They are small-footprint units built to earn contested space beside a register, so they grow upward through tiers rather than outward. The product tier is angled forward because a shopper at a counter looks down at roughly forty-five degrees."
+   },
+   {
+    "q": "How are the floor displays in the portfolio engineered to stay in shape?",
+    "a": "The engineering is in the load path. Corner posts and internal columns carry shelf loads to the base rather than into glued bonds that creep, and one-way locating tabs keep assembly simple for store staff with limited time."
+   },
+   {
+    "q": "Why do the glass-vessel displays in the portfolio use corrugated?",
+    "a": "Candle and glass-vessel displays put far more load per square inch on the base than their size suggests, which is where boxboard stops being viable. Corrugated, often litho-laminated, takes over, with partitions so glass does not chip against glass."
+   },
+   {
+    "q": "What problem do the soap and food displays in the portfolio solve?",
+    "a": "The product attacks its own packaging. Oils migrate into board and stain it permanently, so the coating decision governs both staining and recyclability. Direct food contact also adds material compliance, settled before any structure is drawn."
+   },
+   {
+    "q": "What makes the shipper displays in the portfolio succeed or fail?",
+    "a": "The perforation. These structures survive palletized freight closed and then open into a display. Too strong and a store associate reaches for a knife; too weak and cases open under compression in transit."
+   },
+   {
+    "q": "Does the display box portfolio include order quantities or sales results?",
+    "a": "No. Client names, quantities, timelines and commercial results belong in case studies, which we will publish only with permission and verified figures. The reasoning is explained under <a href=\"/case-studies/\">why case studies are not published yet</a>."
+   },
+   {
+    "q": "How do I start a display project like those in the portfolio?",
+    "a": "Send the product and the constraint you are working against, such as a footprint, a load or a staining problem. Most portfolio jobs started from a constraint rather than a format, and the dieline follows before you commit."
+   }
+  ]
+ },
+ "/quality-assurance/": {
+  "h2": "More questions about quality assurance",
+  "faqs": [
+   {
+    "q": "Which quality checks run on display boxes during the production run?",
+    "a": "Print registration, color against the approved proof, crease quality, die accuracy and glue integrity are each checked during the run. On corrugated, crushing at the crease is checked specifically, and assembled units are checked for squareness."
+   },
+   {
+    "q": "Can display box quality be documented for a retailer requirement?",
+    "a": "Raise it at quoting stage. We do not publish certification marks or defect statistics, but if your job needs documented inspection, certified stock or a specific quality standard, we will confirm what can be evidenced for that job."
+   }
+  ]
+ },
+ "/request-a-quote/": {
+  "h2": "More questions about requesting a quote",
+  "faqs": [
+   {
+    "q": "What should I include in a display box quote request?",
+    "a": "Product dimensions or the product itself, the quantity, where the display will sit, and any footprint limit a retailer has given you. Add artwork if you have it; if not, we draw the dieline first and fill the gaps with suggested options."
+   },
+   {
+    "q": "Can a display box quote start from a photograph instead of dimensions?",
+    "a": "Yes. Send a photograph of the product beside a ruler, or send the product itself. We would rather size the box around the real thing than around a number that leaves out the cap or the label."
+   },
+   {
+    "q": "Does a display box quote show which options change the price?",
+    "a": "Yes. You get a price against a specification, with the options that materially change it called out, usually board, finish and quantity breaks. Where a cheaper route meets the same requirement, the quote says so."
+   },
+   {
+    "q": "Should a fixed in-store date go on a display box quote request?",
+    "a": "Yes. Shipping is included in the quoted price, but delivery dates are not guaranteed by default. Include the in-store date and we will tell you whether it is achievable before you commit to anything."
+   }
+  ]
+ },
+ "/retail-packaging/": {
+  "h2": "More questions about retail packaging",
+  "faqs": [
+   {
+    "q": "Are floor placements for retail packaging usually permanent or promotional?",
+    "a": "Almost always promotional. Floor placements hold the most stock and take the most negotiation, and they are usually tied to a promotional window. Counter placements are smaller and easier to win, while shelf placements follow planograms."
+   }
+  ]
+ },
+ "/sample-request/": {
+  "h2": "More questions about sample requests",
+  "faqs": [
+   {
+    "q": "How long should a requested display sample stay loaded before approval?",
+    "a": "Longer than feels necessary. Paperboard fails by creep rather than sudden collapse, so a base that holds when first filled can bow days later. Keep the sample loaded and standing before approving the structure."
+   },
+   {
+    "q": "Is a printed sample worth requesting when the display is laminated?",
+    "a": "Usually, yes. A laminate changes how color reads, and a screen cannot show it on the real substrate. Where a brand color carries commercial weight, a printed sample settles what a plain structural sample cannot."
+   }
+  ]
+ },
+ "/shipping-information/": {
+  "h2": "More questions about display shipping",
+  "faqs": [
+   {
+    "q": "Does a shipper-display need a separate packing stage on arrival?",
+    "a": "No. A shipper-display travels sealed and converts on arrival, so there is no separate pack stage. The structure has to be designed so that what remains after opening is still square and stable on the shelf or counter."
+   },
+   {
+    "q": "Should glass product displays ship loaded or with product sent separately?",
+    "a": "For glass and fragile assortments, shipping the display flat and the product separately is often safer and cheaper, at the cost of in-store assembly. Glass-carrying displays need partitioning whether or not they ship loaded."
+   }
+  ]
+ },
+ "/soap-packaging/": {
+  "h2": "More questions about soap packaging",
+  "faqs": [
+   {
+    "q": "Do soap displays need dividers to stay tidy through a day?",
+    "a": "Usually, yes. Soap is bought partly by smell, so bars are picked up and returned constantly and an open well becomes mixed within hours. Individual cavities or dividers keep each variety in its own place through a day of handling."
+   }
+  ]
+ },
+ "/supplement-display-packaging/": {
+  "h2": "More questions about supplement display packaging",
+  "faqs": [
+   {
+    "q": "Do supplement displays for gyms and clinics need different footprints?",
+    "a": "Often. Pharmacy chains, health food stores, gyms and clinics concede very different space, and pharmacy is the most prescriptive. Establish which channel the supplement display is for before the dieline is drawn."
+   }
+  ]
+ },
+ "/sustainability/": {
+  "h2": "More questions about sustainable display packaging",
+  "faqs": [
+   {
+    "q": "Does recycled board look different on sustainable display packaging?",
+    "a": "Yes. Recycled board has a warmer, less uniform surface with visible fiber variation. It suits natural and artisan positioning well and conventional luxury positioning less so, which makes it a brand judgment as much as a material one."
+   },
+   {
+    "q": "Is recycled content already standard in corrugated display packaging?",
+    "a": "In most corrugated grades, yes. Recycled content is standard rather than a premium option, so it is often already present without being specified. For direct food contact, a functional barrier between recycled fibers and the food is usually needed."
+   }
+  ]
+ },
+ "/toy-display-packaging/": {
+  "h2": "More questions about toy display packaging",
+  "faqs": [
+   {
+    "q": "Can die-cut board tabs replace plastic ties in toy display boxes?",
+    "a": "Increasingly, yes. Die-cut board tabs anchor a figure or vehicle to its backing card without plastic ties. Anchor where the toy is structurally strongest, such as the waist, ankles and upper back, rather than arms that distort under tension."
+   }
+  ]
+ },
+ "/vape-display-packaging/": {
+  "h2": "More questions about vape display packaging",
+  "faqs": [
+   {
+    "q": "Should vape display packaging use a separately printed header or sleeve?",
+    "a": "It often makes sense. Vape packaging requirements change, and a separately printed sleeve or header lets the copy be replaced while the structural tooling stays intact, which avoids reprinting or retooling the whole display."
+   }
+  ]
+ },
+ "/wholesale-display-boxes/": {
+  "h2": "More questions about wholesale display boxes",
+  "faqs": [
+   {
+    "q": "Are wholesale display box pricing tiers and payment terms published?",
+    "a": "No. Volume pricing tiers, payment terms and any account arrangements are confirmed on quotation, because they depend on the specification and quantity. Send the details of your wholesale job and they come back with the quote."
+   },
+   {
+    "q": "Why send annual volume when requesting a wholesale display box quote?",
+    "a": "Because the pricing conversation changes when it covers a program rather than a single run. Consolidating a year of reorders into fewer runs usually saves more than negotiating the rate, and annual volume shows where that is possible."
+   }
+  ]
+ }
+}

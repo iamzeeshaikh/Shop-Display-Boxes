@@ -1,4 +1,5 @@
 ---
+import { withExtras, extraFaqs, extraHeading } from '../lib/page-faqs';
 /**
  * Body for every non-product root-level page: commercial, industry, guide,
  * and policy. The `kind` discriminator changes the layout emphasis and the
@@ -41,6 +42,7 @@ const crumbs: Crumb[] = [
   { name: content.h1, url },
 ];
 
+const pageFaqs = withExtras(Astro.url.pathname, content.faqs ?? []);
 const schemaType =
   content.slug === 'about-us'
     ? 'AboutPage'
@@ -61,7 +63,7 @@ const schema = graph(
     dateModified: content.updated,
   }),
   breadcrumbSchema(crumbs),
-  content.faqs && content.faqs.length ? faqPage(content.faqs) : null,
+  pageFaqs.length ? faqPage(pageFaqs) : null,
   // Review nodes, emitted only for reviews rendered on this page.
   ...reviews.map((r) => ({
     '@type': 'Review',
@@ -272,10 +274,10 @@ const motion = hasMotion(content.slug);
   }
 
   {
-    content.faqs && content.faqs.length > 0 && (
+    pageFaqs.length > 0 && (
       <section class="section">
         <div class:list={['container', 'container--wide', motion && 'fx-fade-up']}>
-          <FaqAccordion faqs={content.faqs} heading="Frequently asked questions" />
+          <FaqAccordion faqs={pageFaqs} heading={content.faqs?.length ? "Frequently asked questions" : extraHeading(Astro.url.pathname)} />
         </div>
       </section>
     )

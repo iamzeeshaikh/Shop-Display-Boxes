@@ -1,4 +1,6 @@
 ---
+import { withExtras, extraFaqs, extraHeading } from '../../lib/page-faqs';
+import FaqAccordion from '../../components/FaqAccordion.astro';
 /**
  * Blog article. Lives under /blog/ rather than at the root, which keeps
  * editorial content clearly separated from the commercial pages and avoids
@@ -14,6 +16,7 @@ import {
   breadcrumbs as breadcrumbSchema,
   article as articleSchema,
   type Crumb,
+  faqPage,
 } from '../../lib/schema';
 
 export async function getStaticPaths() {
@@ -73,7 +76,8 @@ const schema = graph(
     datePublished: post.published,
     dateModified: post.updated,
     authorName: post.author,
-  })
+  }),
+  extraFaqs(Astro.url.pathname).length ? faqPage(extraFaqs(Astro.url.pathname)) : null
 );
 
 const publishedLabel = new Date(post.published + 'T00:00:00Z').toLocaleDateString('en-US', {
@@ -256,6 +260,11 @@ const related = post.related
       )
     }
   </article>
+  {extraFaqs(Astro.url.pathname).length > 0 && (
+    <section class="section"><div class="container container--prose">
+      <FaqAccordion faqs={extraFaqs(Astro.url.pathname)} heading={extraHeading(Astro.url.pathname)} />
+    </div></section>
+  )}
 </BaseLayout>
 
 <style>
