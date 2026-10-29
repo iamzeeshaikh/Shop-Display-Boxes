@@ -138,11 +138,19 @@ export function xmlEscape(s: string): string {
     .replace(/'/g, '&apos;');
 }
 
+/**
+ * Every page was rebuilt on 2026-10-29: new layout, and the photo picker added
+ * to the homepage, product, industry and category pages. That is a real change
+ * to what each page shows, so no page reports an earlier lastmod than this.
+ */
+const SITE_REBUILT = '2026-10-29';
+
 export function renderUrlset(entries: SitemapEntry[]): string {
   const urls = entries
     .map((e) => {
       const parts = [`    <loc>${xmlEscape(e.loc)}</loc>`];
-      if (e.lastmod) parts.push(`    <lastmod>${e.lastmod}</lastmod>`);
+      const lastmod = !e.lastmod || e.lastmod < SITE_REBUILT ? SITE_REBUILT : e.lastmod;
+      parts.push(`    <lastmod>${lastmod}</lastmod>`);
       for (const img of e.images ?? []) {
         parts.push(`    <image:image><image:loc>${xmlEscape(img)}</image:loc></image:image>`);
       }
