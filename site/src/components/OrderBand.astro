@@ -54,7 +54,7 @@ const headingId = `${id}-h`;
     </h2>
     <p class="ob__line">{PRICE_LINE}</p>
     <p>
-      A standard display box in this style, printed full color to your artwork and delivered flat.
+      A standard display box in {product ? 'this style' : 'the style you choose'}, printed full color to your artwork and delivered flat.
       Larger runs, a different size or specialty board are quoted —
       <a href="/request-a-quote/">ask for a quote</a> instead.
     </p>
@@ -121,12 +121,13 @@ const headingId = `${id}-h`;
 <style>
   .ob {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     background: var(--ink);
     color: #fff;
   }
   @media (min-width: 60em) {
     .ob {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
   .ob__photo img {
@@ -136,6 +137,7 @@ const headingId = `${id}-h`;
     object-fit: cover;
   }
   .ob__panel {
+    min-width: 0;
     padding: clamp(44px, 5vw, 72px) var(--gut);
     max-width: 720px;
     display: flex;
@@ -183,6 +185,7 @@ const headingId = `${id}-h`;
   }
   .ob__select {
     flex: 1;
+    width: 100%;
     min-width: 0;
     padding: 10px 12px;
     border: 1.5px solid rgb(255 255 255 / 0.35);
