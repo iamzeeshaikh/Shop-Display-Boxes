@@ -155,7 +155,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     // CDN's own error page, hiding the real reason from the logs and the visitor.
     return reject(
       503,
-      'We could not send that just now. Please email info@shopdisplayboxes.com or call (503) 358-0443 and we will pick it up.',
+      'We could not send that just now. Please email info@shopdisplayboxes.com or call (503) 461-4788 and we will pick it up.',
     );
   }
 
