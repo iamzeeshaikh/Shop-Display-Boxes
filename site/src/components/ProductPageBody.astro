@@ -14,7 +14,7 @@ import SpecTable from './SpecTable.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import RelatedProducts from './RelatedProducts.astro';
 import QuoteFormShort from './QuoteFormShort.astro';
-import DisplayConfigurator from './DisplayConfigurator.astro';
+import DesignYourBox from './DesignYourBox.astro';
 import InquiryForm from './InquiryForm.astro';
 import { getProduct } from '../data/products';
 import type { ProductContent } from '../data/product-content';
@@ -102,86 +102,71 @@ const schema = graph(
 >
   <Breadcrumbs crumbs={crumbs} />
 
-  {/* ── Hero: gallery + commercial summary + primary CTA ─────────────── */}
-  <section class="section section--tight">
-    <div class="container container--wide hero">
-      <div class="hero__media">
-        <ProductGallery
-          slug={content.slug}
-          imageAlts={content.imageAlts}
-          productName={record.name}
-        />
+  {/* ── Showcase: photo gallery + summary + primary CTA ──────────────── */}
+  <section class="pp-top">
+    <div class="pp-top__media">
+      <ProductGallery slug={content.slug} imageAlts={content.imageAlts} productName={record.name} />
+    </div>
+
+    <div class="pp-top__body">
+      <h1>{content.h1}</h1>
+      <p class="pp-top__summary">{content.summary}</p>
+
+      <div class="pp-top__actions">
+        <a class="btn btn-solid btn-lg" href="/request-a-quote/">Request a quote</a>
+        <a class="btn btn-line btn-lg" href="/sample-request/">Request a sample</a>
+        <a class="pp-top__design" href="#design">Design your display box</a>
       </div>
 
-      <div class="hero__body">
-        <p class="eyebrow">{record.group}</p>
-        <h1>{content.h1}</h1>
-        <p class="lede">{content.summary}</p>
-
-        <div class="hero__actions">
-          <a class="btn btn--primary btn--lg" href="/request-a-quote/">Request a quote</a>
-          <a class="btn btn--outline btn--lg" href="/sample-request/">Request a sample</a>
-        </div>
-
-        <ul class="hero__assurances">
-          <li>Free dieline drawn for your product</li>
-          <li>Custom sizes — the box is built around your unit</li>
-          <li>Shipped to businesses across all 50 states</li>
-        </ul>
-      </div>
+      <ul class="pp-top__facts">
+        <li>Free dieline drawn for your product</li>
+        <li>Custom sizes — the box is built around your unit</li>
+        <li>Shipped to businesses across all 50 states</li>
+      </ul>
     </div>
   </section>
 
-  {/* ── Quick inquiry (compact, name/email/phone/message) ────────────── */}
-  <section class="section section--tight">
-    <div class="container container--wide">
-      <InquiryForm
-        context={record.name}
-        contextSlug={content.slug}
-        formType="product-inquiry"
-        variant="compact"
-      />
-    </div>
+  {/* ── Quick inquiry ────────────────────────────────────────────────── */}
+  <section class="band--tight wrap pp-ask">
+    <InquiryForm context={record.name} contextSlug={content.slug} formType="product-inquiry" variant="compact" />
   </section>
 
   {/* ── Uses and industries ──────────────────────────────────────────── */}
-  <section class="section section--warm">
-    <div class="container container--wide split">
-      <div>
-        <h2>What these displays are used for</h2>
-        <ul class="ticks">
-          {content.uses.map((use) => <li>{use}</li>)}
-        </ul>
-      </div>
-      <div>
-        <h2>Who orders them</h2>
-        <ul class="ticks">
-          {content.industries.map((i) => <li>{i}</li>)}
-        </ul>
-      </div>
+  <section class="pp-uses">
+    <div class="pp-uses__card">
+      <h2>What these displays are used for</h2>
+      <ul class="tick-list">
+        {content.uses.map((use) => <li>{use}</li>)}
+      </ul>
+    </div>
+    <div class="pp-uses__card">
+      <h2>Who orders them</h2>
+      <ul class="tick-list">
+        {content.industries.map((i) => <li>{i}</li>)}
+      </ul>
     </div>
   </section>
 
-  {/* ── Body sections ────────────────────────────────────────────────── */}
-  <section class="section">
-    <div class="container container--wide body-grid">
-      <div class="body-grid__content">
+  {/* ── Body sections + pricing panel ───────────────────────────────── */}
+  <section class="band wrap">
+    <div class="page-cols">
+      <div class="page-cols__main">
         {
           content.sections.map((section) => (
-            <section class="body-section">
+            <section class="copy-block">
               <h2>{section.heading}</h2>
               {section.body.map((p) => (
                 <p>{p}</p>
               ))}
               {section.points && (
-                <ul class="ticks">
+                <ul class="tick-list">
                   {section.points.map((point) => (
                     <li>{point}</li>
                   ))}
                 </ul>
               )}
               {section.link && (
-                <p class="body-section__link">
+                <p class="copy-block__link">
                   {section.link.text} <a href={section.link.href}>{section.link.anchor}</a>.
                 </p>
               )}
@@ -190,248 +175,232 @@ const schema = graph(
         }
       </div>
 
-      <aside class="body-grid__aside">
+      <aside class="page-cols__side">
         <PriceNote />
       </aside>
     </div>
   </section>
 
   {/* ── Specifications ───────────────────────────────────────────────── */}
-  <section class="section section--sunk">
-    <div class="container container--wide">
+  <section class="band band--mist wrap pp-spec">
+    <div class="pp-spec__head">
       <h2>Specifications</h2>
-      <p class="lede spec-lede">
+      <p>
         These are the options available for this style. The values set per job are marked as such
         rather than given a figure that would not hold for every order.
       </p>
-      <div class="spec-wrap">
-        <SpecTable specs={content.specs} productName={record.name} />
-      </div>
+    </div>
+    <div class="pp-spec__table">
+      <SpecTable specs={content.specs} productName={record.name} />
     </div>
   </section>
 
-  {/* ── FAQs ─────────────────────────────────────────────────────────── */}
-  <DisplayConfigurator productName={record.name} productSlug={content.slug} />
+  <DesignYourBox productName={record.name} productSlug={content.slug} id={`dyb-${content.slug}`} />
 
-  <section class="section">
-    <div class="container container--wide">
-      <FaqAccordion
-        faqs={withExtras(Astro.url.pathname, content.faqs)}
-        heading={`${record.name} — questions we get asked`}
-        intro="Answers specific to this style. For ordering, artwork, and shipping questions that apply across the range, see the general FAQ."
-      />
-    </div>
+  <section class="band wrap">
+    <FaqAccordion
+      faqs={withExtras(Astro.url.pathname, content.faqs)}
+      heading={`${record.name} — questions we get asked`}
+      intro="Answers specific to this style. For ordering, artwork, and shipping questions that apply across the range, see the general FAQ."
+    />
   </section>
 
   {
     productReviews.length > 0 && (
-      <section class="section section--sunk">
-        <div class="container container--wide">
-          <h2>What customers said about this style</h2>
-          {rating && (
-            <p class="rating-summary">
-              <strong>{rating.ratingValue} out of 5</strong> from {rating.reviewCount}{' '}
-              {rating.reviewCount === 1 ? 'review' : 'reviews'}
-            </p>
-          )}
-          <ul class="reviews">
-            {productReviews.map((r) => (
-              <li class="review">
-                {r.rating && (
-                  <p class="review__rating" aria-label={`Rated ${r.rating} out of 5`}>
-                    <span aria-hidden="true">
-                      {'★'.repeat(r.rating)}
-                      {'☆'.repeat(5 - r.rating)}
-                    </span>
-                  </p>
-                )}
-                <blockquote class="review__body">{r.body}</blockquote>
-                <p class="review__author">
-                  {r.author}
-                  {r.organization ? `, ${r.organization}` : ''} ·{' '}
-                  <time datetime={r.date}>{r.date}</time>
+      <section class="band band--mist wrap">
+        <h2>What customers said about this style</h2>
+        {rating && (
+          <p class="rv-sum">
+            <strong>{rating.ratingValue} out of 5</strong> from {rating.reviewCount}{' '}
+            {rating.reviewCount === 1 ? 'review' : 'reviews'}
+          </p>
+        )}
+        <ul class="rv-list">
+          {productReviews.map((r) => (
+            <li class="rv">
+              {r.rating && (
+                <p class="rv__stars" aria-label={`Rated ${r.rating} out of 5`}>
+                  <span aria-hidden="true">
+                    {'★'.repeat(r.rating)}
+                    {'☆'.repeat(5 - r.rating)}
+                  </span>
                 </p>
-              </li>
-            ))}
-          </ul>
-        </div>
+              )}
+              <blockquote class="rv__body">{r.body}</blockquote>
+              <p class="rv__by">
+                {r.author}
+                {r.organization ? `, ${r.organization}` : ''} ·{' '}
+                <time datetime={r.date}>{r.date}</time>
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
     )
   }
 
   {/* ── Related ──────────────────────────────────────────────────────── */}
-  <section class="section section--warm">
-    <div class="container container--wide">
-      <RelatedProducts slugs={content.related} />
-    </div>
+  <section class="band band--mist wrap">
+    <RelatedProducts slugs={content.related} />
   </section>
 
-  {/* ── Final quote CTA ──────────────────────────────────────────────── */}
-  <section class="section">
-    <div class="container container--wide">
-      <QuoteFormShort productName={record.name} productSlug={content.slug} />
-    </div>
+  {/* ── Final quote form ─────────────────────────────────────────────── */}
+  <section class="band wrap">
+    <QuoteFormShort productName={record.name} productSlug={content.slug} />
   </section>
-
 </BaseLayout>
 
 <style>
-  .hero {
+  .pp-top {
     display: grid;
-    gap: var(--s-7);
+    gap: 32px;
     align-items: start;
+    padding: 32px var(--gut) 56px;
+    background: linear-gradient(180deg, var(--mist) 0%, var(--mist) 70%, #fff 100%);
   }
 
   @media (min-width: 64em) {
-    .hero {
-      grid-template-columns: minmax(0, 32rem) minmax(0, 1fr);
-      gap: var(--s-9);
+    .pp-top {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+      gap: clamp(40px, 5vw, 80px);
+      padding-block: 40px 72px;
+    }
+    .pp-top__body {
+      position: sticky;
+      top: 104px;
+      padding-block-start: 12px;
     }
   }
 
-  .hero__body h1 {
-    margin-block: var(--s-1) var(--s-4);
+  .pp-top__summary {
+    margin-block-start: 18px;
+    color: var(--ink-2);
+    font-size: 1.125rem;
+    max-width: 60ch;
   }
 
-  .hero__actions {
+  .pp-top__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-3);
-    margin-block: var(--s-6) var(--s-6);
+    align-items: center;
+    gap: 12px 16px;
+    margin-block: 28px;
   }
 
-  .hero__assurances {
+  .pp-top__design {
+    font-weight: 600;
+  }
+
+  .pp-top__facts {
     list-style: none;
     margin: 0;
-    padding: var(--s-5) 0 0;
-    border-block-start: 1px solid var(--c-border);
+    padding: 0;
     display: grid;
-    gap: var(--s-2);
-    font-size: var(--t-base);
-    color: var(--c-text-muted);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    background: #fff;
   }
 
-  .split {
+  .pp-top__facts li {
+    padding: 13px 18px 13px 46px;
+    position: relative;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .pp-top__facts li + li {
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .pp-top__facts li::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: var(--cobalt)
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m6.5 12.5 3.5 3.5 7.5-8" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+      center/11px no-repeat;
+  }
+
+  .pp-uses {
     display: grid;
-    gap: var(--s-7);
+    gap: 20px;
+    padding: 0 var(--gut) var(--band-y-tight);
   }
 
   @media (min-width: 52em) {
-    .split {
+    .pp-uses {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--s-9);
     }
   }
 
-  .ticks {
-    list-style: none;
-    margin: var(--s-4) 0 0;
-    padding: 0;
+  .pp-uses__card {
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--mist);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+  }
+
+  .pp-uses__card h2 {
+    font-size: var(--t-xl);
+  }
+
+  .pp-spec {
     display: grid;
-    gap: var(--s-3);
-  }
-
-  .ticks li {
-    position: relative;
-    padding-inline-start: var(--s-6);
-    color: var(--c-text-muted);
-  }
-
-  .ticks li::before {
-    content: '';
-    position: absolute;
-    inset-inline-start: 0;
-    inset-block-start: 0.62em;
-    width: 9px;
-    height: 9px;
-    background: var(--c-kraft-400);
-    border-radius: 1px;
-    transform: rotate(45deg);
-  }
-
-  .body-grid {
-    display: grid;
-    gap: var(--s-8);
-    align-items: start;
+    gap: 24px;
   }
 
   @media (min-width: 66em) {
-    .body-grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
-      gap: var(--s-10);
-    }
-
-    .body-grid__aside {
-      position: sticky;
-      top: 7rem;
+    .pp-spec {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.5fr);
+      gap: 64px;
+      align-items: start;
     }
   }
 
-  .body-section + .body-section {
-    margin-block-start: var(--s-8);
+  .pp-spec__head p {
+    margin-block-start: 12px;
+    color: var(--muted);
+    font-size: 1.0625rem;
   }
 
-  .body-section h2 {
-    margin-block-end: var(--s-4);
+  .rv-sum {
+    margin-block: 12px 24px;
+    color: var(--muted);
   }
 
-  .body-section p + p {
-    margin-block-start: var(--s-4);
-  }
-
-  .body-section p {
-    color: var(--c-text-muted);
-    max-width: 68ch;
-  }
-
-  .body-section__link {
-    margin-block-start: var(--s-4);
-    font-size: var(--t-base);
-  }
-
-  .spec-lede {
-    margin-block: var(--s-3) var(--s-6);
-  }
-
-  .spec-wrap {
-    max-width: 56rem;
-  }
-
-  .rating-summary {
-    margin-block: var(--s-3) var(--s-6);
-    color: var(--c-text-muted);
-  }
-
-  .reviews {
+  .rv-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--s-6);
+    gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   }
 
-  .review {
-    padding: var(--s-5);
-    background: var(--c-paper);
-    border: 1px solid var(--c-border);
+  .rv {
+    padding: 22px;
+    background: #fff;
+    border: 1px solid var(--rule);
     border-radius: var(--r-lg);
   }
 
-  .review__rating {
-    color: var(--c-signal-700);
+  .rv__stars {
+    color: var(--cobalt);
     letter-spacing: 0.1em;
   }
 
-  .review__body {
-    margin: var(--s-3) 0;
-    border: 0;
-    padding: 0;
-    color: var(--c-text-muted);
+  .rv__body {
+    margin: 12px 0;
+    color: var(--ink-2);
   }
 
-  .review__author {
+  .rv__by {
     font-size: var(--t-sm);
-    color: var(--c-text-subtle);
+    color: var(--muted);
   }
 </style>

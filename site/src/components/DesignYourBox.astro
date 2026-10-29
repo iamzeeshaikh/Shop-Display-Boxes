@@ -1,0 +1,746 @@
+---
+/**
+ * Design Your Display Box — photo-based picker that ends in a quote request.
+ *
+ * Style → size → print and finish → quantity, every option a real product
+ * photo. The chosen style shows large on the left, and a visitor can drop
+ * their logo onto it to judge the look (that file is sent as the artwork
+ * attachment). It posts to the existing /api/quote/ endpoint with the same
+ * formType ("configurator"), honeypot and timing fields as before, so lead
+ * delivery and labelling are unchanged.
+ *
+ * On a product page the first style is that product, shown in its own photo.
+ */
+import { Image, getImage } from 'astro:assets';
+import { photo, photoOf } from '../lib/photos';
+import { DESIGN_STYLES, DESIGN_SIZES, DESIGN_FINISHES, DESIGN_QUANTITIES } from '../data/showroom';
+
+interface Props {
+  /** Product page: the product's slug and name, used for the first style. */
+  productSlug?: string;
+  productName?: string;
+  /** Distinguishes several instances (ids must be unique). */
+  id?: string;
+}
+const { productSlug, productName, id = 'dyb' } = Astro.props;
+
+const styleDefs = [
+  ...(productSlug && productName
+    ? [{ value: productName, img: await photo(productSlug, 1) }]
+    : []),
+  ...(await Promise.all(DESIGN_STYLES.map(async (s) => ({ value: s.value, img: await photoOf(s.photo) })))),
+].slice(0, 6);
+
+const styles = await Promise.all(
+  styleDefs.map(async (s) => {
+    const big = await getImage({ src: s.img, width: 760, height: 760, fit: 'cover', format: 'webp' });
+    return { ...s, stage: big.src };
+  })
+);
+const sizes = await Promise.all(DESIGN_SIZES.map(async (s) => ({ ...s, img: await photoOf(s.photo) })));
+const finishes = await Promise.all(DESIGN_FINISHES.map(async (s) => ({ ...s, img: await photoOf(s.photo) })));
+const first = styles[0];
+const slug = (v: string) => v.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+
+<section class="dyb" id="design" aria-labelledby={`${id}-h`}>
+  <form
+    class="dyb__grid"
+    method="post"
+    action="/api/quote/"
+    enctype="multipart/form-data"
+    novalidate
+    data-dyb
+  >
+    <input type="hidden" name="formType" value="configurator" />
+    <input type="hidden" name="product" value={productSlug ?? ''} />
+    <input type="hidden" name="startedAt" value="" data-started-at />
+    <input type="hidden" name="dimensions" data-out="dimensions" />
+    <input type="hidden" name="printing" data-out="printing" />
+    <input type="hidden" name="quantity" data-out="quantity" />
+    <div class="dyb__hp" aria-hidden="true">
+      <label for={`${id}-company-url`}>Company website</label>
+      <input id={`${id}-company-url`} name="companyUrl" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="dyb__head">
+        <h2 id={`${id}-h`}>Design Your Display Box</h2>
+        <p class="dyb__intro">
+          Pick a style, a size, a print finish and a quantity. We turn your choices into a quote and a
+          free dieline, usually the same day.
+        </p>
+    </div>
+
+    <div class="dyb__stage">
+      <div class="dyb__photo">
+        <img
+          src={first.stage}
+          alt={`Selected style: ${first.value}`}
+          width="760"
+          height="760"
+          loading="lazy"
+          decoding="async"
+          data-stage
+        />
+        <div class="dyb__logo" data-logo hidden><img alt="Your logo" width="200" height="100" data-logo-img /></div>
+      </div>
+      <label class="dyb__upload" for={`${id}-artwork`}>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 20h16" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+        <span data-upload-label>Add your logo to the photo</span>
+      </label>
+      <input
+        class="dyb__file"
+        id={`${id}-artwork`}
+        name="artwork"
+        type="file"
+        accept=".png,.jpg,.jpeg,.svg,.pdf,.ai,.eps,.psd,.zip"
+        data-logo-input
+      />
+      <p class="dyb__note">
+        The photo shows the style you picked with your logo placed on it, so you can judge the look.
+        Your logo file comes to us with the request. The real proof is drawn to your product after
+        we quote.
+      </p>
+    </div>
+
+    <div class="dyb__steps">
+
+      <fieldset class="dyb__step">
+        <legend>Style</legend>
+        <div class="dyb__opts dyb__opts--3">
+          {
+            styles.map((s, i) => (
+              <label class="pick" for={`${id}-st-${i}`}>
+                <input type="radio" id={`${id}-st-${i}`} name="dybStyle" value={s.value} data-photo={s.stage} checked={i === 0} />
+                <Image src={s.img} alt="" widths={[200, 400]} sizes="(min-width: 64em) 12rem, 45vw" format="webp" loading="lazy" decoding="async" />
+                <span>{s.value}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="dyb__step">
+        <legend>Size</legend>
+        <div class="dyb__opts dyb__opts--4">
+          {
+            sizes.map((s, i) => (
+              <label class="pick" for={`${id}-sz-${i}`}>
+                <input type="radio" id={`${id}-sz-${i}`} name="dybSize" value={s.value} checked={i === 0} />
+                <Image src={s.img} alt="" widths={[160, 320]} sizes="(min-width: 64em) 9rem, 45vw" format="webp" loading="lazy" decoding="async" />
+                <span>{s.value}<small>{s.note}</small></span>
+              </label>
+            ))
+          }
+        </div>
+        <div class="dyb__field dyb__field--inline">
+          <label for={`${id}-dims`}>Exact size, if you know it <span class="dyb__opt">optional</span></label>
+          <input id={`${id}-dims`} type="text" maxlength="80" placeholder="e.g. 10 × 6 × 12 in" data-dims />
+        </div>
+      </fieldset>
+
+      <fieldset class="dyb__step">
+        <legend>Print and finish</legend>
+        <div class="dyb__opts dyb__opts--4">
+          {
+            finishes.map((s, i) => (
+              <label class="pick" for={`${id}-fi-${i}`}>
+                <input type="radio" id={`${id}-fi-${i}`} name="dybFinish" value={s.value} checked={i === 0} />
+                <Image src={s.img} alt="" widths={[160, 320]} sizes="(min-width: 64em) 9rem, 45vw" format="webp" loading="lazy" decoding="async" />
+                <span>{s.value}<small>{s.note}</small></span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="dyb__step">
+        <legend>Quantity</legend>
+        <div class="dyb__qty">
+          {
+            DESIGN_QUANTITIES.map((q, i) => (
+              <label class="qty" for={`${id}-q-${slug(q.value)}`}>
+                <input type="radio" id={`${id}-q-${slug(q.value)}`} name="dybQty" value={q.value} data-label={q.label} checked={i === 0} />
+                <span>{q.label}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="dyb__step">
+        <legend>Where should we send the quote?</legend>
+        <div class="dyb__fields">
+          <div class="dyb__field">
+            <label for={`${id}-name`}>Your name <span aria-hidden="true">*</span></label>
+            <input id={`${id}-name`} name="name" type="text" required autocomplete="name" />
+          </div>
+          <div class="dyb__field">
+            <label for={`${id}-email`}>Business email <span aria-hidden="true">*</span></label>
+            <input id={`${id}-email`} name="email" type="email" required autocomplete="email" inputmode="email" />
+          </div>
+          <div class="dyb__field">
+            <label for={`${id}-phone`}>Phone</label>
+            <input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+          </div>
+          <div class="dyb__field">
+            <label for={`${id}-biz`}>Business name</label>
+            <input id={`${id}-biz`} name="businessName" type="text" autocomplete="organization" />
+          </div>
+          <div class="dyb__field dyb__field--wide">
+            <label for={`${id}-notes`}>Anything else we should know <span class="dyb__opt">optional</span></label>
+            <textarea id={`${id}-notes`} name="notes" rows="3" data-notes placeholder="What goes in the display, plus any deadline or delivery detail."></textarea>
+          </div>
+          <div class="dyb__consent dyb__field--wide">
+            <input id={`${id}-consent`} name="consent" type="checkbox" required />
+            <label for={`${id}-consent`}>
+              I agree that my details may be used to respond to this enquiry, as described in our{' '}
+              <a href="/privacy-policy/">privacy policy</a>.
+            </label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="dyb__summary">
+        <p data-summary>
+          <strong>Your box:</strong> {first.value}, {sizes[0].value.toLowerCase()}, {finishes[0].value.toLowerCase()}, 100 units.
+        </p>
+        <button class="btn btn-solid btn-lg" type="submit">Request a Quote</button>
+      </div>
+      <p class="dyb__status" role="status" aria-live="polite" data-status></p>
+    </div>
+  </form>
+</section>
+
+<script>
+  async function payload(form: HTMLFormElement): Promise<Record<string, string>> {
+    const data = new FormData(form);
+    const out: Record<string, string> = {};
+    data.forEach((v, k) => {
+      if (typeof v === 'string' && !k.startsWith('dyb')) out[k] = v;
+    });
+    const file = form.querySelector<HTMLInputElement>('[data-logo-input]')?.files?.[0];
+    if (file && file.size > 0) {
+      out.artwork = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result).split(',')[1] ?? '');
+        r.onerror = reject;
+        r.readAsDataURL(file);
+      });
+      out.artworkName = file.name;
+      out.artworkType = file.type;
+    }
+    return out;
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-dyb]').forEach((form) => {
+    const stamp = form.querySelector<HTMLInputElement>('[data-started-at]');
+    if (stamp) stamp.value = String(Date.now());
+    const stage = form.querySelector<HTMLImageElement>('[data-stage]');
+    const summary = form.querySelector<HTMLElement>('[data-summary]');
+    const status = form.querySelector<HTMLElement>('[data-status]');
+    const dims = form.querySelector<HTMLInputElement>('[data-dims]');
+    const notes = form.querySelector<HTMLTextAreaElement>('[data-notes]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const out = (n: string) => form.querySelector<HTMLInputElement>(`[data-out="${n}"]`);
+    const picked = (n: string) => form.querySelector<HTMLInputElement>(`input[name="${n}"]:checked`);
+
+    function spec() {
+      const style = picked('dybStyle')?.value ?? '';
+      const size = picked('dybSize')?.value ?? '';
+      const finish = picked('dybFinish')?.value ?? '';
+      const qty = picked('dybQty');
+      const exact = dims?.value.trim() ?? '';
+      return {
+        style,
+        size: exact ? `${size} (${exact})` : size,
+        finish,
+        qty: qty?.value ?? '',
+        qtyLabel: qty?.dataset.label ?? '',
+      };
+    }
+
+    function refresh() {
+      const s = spec();
+      const chosen = picked('dybStyle');
+      if (stage && chosen?.dataset.photo && stage.getAttribute('src') !== chosen.dataset.photo) {
+        stage.src = chosen.dataset.photo;
+        stage.alt = `Selected style: ${s.style}`;
+      }
+      const o1 = out('dimensions');
+      const o2 = out('printing');
+      const o3 = out('quantity');
+      if (o1) o1.value = s.size;
+      if (o2) o2.value = s.finish;
+      if (o3) o3.value = s.qty;
+      if (summary) {
+        summary.innerHTML = '';
+        const b = document.createElement('strong');
+        b.textContent = 'Your box:';
+        summary.append(b, ` ${s.style}, ${s.size.toLowerCase()}, ${s.finish.toLowerCase()}, ${s.qtyLabel} units.`);
+      }
+    }
+
+    form.addEventListener('change', refresh);
+    dims?.addEventListener('input', refresh);
+
+    const fileInput = form.querySelector<HTMLInputElement>('[data-logo-input]');
+    const logo = form.querySelector<HTMLElement>('[data-logo]');
+    const logoImg = form.querySelector<HTMLImageElement>('[data-logo-img]');
+    const uploadLabel = form.querySelector<HTMLElement>('[data-upload-label]');
+    fileInput?.addEventListener('change', () => {
+      const f = fileInput.files?.[0];
+      if (!f) return;
+      if (uploadLabel) uploadLabel.textContent = `Logo added: ${f.name}`;
+      if (!/^image\/(png|jpe?g|svg\+xml|webp)$/.test(f.type) || !logo || !logoImg) {
+        if (logo) logo.hidden = true;
+        return;
+      }
+      const r = new FileReader();
+      r.onload = () => {
+        logoImg.src = String(r.result);
+        logo.hidden = false;
+      };
+      r.readAsDataURL(f);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      refresh();
+      const s = spec();
+      if (notes) {
+        const typed = notes.value.replace(/^Design Your Display Box[\s\S]*?(?:\n\n|$)/, '').trim();
+        notes.value = [
+          'Design Your Display Box',
+          `Style: ${s.style}`,
+          `Size: ${s.size}`,
+          `Print and finish: ${s.finish}`,
+          `Quantity: ${s.qtyLabel} units`,
+          typed ? `\n${typed}` : '',
+        ]
+          .filter(Boolean)
+          .join('\n');
+      }
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
+      if (status) status.textContent = '';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: JSON.stringify(await payload(form)),
+          headers: { accept: 'application/json', 'content-type': 'application/json' },
+        });
+        if (res.ok) {
+          window.location.href = '/thank-you/';
+          return;
+        }
+        const data = (await res.json().catch(() => null)) as { message?: string } | null;
+        if (status) status.textContent = data?.message ?? 'That did not send. Please try again or email us directly.';
+      } catch {
+        if (status) status.textContent = 'That did not send. Please check your connection and try again.';
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Request a Quote';
+        }
+      }
+    });
+
+    refresh();
+  });
+</script>
+
+<style>
+  .dyb {
+    background: var(--mist);
+    border-block: 1px solid var(--rule);
+    padding: clamp(56px, 6vw, 88px) var(--gut);
+  }
+
+  .dyb__grid {
+    display: grid;
+    grid-template-areas: 'head' 'stage' 'steps';
+    gap: 24px;
+    align-items: start;
+  }
+
+  .dyb__head {
+    grid-area: head;
+  }
+
+  .dyb__stage {
+    grid-area: stage;
+  }
+
+  .dyb__steps {
+    grid-area: steps;
+  }
+
+  @media (min-width: 70em) {
+    .dyb__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      grid-template-rows: auto 1fr;
+      grid-template-areas: 'stage head' 'stage steps';
+      gap: 0 56px;
+    }
+    .dyb__stage {
+      position: sticky;
+      top: 100px;
+    }
+  }
+
+  .dyb__stage {
+    max-width: 640px;
+  }
+
+  .dyb__photo {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .dyb__photo > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .dyb__logo {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    width: 26%;
+    aspect-ratio: 2 / 1;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dyb__logo[hidden] {
+    display: none;
+  }
+
+  .dyb__logo img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  .dyb__upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-block-start: 14px;
+    padding: 14px;
+    border: 1.5px dashed #9fb2c8;
+    border-radius: 10px;
+    background: #fff;
+    font-weight: 600;
+    color: var(--ink-2);
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .dyb__upload:hover {
+    border-color: var(--cobalt);
+    color: var(--cobalt);
+  }
+
+  .dyb__file {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .dyb__file:focus-visible + .dyb__note,
+  .dyb__stage:has(.dyb__file:focus-visible) .dyb__upload {
+    outline: 2px solid var(--cobalt);
+    outline-offset: 2px;
+  }
+
+  .dyb__note {
+    margin-block-start: 12px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .dyb__intro {
+    margin-block: 10px 6px;
+    color: var(--muted);
+    font-size: 1.0625rem;
+  }
+
+  .dyb__steps {
+    counter-reset: dstep;
+    min-width: 0;
+  }
+
+  .dyb__step {
+    border: 0;
+    margin: 0;
+    padding: 24px 0 0;
+    min-width: 0;
+  }
+
+  .dyb__step legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin-block-end: 12px;
+    font: 700 16px/1.3 var(--font-display);
+    color: var(--ink);
+    counter-increment: dstep;
+  }
+
+  .dyb__step legend::before {
+    content: counter(dstep) '. ';
+    color: var(--cobalt);
+  }
+
+  .dyb__opts,
+  .dyb__qty,
+  .dyb__fields,
+  .dyb__field--inline {
+    clear: both;
+  }
+
+  .dyb__opts {
+    display: grid;
+    gap: 10px;
+  }
+
+  .dyb__opts--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dyb__opts--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .pick {
+    position: relative;
+    display: block;
+    background: #fff;
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+  }
+
+  .pick input,
+  .qty input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .pick img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .dyb__opts--3 .pick img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .pick span {
+    display: block;
+    padding: 9px 10px 10px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  .pick small {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 13px;
+  }
+
+  .pick:hover {
+    border-color: #9fb2c8;
+  }
+
+  .pick:has(input:checked) {
+    border-color: var(--cobalt);
+    box-shadow: 0 0 0 2px var(--cobalt);
+  }
+
+  .pick:has(input:checked)::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--cobalt)
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m6 12 4 4 8-8" fill="none" stroke="white" stroke-width="2.6"/></svg>')
+      center/14px no-repeat;
+  }
+
+  .pick:has(input:focus-visible),
+  .qty:has(input:focus-visible) {
+    outline: 2px solid var(--cobalt);
+    outline-offset: 2px;
+  }
+
+  .dyb__qty {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .qty {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .qty span {
+    display: block;
+    padding: 13px 6px;
+    text-align: center;
+    background: #fff;
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    font: 700 16px/1 var(--font-display);
+  }
+
+  .qty:has(input:checked) span {
+    border-color: var(--cobalt);
+    background: var(--cobalt-soft);
+    color: var(--cobalt-d);
+  }
+
+  .dyb__fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .dyb__field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .dyb__field--wide {
+    grid-column: 1 / -1;
+  }
+
+  .dyb__field--inline {
+    margin-block-start: 12px;
+    max-width: 420px;
+  }
+
+  .dyb__field label {
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+
+  .dyb__opt {
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .dyb__field input,
+  .dyb__field textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1.5px solid var(--rule);
+    border-radius: 10px;
+    background: #fff;
+    font-size: 15.5px;
+  }
+
+  .dyb__field input:focus,
+  .dyb__field textarea:focus {
+    border-color: var(--cobalt);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--cobalt-soft);
+  }
+
+  .dyb__consent {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  .dyb__consent input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--cobalt);
+    flex: none;
+  }
+
+  .dyb__summary {
+    margin-block-start: 26px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .dyb__summary p {
+    flex: 1;
+    min-width: 220px;
+    color: var(--ink-2);
+  }
+
+  .dyb__status:not(:empty) {
+    margin-block-start: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--c-error-100);
+    color: var(--c-error-700);
+    font-weight: 600;
+  }
+
+  .dyb__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 640px) {
+    .dyb__opts--3,
+    .dyb__opts--4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .dyb__qty {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .dyb__fields {
+      grid-template-columns: 1fr;
+    }
+    .dyb__summary .btn {
+      width: 100%;
+    }
+  }
+</style>

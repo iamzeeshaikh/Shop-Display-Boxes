@@ -18,8 +18,10 @@ import RelatedProducts from './RelatedProducts.astro';
 import QuotePanel from './QuotePanel.astro';
 import InquiryForm from './InquiryForm.astro';
 import QuoteFormFull from './QuoteFormFull.astro';
-import MotionRuntime from './MotionRuntime.astro';
-import { hasMotion } from '../data/motion';
+import DesignYourBox from './DesignYourBox.astro';
+import { Image } from 'astro:assets';
+import { photo, photoOf } from '../lib/photos';
+import { INDUSTRY_PHOTOS } from '../data/showroom';
 import type { PageContent } from '../data/page-content';
 import { allReviews, aggregateFor } from '../data/reviews';
 import {
@@ -95,16 +97,18 @@ const showQuoteForm = content.slug === 'request-a-quote';
 const showQuotePanel =
   (content.kind === 'commercial' || content.kind === 'industry') && !showQuoteForm;
 
-/**
- * Scroll reveals, on the handful of top-level landing pages listed in
- * src/data/motion.ts and nowhere else. Guides, policies, industry pages and
- * every product page render exactly as before and ship none of the CSS.
- *
- * The classes go on individual elements rather than a wrapper, so a page that
- * is not opted in emits no extra class attributes at all — the markup it ships
- * is byte-identical to before this change.
- */
-const motion = hasMotion(content.slug);
+// Industry and commercial pages open on a full-bleed product photo; guides,
+// policies and utility pages get a plain navy title band.
+const photoHead = content.kind === 'industry' || content.kind === 'commercial';
+const headImage = photoHead
+  ? INDUSTRY_PHOTOS[url]
+    ? await photoOf(INDUSTRY_PHOTOS[url])
+    : await photo(content.relatedProducts?.[0] ?? 'custom-display-boxes', 1)
+  : null;
+
+// Design Your Display Box on every industry page and the commercial hubs.
+const DESIGN_HUBS = ['display-box-packaging', 'custom-display-box-manufacturer', 'wholesale-display-boxes', 'low-minimum-orders'];
+const showDesign = content.kind === 'industry' || DESIGN_HUBS.includes(content.slug);
 ---
 
 <BaseLayout
@@ -114,26 +118,34 @@ const motion = hasMotion(content.slug);
   modified={content.updated}
   schema={schema}
 >
-  {motion && <MotionRuntime />}
-
   <Breadcrumbs crumbs={crumbs} />
 
-  <section class="section section--tight">
-    <div class={`container ${isNarrow ? '' : 'container--wide'}`}>
-      <p class="eyebrow">
-        {
-          content.kind === 'guide'
-            ? 'Buyer guide'
-            : content.kind === 'industry'
-              ? 'Industry'
-              : content.kind === 'policy'
-                ? 'Policy'
-                : 'Shop Display Boxes'
-        }
-      </p>
+  <section class:list={['ph-head', headImage ? 'ph-head--photo' : 'ph-head--plain']}>
+    {
+      headImage && (
+        <Image
+          src={headImage}
+          alt=""
+          widths={[480, 720, 960, 1200]}
+          sizes="(min-width: 40em) 55vw, 100vw"
+          format="webp"
+          loading="eager"
+          fetchpriority="high"
+          class="ph-head__img"
+        />
+      )
+    }
+    <div class="ph-head__copy">
       <h1>{content.h1}</h1>
-      <p class="lede page-intro">{content.intro}</p>
-
+      <p class="ph-head__intro">{content.intro}</p>
+      {
+        headImage && (
+          <div class="ph-head__actions">
+            <a class="btn btn-solid btn-lg" href="/request-a-quote/">Request a quote</a>
+            {showDesign && <a class="btn btn-ghost btn-lg" href="#design">Design your display box</a>}
+          </div>
+        )
+      }
       {
         content.awaitingOwnerFacts && (
           <p class="verify-notice" role="note">
@@ -149,33 +161,31 @@ const motion = hasMotion(content.slug);
 
   {
     showQuoteForm && (
-      <section class="section section--tight">
-        <div class="container container--wide">
-          <QuoteFormFull />
-        </div>
+      <section class="band--tight wrap">
+        <QuoteFormFull />
       </section>
     )
   }
 
-  <section class="section section--tight">
-    <div class={`container ${isNarrow ? '' : 'container--wide'} ${showQuotePanel ? 'body-grid' : ''}`}>
-      <div class={isNarrow ? 'prose' : 'body-grid__content'}>
+  <section class="band wrap">
+    <div class={showQuotePanel ? 'page-cols' : isNarrow ? 'read-col' : ''}>
+      <div class={isNarrow ? 'prose' : 'page-cols__main'}>
         {
           content.sections.map((section) => (
-            <section class:list={['body-section', motion && 'fx-fade-up']}>
+            <section class="copy-block">
               <h2>{section.heading}</h2>
               {section.body.map((p) => (
                 <p>{p}</p>
               ))}
               {section.points && (
-                <ul class="ticks">
+                <ul class="tick-list">
                   {section.points.map((point) => (
                     <li>{point}</li>
                   ))}
                 </ul>
               )}
               {section.link && (
-                <p class="body-section__link">
+                <p class="copy-block__link">
                   {section.link.text} <a href={section.link.href}>{section.link.anchor}</a>.
                 </p>
               )}
@@ -185,8 +195,8 @@ const motion = hasMotion(content.slug);
 
         {
           content.tables?.map((table) => (
-            <div class:list={['table-block', motion && 'fx-fade-up']}>
-              <div class="table-wrap">
+            <div class="tbl-block">
+              <div class="tbl-scroll">
                 <table>
                   <caption>{table.caption}</caption>
                   <thead>
@@ -207,7 +217,7 @@ const motion = hasMotion(content.slug);
                   </tbody>
                 </table>
               </div>
-              {table.note && <p class="table-note">{table.note}</p>}
+              {table.note && <p class="tbl-note">{table.note}</p>}
             </div>
           ))
         }
@@ -215,7 +225,7 @@ const motion = hasMotion(content.slug);
 
       {
         showQuotePanel && (
-          <aside class="body-grid__aside">
+          <aside class="page-cols__side">
             <QuotePanel />
           </aside>
         )
@@ -225,104 +235,91 @@ const motion = hasMotion(content.slug);
 
   {
     reviews.length > 0 && (
-      <section class="section section--warm">
-        <div class="container container--wide">
-          <h2>What customers have said</h2>
-          {reviewAggregate && (
-            <p class="review-summary">
-              <strong>{reviewAggregate.ratingValue} out of 5</strong> from{' '}
-              {reviewAggregate.reviewCount} rated{' '}
-              {reviewAggregate.reviewCount === 1 ? 'review' : 'reviews'}
-            </p>
-          )}
-          <ul class:list={['reviews', motion && 'fx-stagger']}>
-            {reviews.map((r) => (
-              <li class="review">
-                {r.rating && (
-                  <p class="review__rating" aria-label={`Rated ${r.rating} out of 5`}>
-                    <span aria-hidden="true">
-                      {'★'.repeat(r.rating)}
-                      {'☆'.repeat(5 - r.rating)}
-                    </span>
-                  </p>
-                )}
-                <blockquote class="review__body">{r.body}</blockquote>
-                <p class="review__author">
-                  {r.author}
-                  {r.organization ? `, ${r.organization}` : ''} ·{' '}
-                  <time datetime={r.date}>{r.date}</time>
+      <section class="band band--mist wrap">
+        <h2>What customers have said</h2>
+        {reviewAggregate && (
+          <p class="rv-sum">
+            <strong>{reviewAggregate.ratingValue} out of 5</strong> from{' '}
+            {reviewAggregate.reviewCount} rated{' '}
+            {reviewAggregate.reviewCount === 1 ? 'review' : 'reviews'}
+          </p>
+        )}
+        <ul class="rv-list">
+          {reviews.map((r) => (
+            <li class="rv">
+              {r.rating && (
+                <p class="rv__stars" aria-label={`Rated ${r.rating} out of 5`}>
+                  <span aria-hidden="true">
+                    {'★'.repeat(r.rating)}
+                    {'☆'.repeat(5 - r.rating)}
+                  </span>
                 </p>
-              </li>
-            ))}
-          </ul>
-        </div>
+              )}
+              <blockquote class="rv__body">{r.body}</blockquote>
+              <p class="rv__by">
+                {r.author}
+                {r.organization ? `, ${r.organization}` : ''} ·{' '}
+                <time datetime={r.date}>{r.date}</time>
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
     )
   }
 
   {
     content.relatedProducts && content.relatedProducts.length > 0 && (
-      <section class="section section--warm">
-        <div class:list={['container', 'container--wide', motion && 'fx-fade-up']}>
-          <RelatedProducts
-            slugs={content.relatedProducts}
-            heading="Display packaging for this application"
-          />
-        </div>
+      <section class="band band--mist wrap">
+        <RelatedProducts slugs={content.relatedProducts} heading="Display packaging for this application" />
       </section>
     )
   }
 
+  {showDesign && <DesignYourBox id={`dyb-${content.slug}`} />}
+
   {
     pageFaqs.length > 0 && (
-      <section class="section">
-        <div class:list={['container', 'container--wide', motion && 'fx-fade-up']}>
-          <FaqAccordion faqs={pageFaqs} heading={content.faqs?.length ? "Frequently asked questions" : extraHeading(Astro.url.pathname)} />
-        </div>
+      <section class="band wrap">
+        <FaqAccordion faqs={pageFaqs} heading={content.faqs?.length ? "Frequently asked questions" : extraHeading(Astro.url.pathname)} />
       </section>
     )
   }
 
   {
     content.relatedPages && content.relatedPages.length > 0 && (
-      <section class="section section--tight">
-        <div class="container container--wide">
-          <h2 class="related-pages__heading">Related reading</h2>
-          <ul class:list={['related-pages', motion && 'fx-stagger']}>
-            {content.relatedPages.map((p) => (
-              <li>
-                <a href={p.href}>{p.label}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <section class="band--tight wrap rl">
+        <h2 class="rl__h">Related reading</h2>
+        <ul class="rl__list">
+          {content.relatedPages.map((p) => (
+            <li>
+              <a href={p.href}>{p.label}</a>
+            </li>
+          ))}
+        </ul>
       </section>
     )
   }
 
   {
     content.kind === 'industry' && (
-      <section class="section section--tight">
-        <div class="container container--wide">
-          <InquiryForm context={content.h1} contextSlug={content.slug} formType="industry-inquiry" />
-        </div>
+      <section class="band--tight wrap">
+        <InquiryForm context={content.h1} contextSlug={content.slug} formType="industry-inquiry" />
       </section>
     )
   }
 
   {
     content.cta && (
-      <section class="section">
-        <div class="container container--wide">
-          <div class:list={['page-cta', motion && 'fx-scale-in']}>
-            <div>
-              <h2>{content.cta.heading}</h2>
-              <p>{content.cta.body}</p>
-            </div>
-            <a class="btn btn--primary btn--lg" href={content.cta.buttonHref ?? '/request-a-quote/'}>
-              {content.cta.buttonLabel ?? 'Request a quote'}
-            </a>
+      <section class="band wrap">
+        <div class="cta-strip">
+          <div>
+            <h2>{content.cta.heading}</h2>
+            <p>{content.cta.body}</p>
           </div>
+          <a class="btn btn-solid btn-lg" href={content.cta.buttonHref ?? '/request-a-quote/'}>
+            {content.cta.buttonLabel ?? 'Request a quote'}
+          </a>
         </div>
       </section>
     )
@@ -330,173 +327,221 @@ const motion = hasMotion(content.slug);
 </BaseLayout>
 
 <style>
-  .page-intro {
-    margin-block-start: var(--s-4);
-    max-width: 62ch;
-  }
-
-  .verify-notice {
-    margin-block-start: var(--s-6);
-    padding: var(--s-4) var(--s-5);
-    background: var(--c-warn-100);
-    border-inline-start: 3px solid var(--c-warn-700);
-    border-radius: var(--r-md);
-    font-size: var(--t-base);
-    max-width: 68ch;
-  }
-
-  .body-grid {
-    display: grid;
-    gap: var(--s-8);
-    align-items: start;
-  }
-
-  @media (min-width: 66em) {
-    .body-grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
-      gap: var(--s-10);
-    }
-    .body-grid__aside {
-      position: sticky;
-      top: 7rem;
-    }
-  }
-
-  .body-section + .body-section {
-    margin-block-start: var(--s-8);
-  }
-
-  .body-section h2 {
-    margin-block-end: var(--s-4);
-  }
-
-  .body-section p {
-    color: var(--c-text-muted);
-    max-width: 68ch;
-  }
-
-  .body-section p + p {
-    margin-block-start: var(--s-4);
-  }
-
-  .body-section__link {
-    margin-block-start: var(--s-4);
-  }
-
-  .ticks {
-    list-style: none;
-    margin: var(--s-4) 0 0;
-    padding: 0;
-    display: grid;
-    gap: var(--s-3);
-  }
-
-  .ticks li {
+  /* Page head */
+  .ph-head {
     position: relative;
-    padding-inline-start: var(--s-6);
-    color: var(--c-text-muted);
+    overflow: hidden;
+    background: var(--ink);
   }
 
-  .ticks li::before {
-    content: '';
-    position: absolute;
-    inset-inline-start: 0;
-    inset-block-start: 0.62em;
-    width: 9px;
-    height: 9px;
-    background: var(--c-kraft-400);
-    border-radius: 1px;
-    transform: rotate(45deg);
+  .ph-head__copy {
+    position: relative;
+    z-index: 1;
+    padding: clamp(40px, 5vw, 72px) var(--gut);
+    max-width: calc(820px + 2 * var(--gut));
   }
 
-  .table-block {
-    margin-block-start: var(--s-8);
+  .ph-head h1 {
+    color: #fff;
   }
 
-  .table-note {
-    margin-block-start: var(--s-3);
-    font-size: var(--t-sm);
-    color: var(--c-text-subtle);
+  .ph-head__intro {
+    margin-block-start: 18px;
+    color: #d3deea;
+    font-size: 1.125rem;
     max-width: 66ch;
   }
 
-  .related-pages__heading {
-    margin-block-end: var(--s-4);
+  .ph-head__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-block-start: 28px;
   }
 
-  .related-pages {
+  .ph-head--photo {
+    min-height: clamp(420px, 36vw, 540px);
+    display: flex;
+    align-items: center;
+    background: linear-gradient(180deg, #34506a, #1d3047);
+  }
+
+  .ph-head--photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(9 20 36 / 0.92) 0%, rgb(9 20 36 / 0.78) 38%, rgb(9 20 36 / 0.18) 68%, rgb(9 20 36 / 0) 82%);
+  }
+
+  .ph-head__img {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 58%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 26%);
+  }
+
+  .ph-head--photo .ph-head__copy {
+    z-index: 2;
+  }
+
+  .ph-head--plain .ph-head__copy {
+    padding-block: clamp(40px, 4.5vw, 64px);
+  }
+
+  .verify-notice {
+    margin-block-start: 24px;
+    padding: 14px 18px;
+    background: var(--c-warn-100);
+    color: var(--ink);
+    border-radius: 10px;
+    font-size: 15px;
+    max-width: 68ch;
+  }
+
+  .read-col {
+    max-width: var(--w-read);
+    margin-inline: auto;
+  }
+
+  .tbl-block {
+    margin-block-start: 48px;
+  }
+
+  .tbl-note {
+    margin-block-start: 12px;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+
+  .rl__h {
+    margin-block-end: 16px;
+  }
+
+  .rl__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--s-2);
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
   }
 
-  .related-pages a {
-    display: block;
-    padding: var(--s-3) 0;
+  .rl__list a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: 100%;
+    padding: 16px 18px;
+    background: var(--mist);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
     font-weight: 600;
-    border-block-start: 1px solid var(--c-border);
+    color: var(--ink);
+    text-decoration: none;
   }
 
-  .review-summary {
-    margin-block: var(--s-3) var(--s-6);
-    color: var(--c-text-muted);
+  .rl__list a::after {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border: solid var(--cobalt);
+    border-width: 2px 2px 0 0;
+    transform: rotate(45deg);
   }
 
-  .reviews {
+  .rl__list a:hover {
+    border-color: var(--cobalt);
+    color: var(--cobalt);
+  }
+
+  .rv-sum {
+    margin-block: 12px 24px;
+    color: var(--muted);
+  }
+
+  .rv-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--s-6);
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   }
 
-  .review {
-    padding: var(--s-5);
-    background: var(--c-paper);
-    border: 1px solid var(--c-border);
+  .rv {
+    padding: 22px;
+    background: #fff;
+    border: 1px solid var(--rule);
     border-radius: var(--r-lg);
   }
 
-  .review__rating {
-    color: var(--c-signal-700);
+  .rv__stars {
+    color: var(--cobalt);
     letter-spacing: 0.1em;
   }
 
-  .review__body {
-    margin: var(--s-3) 0;
-    border: 0;
-    padding: 0;
-    color: var(--c-text-muted);
+  .rv__body {
+    margin: 12px 0;
+    color: var(--ink-2);
   }
 
-  .review__author {
+  .rv__by {
     font-size: var(--t-sm);
-    color: var(--c-text-subtle);
+    color: var(--muted);
   }
 
-  .page-cta {
+  .cta-strip {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--s-5);
-    padding: var(--s-7);
-    background: var(--c-ink-900);
-    color: var(--c-ink-200);
+    gap: 24px;
+    padding: clamp(28px, 4vw, 48px);
+    background: var(--ink);
+    color: #c4d1e0;
     border-radius: var(--r-lg);
   }
 
-  .page-cta :global(h2) {
-    color: var(--c-paper);
-    margin-block-end: var(--s-3);
+  .cta-strip h2 {
+    color: #fff;
+    margin-block-end: 10px;
   }
 
-  .page-cta p {
-    max-width: 54ch;
-    margin: 0;
+  .cta-strip p {
+    max-width: 60ch;
+  }
+
+  @media (max-width: 640px) {
+    .ph-head--photo {
+      flex-direction: column;
+      align-items: stretch;
+      min-height: 0;
+      background: var(--ink);
+    }
+    .ph-head--photo::after {
+      display: none;
+    }
+    .ph-head__img {
+      position: relative;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      -webkit-mask-image: linear-gradient(0deg, transparent 0, #000 30%);
+      mask-image: linear-gradient(0deg, transparent 0, #000 30%);
+    }
+    .ph-head--photo .ph-head__copy {
+      margin-block-start: -40px;
+      padding-block-start: 0;
+    }
+    .ph-head__actions .btn {
+      flex: 1 1 100%;
+    }
   }
 </style>

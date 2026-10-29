@@ -15,7 +15,7 @@ interface Props {
 const { specs, productName } = Astro.props;
 ---
 
-<div class="table-wrap">
+<div class="tbl-scroll">
   <table>
     <caption>{productName} — specification summary</caption>
     <tbody>
@@ -30,17 +30,17 @@ const { specs, productName } = Astro.props;
     </tbody>
   </table>
 </div>
-<p class="spec-note">
+<p class="st-note">
   Values shown as “Custom”, “Depends on order specifications”, or “Available on request” are set
   per job. We confirm them against your artwork and quantity rather than publishing a figure that
   would not hold for every order.
 </p>
 
 <style>
-  .spec-note {
-    margin-block-start: var(--s-3);
-    font-size: var(--t-sm);
-    color: var(--c-text-subtle);
-    max-width: 66ch;
+  .st-note {
+    margin-block-start: 12px;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 70ch;
   }
 </style>

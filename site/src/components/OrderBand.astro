@@ -1,0 +1,161 @@
+---
+/**
+ * "Order online" band. Driven by `orderPack` in src/data/showroom.ts and
+ * renders NOTHING while the price is null — the owner has not set one yet, and
+ * a placeholder price must never ship. There is no checkout yet; until there
+ * is, the button opens the quote form with the pack size noted.
+ */
+import { Image } from 'astro:assets';
+import { orderPack, HOME_PHOTOS } from '../data/showroom';
+import { photoOf } from '../lib/photos';
+
+const ready = typeof orderPack.price === 'number' && orderPack.price > 0;
+const img = ready ? await photoOf(HOME_PHOTOS.order) : null;
+const price = ready
+  ? orderPack.price!.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+  : '';
+---
+
+{
+  ready && img && (
+    <section class="ob" aria-labelledby="ob-h">
+      <div class="ob__photo">
+        <Image src={img} alt="Printed counter display box with a tiered insert" widths={[480, 720, 960]} sizes="(min-width: 60em) 50vw, 100vw" format="webp" loading="lazy" decoding="async" />
+      </div>
+      <div class="ob__panel">
+        <h2 id="ob-h">
+          Order online: {orderPack.qty} display boxes — <span class="ob__price">{price}</span>
+        </h2>
+        <p>
+          A standard counter display box, printed full color on white board, delivered flat. Need a
+          different size or board? Use the quote form instead.
+        </p>
+        <ul class="ob__spec">
+          <li><span>Style</span>Counter display with header card</li>
+          <li><span>Print</span>Full color, one side, matte</li>
+          <li><span>Production</span>5–7 business days after proof</li>
+        </ul>
+        <div class="ob__buy">
+          <div class="ob__stepper" data-ob-qty={orderPack.qty}>
+            <button type="button" aria-label="One pack fewer" data-ob-minus>−</button>
+            <output aria-live="polite" data-ob-count>1</output>
+            <button type="button" aria-label="One pack more" data-ob-plus>+</button>
+          </div>
+          <p class="ob__units"><span data-ob-units>{orderPack.qty}</span> boxes · packs of {orderPack.qty}</p>
+          <a class="btn btn-solid btn-lg" href="/request-a-quote/">Order Now</a>
+        </div>
+        <p class="ob__ship">Free shipping to any business address in the US.</p>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ob-qty]').forEach((box) => {
+    const per = Number(box.dataset.obQty) || 100;
+    const count = box.querySelector<HTMLElement>('[data-ob-count]');
+    const units = document.querySelector<HTMLElement>('[data-ob-units]');
+    let n = 1;
+    const set = (v: number) => {
+      n = Math.max(1, Math.min(50, v));
+      if (count) count.textContent = String(n);
+      if (units) units.textContent = (n * per).toLocaleString('en-US');
+    };
+    box.querySelector('[data-ob-minus]')?.addEventListener('click', () => set(n - 1));
+    box.querySelector('[data-ob-plus]')?.addEventListener('click', () => set(n + 1));
+  });
+</script>
+
+<style>
+  .ob {
+    display: grid;
+    background: var(--ink);
+    color: #fff;
+  }
+  @media (min-width: 60em) {
+    .ob {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .ob__photo img {
+    width: 100%;
+    height: 100%;
+    max-height: 640px;
+    object-fit: cover;
+  }
+  .ob__panel {
+    padding: clamp(44px, 5vw, 72px) var(--gut);
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .ob h2 {
+    color: #fff;
+  }
+  .ob__price {
+    color: var(--cobalt-light);
+    white-space: nowrap;
+  }
+  .ob__panel > p {
+    margin-block-start: 14px;
+    color: #c4d1e0;
+    font-size: 17px;
+  }
+  .ob__spec {
+    list-style: none;
+    margin: 26px 0 0;
+    padding: 0;
+    border-block-start: 1px solid rgb(255 255 255 / 0.16);
+  }
+  .ob__spec li {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-block-end: 1px solid rgb(255 255 255 / 0.16);
+    color: #e7eef7;
+  }
+  .ob__spec span {
+    width: 110px;
+    flex: none;
+    color: #93a6bd;
+  }
+  .ob__buy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    margin-block-start: 28px;
+  }
+  .ob__stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid rgb(255 255 255 / 0.35);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .ob__stepper button {
+    width: 46px;
+    height: 50px;
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 22px;
+  }
+  .ob__stepper output {
+    min-width: 44px;
+    text-align: center;
+    font: 700 18px/1 var(--font-display);
+  }
+  .ob__units {
+    color: #c4d1e0;
+  }
+  .ob__units span {
+    color: #fff;
+    font-weight: 700;
+  }
+  .ob__ship {
+    margin-block-start: 22px;
+    color: #c4d1e0;
+  }
+</style>

@@ -33,8 +33,8 @@ const isCompact = variant === 'compact';
 const shortField = isCompact ? 'field field--third' : 'field field--half';
 ---
 
-<section class={`inquiry ${isCompact ? 'inquiry--compact' : ''}`} aria-labelledby={`${formId}-heading`}>
-  <div class="inquiry__intro">
+<section class={`ask ${isCompact ? 'ask--compact' : ''}`} aria-labelledby={`${formId}-heading`}>
+  <div class="ask__intro">
     <h2 id={`${formId}-heading`}>Have a question about {context.toLowerCase()}?</h2>
     <p>
       {
@@ -45,7 +45,7 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
     </p>
   </div>
 
-  <form class="inquiry__form" method="post" action="/api/quote/" enctype="multipart/form-data" data-inquiry-form novalidate>
+  <form class="ask__form" method="post" action="/api/quote/" enctype="multipart/form-data" data-inquiry-form novalidate>
     <input type="hidden" name="formType" value={formType} />
     <input type="hidden" name="product" value={contextSlug} />
     <input type="hidden" name="startedAt" value="" data-started-at />
@@ -115,9 +115,9 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
       </label>
     </div>
 
-    <div class="inquiry__status" role="status" aria-live="polite" data-form-status></div>
+    <div class="ask__status" role="status" aria-live="polite" data-form-status></div>
 
-    <button class="btn btn--primary btn--lg inquiry__submit" type="submit">Send message</button>
+    <button class="btn btn-solid btn-lg ask__submit" type="submit">Send message</button>
   </form>
 </section>
 
@@ -219,19 +219,18 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
 </script>
 
 <style>
-  .inquiry {
+  .ask {
     display: grid;
     gap: var(--s-6);
     padding: var(--s-7);
     background: var(--c-paper-warm);
     border: 1px solid var(--c-border);
-    border-inline-start: 3px solid var(--c-signal-700);
     border-radius: var(--r-lg);
     box-shadow: var(--shadow-sm);
   }
 
   @media (min-width: 52em) {
-    .inquiry {
+    .ask {
       grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
       gap: var(--s-8);
       padding: var(--s-8);
@@ -240,50 +239,50 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
   }
 
   /* ── Compact band: slimmer, for placing high on a page ──────────────── */
-  .inquiry--compact {
+  .ask--compact {
     padding: var(--s-6);
     gap: var(--s-4);
   }
 
   @media (min-width: 52em) {
-    .inquiry--compact {
+    .ask--compact {
       grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
       gap: var(--s-6);
       padding: var(--s-6) var(--s-7);
     }
   }
 
-  .inquiry--compact .inquiry__intro h2 {
+  .ask--compact .ask__intro h2 {
     font-size: var(--t-lg);
   }
 
-  .inquiry--compact .inquiry__intro p {
+  .ask--compact .ask__intro p {
     font-size: var(--t-sm);
     max-width: none;
   }
 
   /* Three short fields share one row on wider screens. */
   @media (min-width: 40em) {
-    .inquiry--compact .inquiry__form {
+    .ask--compact .ask__form {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    .inquiry--compact .field--third {
+    .ask--compact .field--third {
       grid-column: span 1;
     }
   }
 
-  .inquiry__intro h2 {
+  .ask__intro h2 {
     font-size: var(--t-xl);
     margin-block-end: var(--s-3);
   }
 
-  .inquiry__intro p {
+  .ask__intro p {
     color: var(--c-text-muted);
     max-width: 40ch;
     margin: 0;
   }
 
-  .inquiry__form {
+  .ask__form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--s-4);
@@ -375,7 +374,7 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
     color: var(--c-text-muted);
   }
 
-  .inquiry__status {
+  .ask__status {
     grid-column: 1 / -1;
     font-size: var(--t-sm);
     font-weight: 600;
@@ -383,26 +382,26 @@ const shortField = isCompact ? 'field field--third' : 'field field--half';
     border-radius: var(--r-md);
   }
 
-  .inquiry__status:empty {
+  .ask__status:empty {
     display: none;
   }
 
-  .inquiry__status[data-tone='ok'] {
+  .ask__status[data-tone='ok'] {
     background: var(--c-success-100, #e7f6ec);
     color: var(--c-success-700, #14713b);
   }
 
-  .inquiry__status[data-tone='error'] {
+  .ask__status[data-tone='error'] {
     background: var(--c-error-100, #fdeaea);
     color: var(--c-error-700, #b42318);
   }
 
-  .inquiry__submit {
+  .ask__submit {
     grid-column: 1 / -1;
     justify-self: start;
   }
 
-  .inquiry__submit:disabled {
+  .ask__submit:disabled {
     opacity: 0.7;
     cursor: progress;
   }

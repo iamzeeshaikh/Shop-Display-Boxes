@@ -17,6 +17,9 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import RelatedProducts from './RelatedProducts.astro';
 import QuotePanel from './QuotePanel.astro';
+import { Image } from 'astro:assets';
+import { photo } from '../lib/photos';
+import { GALLERY_PICK } from '../data/showroom';
 import type { StateLocation, CityLocation } from '../data/locations';
 import { business, has } from '../data/business';
 import { LOCATION_FAQS } from '../data/location-faqs';
@@ -132,86 +135,87 @@ const schema = graph(
   breadcrumbSchema(crumbs),
   faqPage(faqs)
 );
+const headSlug = location.products?.[0] ?? 'custom-display-boxes';
+const headImage = await photo(headSlug, GALLERY_PICK[headSlug] ?? 1);
 ---
-
 <BaseLayout url={url} title={metaTitle} description={metaDescription} schema={schema}>
   <Breadcrumbs crumbs={crumbs} />
 
-  <section class="section section--tight">
-    <div class="container container--wide">
-      <p class="eyebrow">{isCity ? `${city!.stateName} · City` : 'State'}</p>
+  <section class="lh">
+    <Image src={headImage} alt="" widths={[480, 720, 960, 1200]} sizes="(min-width: 40em) 55vw, 100vw" format="webp" loading="eager" fetchpriority="high" class="lh__img" />
+    <div class="lh__copy">
       <h1>{title}</h1>
-      <p class="lede">{location.positioning}</p>
+      <p class="lh__intro">{location.positioning}</p>
+      <div class="lh__actions">
+        <a class="btn btn-solid btn-lg" href="/request-a-quote/">Request a quote</a>
+        <a class="btn btn-ghost btn-lg" href="/locations/">All locations</a>
+      </div>
     </div>
   </section>
 
   {/* ── The honesty section. Rendered on every location page, always. ─── */}
-  <section class="section section--tight">
-    <div class="container container--wide">
-      <div class="supply-note">
-        <h2>How supply to {displayName} actually works</h2>
-        {
-          isHomeLocation ? (
-            <>
-              <p>
-                Our registered address is in {addr!.addressLocality}, so unlike every other location
-                on this site, we are based in {displayName}. That address is
-                {' '}{addr!.display}.
-              </p>
-              <p>
-                Being registered here does not mean a trade counter you can collect from — we have
-                not published opening hours or described this as a walk-in location, because that
-                is not what it is. Orders are produced to specification and shipped to your business
-                address, the same as anywhere else.
-              </p>
-            </>
-          ) : (
-            <>
-              <p>
-                We do not have an office, production facility, warehouse, or collection point in
-                {' '}{displayName}, and we are not going to imply otherwise. Custom display packaging
-                is produced to order against your specification and shipped to your business address.
-              </p>
-              <p>
-                We also do not publish transit times or delivery guarantees we have not committed
-                to. If your order depends on a fixed in-store date, say so when you request a quote
-                and we will tell you whether it is achievable before you commit to anything.
-              </p>
-            </>
-          )
-        }
-      </div>
+  <section class="band--tight wrap">
+    <div class="supply">
+      <h2>How supply to {displayName} actually works</h2>
+      {
+        isHomeLocation ? (
+          <>
+            <p>
+              Our registered address is in {addr!.addressLocality}, so unlike every other location
+              on this site, we are based in {displayName}. That address is
+              {' '}{addr!.display}.
+            </p>
+            <p>
+              Being registered here does not mean a trade counter you can collect from — we have
+              not published opening hours or described this as a walk-in location, because that
+              is not what it is. Orders are produced to specification and shipped to your business
+              address, the same as anywhere else.
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              We do not have an office, production facility, warehouse, or collection point in
+              {' '}{displayName}, and we are not going to imply otherwise. Custom display packaging
+              is produced to order against your specification and shipped to your business address.
+            </p>
+            <p>
+              We also do not publish transit times or delivery guarantees we have not committed
+              to. If your order depends on a fixed in-store date, say so when you request a quote
+              and we will tell you whether it is achievable before you commit to anything.
+            </p>
+          </>
+        )
+      }
     </div>
   </section>
 
-  <section class="section section--warm">
-    <div class="container container--wide split">
-      <div>
-        <h2>Sectors here that use display packaging</h2>
-        <ul class="ticks">
-          {location.sectors.map((s) => <li>{s}</li>)}
-        </ul>
-      </div>
-      <div>
-        <h2>Retail context</h2>
-        <ul class="ticks">
-          {location.retailContext.map((r) => <li>{r}</li>)}
-        </ul>
-      </div>
+  <section class="lx">
+    <div class="lx__card">
+      <h2>Sectors here that use display packaging</h2>
+      <ul class="tick-list">
+        {location.sectors.map((s) => <li>{s}</li>)}
+      </ul>
+    </div>
+    <div class="lx__card">
+      <h2>Retail context</h2>
+      <ul class="tick-list">
+        {location.retailContext.map((r) => <li>{r}</li>)}
+      </ul>
     </div>
   </section>
 
-  <section class="section">
-    <div class="container container--wide body-grid">
+  <section class="band wrap">
+    <div class="page-cols">
       <div>
-        <section class="body-section">
+        <section class="copy-block">
           <h2>{location.packagingAngle.heading}</h2>
           {location.packagingAngle.body.map((p) => <p>{p}</p>)}
         </section>
 
         {
           isCity && (
-            <section class="body-section">
+            <section class="copy-block">
               <h2>Ordering from {city!.name}</h2>
               <p>
                 The process is the same wherever you are: send the product and a quantity, we draw a
@@ -219,7 +223,7 @@ const schema = graph(
                 follows. The two approval stages are where the risk sits — changes before them cost
                 nothing, changes after them are a new job.
               </p>
-              <p class="body-section__link">
+              <p class="copy-block__link">
                 Statewide context is on the{' '}
                 <a href={`/${city!.stateSlug}/`}>{city!.stateName} page</a>.
               </p>
@@ -229,13 +233,13 @@ const schema = graph(
 
         {
           !isCity && state!.cities.length > 0 && (
-            <section class="body-section">
+            <section class="copy-block">
               <h2>Cities in {state!.name}</h2>
               <p>
                 We ship to businesses throughout the state. These city pages cover context specific
                 to their local sectors and retail conditions.
               </p>
-              <ul class="city-list">
+              <ul class="lc">
                 {state!.cities.map((c) => (
                   <li>
                     <a href={`/${c.slug}/`}>Display boxes in {c.name}</a>
@@ -246,154 +250,165 @@ const schema = graph(
           )
         }
 
-        <section class="body-section">
+        <section class="copy-block">
           <h2>What we need to quote</h2>
-          <ul class="ticks">
+          <ul class="tick-list">
             <li>The product itself, or its dimensions at the widest point</li>
             <li>How many units the display should hold</li>
             <li>Where it will sit — counter, shelf, or floor</li>
             <li>Any footprint or shelf-ready specification your retailer has issued</li>
           </ul>
-          <p class="body-section__link">
+          <p class="copy-block__link">
             The full sequence is set out under <a href="/how-to-order/">how ordering works</a>.
           </p>
         </section>
       </div>
 
-      <aside class="body-grid__aside">
+      <aside class="page-cols__side">
         <QuotePanel />
       </aside>
     </div>
   </section>
 
-  <section class="section section--warm">
-    <div class="container container--wide">
-      <RelatedProducts
-        slugs={location.products}
-        heading={`Display packaging for ${displayName} businesses`}
-      />
-    </div>
+  <section class="band band--mist wrap">
+    <RelatedProducts slugs={location.products} heading={`Display packaging for ${displayName} businesses`} />
   </section>
 
-  <section class="section">
-    <div class="container container--wide">
-      <FaqAccordion faqs={faqs} heading={`Questions from ${displayName} buyers`} />
-    </div>
+  <section class="band wrap">
+    <FaqAccordion faqs={faqs} heading={`Questions from ${displayName} buyers`} />
   </section>
 </BaseLayout>
 
 <style>
-  .supply-note {
-    padding: var(--s-6);
-    background: var(--c-paper-warm);
-    border: 1px solid var(--c-border);
-    border-inline-start: 3px solid var(--c-ink-700);
-    border-radius: var(--r-lg);
-    max-width: 68ch;
-  }
-
-  .supply-note h2 {
-    font-size: var(--t-lg);
-    margin-block-end: var(--s-4);
-  }
-
-  .supply-note p + p {
-    margin-block-start: var(--s-4);
-  }
-
-  .supply-note p {
-    color: var(--c-text-muted);
-  }
-
-  .split {
-    display: grid;
-    gap: var(--s-7);
-  }
-
-  @media (min-width: 52em) {
-    .split {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--s-9);
-    }
-  }
-
-  .ticks {
-    list-style: none;
-    margin: var(--s-4) 0 0;
-    padding: 0;
-    display: grid;
-    gap: var(--s-3);
-  }
-
-  .ticks li {
+  .lh {
     position: relative;
-    padding-inline-start: var(--s-6);
-    color: var(--c-text-muted);
+    overflow: hidden;
+    min-height: clamp(400px, 34vw, 520px);
+    display: flex;
+    align-items: center;
+    background: linear-gradient(180deg, #34506a, #1d3047);
   }
-
-  .ticks li::before {
+  .lh::after {
     content: '';
     position: absolute;
-    inset-inline-start: 0;
-    inset-block-start: 0.62em;
-    width: 9px;
-    height: 9px;
-    background: var(--c-kraft-400);
-    border-radius: 1px;
-    transform: rotate(45deg);
+    inset: 0;
+    background: linear-gradient(90deg, rgb(9 20 36 / 0.92) 0%, rgb(9 20 36 / 0.78) 38%, rgb(9 20 36 / 0.18) 68%, rgb(9 20 36 / 0) 82%);
+  }
+  .lh__img {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 58%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 26%);
+  }
+  .lh__copy {
+    position: relative;
+    z-index: 2;
+    padding: clamp(40px, 5vw, 72px) var(--gut);
+    max-width: calc(800px + 2 * var(--gut));
+  }
+  .lh h1 {
+    color: #fff;
+  }
+  .lh__intro {
+    margin-block-start: 18px;
+    color: #d3deea;
+    font-size: 1.125rem;
+  }
+  .lh__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-block-start: 28px;
   }
 
-  .body-grid {
+  .supply {
     display: grid;
-    gap: var(--s-8);
-    align-items: start;
+    gap: 14px 64px;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--mist);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
   }
-
-  @media (min-width: 66em) {
-    .body-grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
-      gap: var(--s-10);
-    }
-    .body-grid__aside {
-      position: sticky;
-      top: 7rem;
+  @media (min-width: 62em) {
+    .supply {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
     }
   }
-
-  .body-section + .body-section {
-    margin-block-start: var(--s-8);
+  .supply h2 {
+    font-size: var(--t-xl);
+  }
+  .supply p {
+    color: var(--ink-2);
   }
 
-  .body-section h2 {
-    margin-block-end: var(--s-4);
+  .lx {
+    display: grid;
+    gap: 20px;
+    padding: 0 var(--gut);
+  }
+  @media (min-width: 52em) {
+    .lx {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .lx__card {
+    padding: clamp(24px, 3vw, 36px);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+  }
+  .lx__card h2 {
+    font-size: var(--t-xl);
   }
 
-  .body-section p {
-    color: var(--c-text-muted);
-    max-width: 68ch;
-  }
-
-  .body-section p + p {
-    margin-block-start: var(--s-4);
-  }
-
-  .body-section__link {
-    margin-block-start: var(--s-4);
-  }
-
-  .city-list {
+  .lc {
     list-style: none;
-    margin: var(--s-4) 0 0;
+    margin: 16px 0 0;
     padding: 0;
     display: grid;
-    gap: var(--s-2);
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  }
+  .lc a {
+    display: block;
+    padding: 12px 16px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .lc a:hover {
+    border-color: var(--cobalt);
   }
 
-  .city-list a {
-    display: block;
-    padding: var(--s-3) 0;
-    font-weight: 600;
-    border-block-start: 1px solid var(--c-border);
+  @media (max-width: 640px) {
+    .lh {
+      flex-direction: column;
+      align-items: stretch;
+      min-height: 0;
+      background: var(--ink);
+    }
+    .lh::after {
+      display: none;
+    }
+    .lh__img {
+      position: relative;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      -webkit-mask-image: linear-gradient(0deg, transparent 0, #000 30%);
+      mask-image: linear-gradient(0deg, transparent 0, #000 30%);
+    }
+    .lh__copy {
+      margin-block-start: -40px;
+      padding-block-start: 0;
+    }
+    .lh__actions .btn {
+      flex: 1 1 100%;
+    }
   }
 </style>

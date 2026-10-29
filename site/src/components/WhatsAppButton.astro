@@ -1,12 +1,13 @@
 ---
 /**
- * Floating WhatsApp button, fixed bottom-left so it never overlaps the
- * ZeeOps live-chat widget that docks bottom-right.
+ * Floating WhatsApp button, fixed bottom-LEFT so it never overlaps the ZeeOps
+ * live-chat launcher that docks bottom-right. Always visible, every page.
  */
 ---
+
 <a
   href="https://api.whatsapp.com/send/?phone=15034614788&text=Hi+Shop+Display+Boxes%21+I+need+more+info+about+Shop+Display+Boxes+https%3A%2F%2Fshopdisplayboxes.com%2F&type=phone_number&app_absent=0"
-  class="whatsapp-float"
+  class="wa-float"
   target="_blank"
   rel="noopener noreferrer"
   aria-label="Chat with us on WhatsApp"
@@ -18,34 +19,35 @@
 </a>
 
 <style>
-  .whatsapp-float {
+  .wa-float {
     position: fixed;
-    bottom: 1.5rem;
-    left: 1.5rem;
+    bottom: 22px;
+    left: 22px;
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
     border-radius: 50%;
-    background: #25d366;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: var(--wa);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.22);
+    transition: box-shadow 0.2s ease;
   }
-  .whatsapp-float:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  .wa-float:hover {
+    box-shadow: 0 10px 28px rgb(0 0 0 / 0.3);
   }
-  .whatsapp-float svg {
-    width: 30px;
-    height: 30px;
+  .wa-float svg {
+    width: 31px;
+    height: 31px;
     fill: #fff;
   }
   @media (max-width: 640px) {
-    .whatsapp-float {
-      bottom: 1rem;
-      left: 1rem;
+    .wa-float {
+      width: 54px;
+      height: 54px;
+      bottom: 16px;
+      left: 16px;
     }
   }
 </style>

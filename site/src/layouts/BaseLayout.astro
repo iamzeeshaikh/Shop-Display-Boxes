@@ -37,14 +37,14 @@ const seo = buildSeo(seoInput);
     {/* Fonts are same-origin; preload the two that render above the fold. */}
     <link
       rel="preload"
-      href="/fonts/inter-var-latin.woff2"
+      href="/fonts/figtree-var-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/fonts/fraunces-var-latin.woff2"
+      href="/fonts/plus-jakarta-sans-var-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -74,9 +74,11 @@ const seo = buildSeo(seoInput);
       )
     }
 
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png" type="image/png" sizes="48x48" />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
-    <meta name="theme-color" content="#101c26" />
+    <meta name="theme-color" content="#0d1b2e" />
 
     {schema && <script type="application/ld+json" set:html={schema} />}
 

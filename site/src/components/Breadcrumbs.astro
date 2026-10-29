@@ -13,59 +13,61 @@ const { crumbs } = Astro.props;
 const last = crumbs.length - 1;
 ---
 
-<nav class="crumbs" aria-label="Breadcrumb">
-  <div class="container container--wide">
-    <ol>
-      {
-        crumbs.map((c, i) => (
-          <li>
-            {i === last ? (
-              <span aria-current="page">{c.name}</span>
-            ) : (
-              <a href={path(c.url)}>{c.name}</a>
-            )}
-          </li>
-        ))
-      }
-    </ol>
-  </div>
+<nav class="trail" aria-label="Breadcrumb">
+  <ol class="wrap">
+    {
+      crumbs.map((c, i) => (
+        <li>
+          {i === last ? (
+            <span aria-current="page">{c.name}</span>
+          ) : (
+            <a href={path(c.url)}>{c.name}</a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
 </nav>
 
 <style>
-  .crumbs {
-    border-block-end: 1px solid var(--c-border);
-    background: var(--c-paper-warm);
-    font-size: var(--t-sm);
+  .trail {
+    background: #fff;
+    border-block-end: 1px solid var(--rule);
+    font-size: 14px;
   }
-
-  ol {
+  .trail ol {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--s-2);
+    gap: 4px 0;
     list-style: none;
     margin: 0;
-    padding-block: var(--s-3);
+    padding-block: 12px;
   }
-
-  li + li::before {
-    content: '/';
-    margin-inline-end: var(--s-2);
-    color: var(--c-ink-300);
+  .trail li {
+    display: inline-flex;
+    align-items: center;
+    color: var(--muted);
   }
-
-  a {
-    color: var(--c-text-muted);
+  .trail li + li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    margin-inline: 10px 12px;
+    border: solid #9fb2c8;
+    border-width: 1.5px 1.5px 0 0;
+    transform: rotate(45deg);
+  }
+  .trail a {
+    color: var(--ink-2);
     text-decoration: none;
+    font-weight: 500;
   }
-
-  a:hover {
-    color: var(--c-signal-700);
+  .trail a:hover {
+    color: var(--cobalt);
     text-decoration: underline;
   }
-
-  [aria-current='page'] {
-    color: var(--c-ink-900);
-    font-weight: 600;
+  .trail [aria-current] {
+    color: var(--muted);
   }
 </style>

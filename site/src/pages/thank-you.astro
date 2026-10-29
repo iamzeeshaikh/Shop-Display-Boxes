@@ -16,34 +16,20 @@ import { FEATURED_PRODUCTS } from '../data/products';
   description="Your message has been received. We usually reply the same working day with next steps."
   noindex
 >
-  <section class="section">
-    <div class="container container--wide thanks">
-      <div class="thanks__badge" aria-hidden="true">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-          <path
-            d="m5 12.5 4 4 10-10"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></path>
-        </svg>
-      </div>
-
-      <p class="eyebrow">Message received</p>
-      <h1>Thank you — we’ll be in touch</h1>
-      <p class="lede">
-        Your details are with our team. We usually reply the same working day with next steps, a
-        price, or the questions we need answered to draw your dieline. If it is urgent, call us on
-        the number in the header and mention you have just submitted a request.
-      </p>
-
-      <div class="thanks__actions">
-        <a class="btn btn--primary btn--lg" href="/">Back to home</a>
-        <a class="btn btn--outline btn--lg" href="/blog/">Read the blog</a>
-      </div>
-
-      <div class="thanks__grid">
+  <section class="ty-head">
+    <h1>Thank you — we’ll be in touch</h1>
+    <p>
+      Your details are with our team. We usually reply the same working day with next steps, a
+      price, or the questions we need answered to draw your dieline. If it is urgent, call us on
+      the number in the header and mention you have just submitted a request.
+    </p>
+    <div class="ty-actions">
+      <a class="btn btn-solid btn-lg" href="/">Back to home</a>
+      <a class="btn btn-ghost btn-lg" href="/blog/">Read the blog</a>
+    </div>
+  </section>
+  <section class="band wrap">
+    <div class="ty-grid">
         <div>
           <h2>While you wait</h2>
           <ul>
@@ -61,60 +47,52 @@ import { FEATURED_PRODUCTS } from '../data/products';
             ))}
           </ul>
         </div>
-      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .thanks {
-    max-width: 62ch;
+  .ty-head {
+    padding: clamp(48px, 6vw, 88px) var(--gut);
+    background: var(--ink);
   }
-
-  .thanks__badge {
-    display: grid;
-    place-items: center;
-    width: 64px;
-    height: 64px;
-    margin-block-end: var(--s-5);
-    color: var(--c-success-700, #14713b);
-    background: var(--c-success-100, #e7f6ec);
-    border-radius: 50%;
+  .ty-head h1 {
+    color: #fff;
+    max-width: 22ch;
   }
-
-  .thanks h1 {
-    margin-block: var(--s-2) var(--s-4);
+  .ty-head p {
+    margin-block-start: 16px;
+    max-width: 66ch;
+    color: #d3deea;
+    font-size: 1.125rem;
   }
-
-  .thanks__actions {
+  .ty-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-3);
-    margin-block-start: var(--s-6);
+    gap: 12px;
+    margin-block-start: 28px;
   }
-
-  .thanks__grid {
+  .ty-grid {
     display: grid;
-    gap: var(--s-7);
-    margin-block-start: var(--s-9);
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
   }
-
-  .thanks__grid h2 {
-    font-family: var(--font-sans);
-    font-size: var(--t-xs);
-    font-weight: 650;
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
-    color: var(--c-text-subtle);
-    margin-block-end: var(--s-4);
+  .ty-grid > div {
+    padding: 22px;
+    background: var(--mist);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
   }
-
-  .thanks__grid ul {
+  .ty-grid h2 {
+    font-size: 1.125rem;
+    margin-block-end: 12px;
+  }
+  .ty-grid ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--s-2);
+    gap: 8px;
+    font-weight: 600;
   }
 </style>

@@ -11,13 +11,13 @@ import { withExtras, extraFaqs, extraHeading } from '../lib/page-faqs';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
-import MotionRuntime from '../components/MotionRuntime.astro';
-import ScrollBox3D from '../components/ScrollBox3D.astro';
-import PinnedProcess from '../components/PinnedProcess.astro';
+import DesignYourBox from '../components/DesignYourBox.astro';
+import OrderBand from '../components/OrderBand.astro';
+import { photo, photoOf } from '../lib/photos';
+import { HOME_PHOTOS, GALLERY_PICK, INDUSTRY_PHOTOS } from '../data/showroom';
 import { FEATURED_PRODUCTS, PRODUCTS, getProduct } from '../data/products';
 import { business } from '../data/business';
 import { graph, organization, localBusiness, website, webPage, faqPage } from '../lib/schema';
-import manifest from '../assets/products/manifest.json';
 
 const seo = {
   url: '/',
@@ -28,25 +28,25 @@ const seo = {
 
 const price = business.startingPricePerPiece.value;
 
-// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob.
-const imageModules = import.meta.glob<{ default: ImageMetadata }>([
-  '../assets/products/**/*.png',
-  '!**/._*',
-]);
-const files = manifest as Record<string, Array<{ file: string }>>;
-
-async function loadFirst(slug: string) {
-  const file = files[slug]?.[0]?.file;
-  const loader = file ? imageModules[`../assets/products/${slug}/${file}`] : undefined;
-  return loader ? (await loader()).default : undefined;
-}
-
-const featured = await Promise.all(
-  FEATURED_PRODUCTS.map(async (p) => ({ product: p, image: await loadFirst(p.slug) }))
+const range = await Promise.all(
+  PRODUCTS.map(async (p) => ({ product: p, image: await photo(p.slug, GALLERY_PICK[p.slug] ?? 1) }))
 );
+const groups = ['By placement', 'By material', 'By format', 'By industry'] as const;
 
-// Hero image: the LCP element. Eager, high priority, never lazy-loaded.
-const heroImage = await loadFirst('cardboard-display-stands');
+const heroImage = await photoOf(HOME_PHOTOS.hero);
+const placementImages = {
+  counter: await photoOf(HOME_PHOTOS.placement.counter),
+  shelf: await photoOf(HOME_PHOTOS.placement.shelf),
+  floor: await photoOf(HOME_PHOTOS.placement.floor),
+};
+const specImages = {
+  material: await photoOf(HOME_PHOTOS.spec.material),
+  printing: await photoOf(HOME_PHOTOS.spec.printing),
+  finishing: await photoOf(HOME_PHOTOS.spec.finishing),
+  size: await photoOf(HOME_PHOTOS.spec.size),
+};
+const structureImage = await photoOf(HOME_PHOTOS.structure);
+const closeImage = await photoOf(HOME_PHOTOS.close);
 
 const gallery = await Promise.all(
   [
@@ -56,8 +56,17 @@ const gallery = await Promise.all(
     'counter-display-boxes',
     'soap-display-boxes',
     'display-trays',
-  ].map(async (slug) => ({ slug, name: getProduct(slug).name, image: await loadFirst(slug) }))
+  ].map(async (slug) => ({ slug, name: getProduct(slug).name, image: await photo(slug, 1) }))
 );
+
+const steps = [
+  { title: 'Specification and quote.', body: 'Send the product, a quantity, and where it will sit.' },
+  { title: 'Dieline — first approval.', body: 'Drawn around your real product. This fixes the structure.' },
+  { title: 'Artwork.', body: 'Placed onto that dieline rather than designed to a rectangle.' },
+  { title: 'Proof — second approval.', body: 'This fixes color and content. Changes after it are a new job.' },
+  { title: 'Production.', body: 'Each stage checked against the approved proof, not the previous stage.' },
+  { title: 'Delivery.', body: 'Usually flat-packed, since freight is billed on volume.' },
+];
 
 const industries = [
   { label: 'Cosmetics & beauty', href: '/cosmetic-packaging/' },
@@ -73,6 +82,10 @@ const industries = [
   { label: 'Toys', href: '/toy-display-packaging/' },
   { label: 'Retail (general)', href: '/retail-packaging/' },
 ];
+
+const industryTiles = await Promise.all(
+  industries.map(async (i) => ({ ...i, image: await photoOf(INDUSTRY_PHOTOS[i.href]) }))
+);
 
 const faqs = [
   { question: 'What does a custom display box cost?', answer: `${price.statement} Quantity is the largest single driver, because setup costs are fixed and spread across the run — which is why halving an order does not halve the invoice.` },
@@ -95,579 +108,1026 @@ const schema = graph(
 ---
 
 <BaseLayout {...seo} schema={schema}>
-  {/* Loads the reveal CSS and the feature-detect. Renders no markup, and
-      deliberately nothing above it depends on either. */}
-  <MotionRuntime />
-
-  <section class="hero">
-    <div class="container container--wide hero__inner">
-      <div class="hero__body">
-        <p class="eyebrow">Custom printed display packaging</p>
-        <h1>Display boxes built around your product, not around a stock size</h1>
-        <p class="lede">
-          A display that holds your product approximately is a display whose front row leans within
-          a week — and a leaning row stops selling. We draw a dieline around the real thing before
-          you commit to anything.
-        </p>
-        <div class="hero__actions">
-          <a class="btn btn--primary btn--lg" href="/request-a-quote/">Request a quote</a>
-          <a class="btn btn--outline btn--lg" href="/get-a-free-dieline/">Get a free dieline</a>
-        </div>
-        <ul class="hero__points">
-          <li>Free dielines drawn from your actual product</li>
-          <li>Low minimums — digital printing removes plate setup</li>
-          <li>Shipped to businesses across all fifty states</li>
-        </ul>
+  {/* ── Hero: full-bleed product photo, copy on the navy shade ─────────── */}
+  <section class="hx">
+    <Image
+      src={heroImage}
+      alt="Printed counter display box holding sport gels and pump bottles"
+      widths={[480, 720, 960, 1200]}
+      sizes="(min-width: 40em) 50vw, 100vw"
+      format="webp"
+      loading="eager"
+      fetchpriority="high"
+      decoding="sync"
+      class="hx__img"
+    />
+    <div class="hx__shade" aria-hidden="true"></div>
+    <div class="hx__copy">
+      <h1>Display boxes built around your product, not around a stock size</h1>
+      <p class="hx__lede">
+        A display that holds your product approximately is a display whose front row leans within
+        a week — and a leaning row stops selling. We draw a dieline around the real thing before
+        you commit to anything.
+      </p>
+      <div class="hx__actions">
+        <a class="btn btn-solid btn-lg" href="/request-a-quote/">Request a quote</a>
+        <a class="btn btn-ghost btn-lg" href="/get-a-free-dieline/">Get a free dieline</a>
       </div>
-      <div class="hero__media">
-        {
-          heroImage && (
-            <Image
-              src={heroImage}
-              alt="Tall printed floor display stand holding four tiers of product"
-              widths={[480, 720, 960]}
-              sizes="(min-width: 64em) 30rem, 90vw"
-              format="webp"
-              loading="eager"
-              fetchpriority="high"
-              decoding="sync"
-              class="hero__img"
-            />
-          )
-        }
-      </div>
+      <ul class="hx__facts">
+        <li>Free dielines drawn from your actual product</li>
+        <li>Low minimums — digital printing removes plate setup</li>
+        <li>Shipped to businesses across all fifty states</li>
+      </ul>
     </div>
   </section>
 
-  <ScrollBox3D />
-
-  <section class="section">
-    <div class="container container--wide">
-      <p class="eyebrow fx-fade-up">Where to start</p>
-      <h2 class="fx-fade-up">Narrow it down in one question: where will it sit?</h2>
-      <p class="lede fx-fade-up">
+  {/* ── Placement: three edge-to-edge photo panels ─────────────────────── */}
+  <section class="pl" aria-labelledby="pl-h">
+    <div class="pl__head wrap">
+      <h2 id="pl-h">Narrow it down in one question: where will it sit?</h2>
+      <p>
         Placement sets the footprint you are allowed and the angle a shopper views from, and both
         constrain everything downstream. It is the most useful first filter there is.
       </p>
-      <div class="placement-grid fx-stagger">
-        <a class="placement" href="/counter-display-boxes/">
+    </div>
+    <div class="pl__row">
+      <a class="pl__panel" href="/counter-display-boxes/">
+        <Image src={placementImages.counter} alt="Corrugated counter display with a printed summer header card" widths={[480, 720]} sizes="(min-width: 60em) 33vw, 100vw" format="webp" loading="lazy" decoding="async" />
+        <div class="pl__text">
           <h3>On a counter</h3>
-          <p>
-            Small footprint, steep viewing angle, easiest placement to win. Build upward, not
-            outward.
-          </p>
-        </a>
-        <a class="placement" href="/shelf-ready-display-boxes/">
+          <p>Small footprint, steep viewing angle, easiest placement to win. Build upward, not outward.</p>
+          <span class="pl__link">Counter display boxes</span>
+        </div>
+      </a>
+      <a class="pl__panel" href="/shelf-ready-display-boxes/">
+        <Image src={placementImages.shelf} alt="Orange shelf-ready display box with a hexagon window" widths={[480, 720]} sizes="(min-width: 60em) 33vw, 100vw" format="webp" loading="lazy" decoding="async" />
+        <div class="pl__text">
           <h3>On a shelf</h3>
-          <p>
-            Planogram constrained, and increasingly governed by shelf-ready specifications from the
-            chain.
-          </p>
-        </a>
-        <a class="placement" href="/cardboard-display-stands/">
+          <p>Planogram constrained, and increasingly governed by shelf-ready specifications from the chain.</p>
+          <span class="pl__link">Shelf-ready display boxes</span>
+        </div>
+      </a>
+      <a class="pl__panel" href="/cardboard-display-stands/">
+        <Image src={placementImages.floor} alt="Pink and black floor display stand with four printed shelves" widths={[480, 720]} sizes="(min-width: 60em) 33vw, 100vw" format="webp" loading="lazy" decoding="async" />
+        <div class="pl__text">
           <h3>On the floor</h3>
-          <p>
-            Highest stock capacity, most negotiation, and the structure that has to carry its own
-            load.
-          </p>
-        </a>
+          <p>Highest stock capacity, most negotiation, and the structure that has to carry its own load.</p>
+          <span class="pl__link">Cardboard display stands</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  {/* ── Range: every style as a photo tile, filterable ─────────────────── */}
+  <section class="rg wrap" aria-labelledby="rg-h">
+    <div class="sec-head">
+      <div>
+        <h2 id="rg-h">Selected formats</h2>
+        <p>
+          All {PRODUCTS.length} styles are in the{' '}
+          <a href="/display-box-packaging/">display packaging overview</a>.
+        </p>
+      </div>
+      <div class="rg__tabs" role="group" aria-label="Filter display box styles">
+        <button type="button" class="is-on" data-f="all" aria-pressed="true">All {PRODUCTS.length}</button>
+        {groups.map((g) => (
+          <button type="button" data-f={g} aria-pressed="false">{g}</button>
+        ))}
       </div>
     </div>
-  </section>
-
-  <section class="section section--warm">
-    <div class="container container--wide">
-      <p class="eyebrow">Display box styles</p>
-      <h2>Selected formats</h2>
-      <ul class="product-grid fx-stagger">
-        {
-          featured.map(({ product, image }) => (
-            <li>
-              <a href={`/${product.slug}/`}>
-                {image && (
-                  <Image
-                    src={image}
-                    alt={`${product.name} — custom printed display box`}
-                    widths={[280, 560]}
-                    sizes="(min-width: 60em) 18rem, 45vw"
-                    format="webp"
-                    loading="lazy"
-                    decoding="async"
-                    class="product-grid__img"
-                  />
-                )}
-                <span class="product-grid__name">{product.name}</span>
-              </a>
-              <p class="product-grid__intent">{product.searchIntent}</p>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="section-link">
-        All {PRODUCTS.length} styles are in the{' '}
-        <a href="/display-box-packaging/">display packaging overview</a>.
-      </p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container container--wide">
-      <p class="eyebrow">Industries</p>
-      <h2>Different categories break in different ways</h2>
-      <p class="lede">
-        Glass weight for candles. Oil migration for soap. Food-contact coatings for bakery. Warning
-        copy claiming panel space before design starts. The constraint changes by category.
-      </p>
-      <ul class="industry-list fx-stagger">
-        {industries.map((i) => (
-          <li>
-            <a href={i.href}>{i.label}</a>
+    <ul class="rg__grid">
+      {
+        range.map(({ product, image }) => (
+          <li data-g={product.group}>
+            <a href={`/${product.slug}/`}>
+              <Image
+                src={image}
+                alt={`${product.name} — custom printed display box`}
+                widths={[280, 560]}
+                sizes="(min-width: 80em) 19vw, (min-width: 40em) 30vw, 48vw"
+                format="webp"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="rg__info">
+                <h3>{product.name}</h3>
+                <p>{product.searchIntent}</p>
+                <span>View style</span>
+              </div>
+            </a>
           </li>
-        ))}
-      </ul>
+        ))
+      }
+    </ul>
+  </section>
+
+  <DesignYourBox id="dyb-home" />
+
+  <OrderBand />
+
+  {/* ── Structure: the six-panel argument beside a real box ───────────── */}
+  <section class="st" aria-labelledby="st-h">
+    <div class="st__photo">
+      <Image src={structureImage} alt="Printed counter display box with a tall header card" widths={[480, 720, 960]} sizes="(min-width: 60em) 45vw, 100vw" format="webp" loading="lazy" decoding="async" />
+    </div>
+    <div class="st__copy">
+      <h2 id="st-h">Six panels, and every one of them is a decision</h2>
+      <p>
+        A display box is not a printed rectangle. The front panel sells, the side walls carry the
+        load, the base decides whether the front row is still standing in a fortnight, and the
+        header card is the only part a shopper sees from across an aisle. They are drawn together
+        or they fight each other.
+      </p>
     </div>
   </section>
 
-  <section class="section section--sunk">
-    <div class="container container--wide">
-      <p class="eyebrow">Specification</p>
-      <h2>The four decisions that set your quote</h2>
-      <div class="spec-grid fx-stagger">
-        <article>
+  {/* ── How ordering works ────────────────────────────────────────────── */}
+  <section class="sp wrap" aria-labelledby="sp-h">
+    <div class="sec-head">
+      <div>
+        <h2 id="sp-h">Six stages, two of which carry the risk</h2>
+        <p>
+          The full sequence and what to check at each approval is under{' '}
+          <a href="/how-to-order/">how ordering works</a>.
+        </p>
+      </div>
+    </div>
+    <ol class="sp__list">
+      {
+        steps.map((step) => (
+          <li>
+            <strong>{step.title}</strong> {step.body}
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  {/* ── The four decisions ─────────────────────────────────────────────── */}
+  <section class="dc wrap" aria-labelledby="dc-h">
+    <div class="sec-head">
+      <div>
+        <h2 id="dc-h">The four decisions that set your quote</h2>
+      </div>
+    </div>
+    <div class="dc__cards">
+      <article class="dc__card">
+        <Image src={specImages.material} alt="Plain kraft display box with a tall header" widths={[400, 600]} sizes="(min-width: 70em) 23vw, (min-width: 40em) 45vw, 100vw" format="webp" loading="lazy" decoding="async" />
+        <div>
           <h3>Material</h3>
           <p>
             Folding boxboard prints best and suits light units. Corrugated carries load and survives
             transit. The dividing line is weight against unsupported base span — not category.
           </p>
           <a href="/box-materials/">Board and box materials</a>
-        </article>
-        <article>
+        </div>
+      </article>
+      <article class="dc__card">
+        <Image src={specImages.printing} alt="Tiered tea display printed in full color" widths={[400, 600]} sizes="(min-width: 70em) 23vw, (min-width: 40em) 45vw, 100vw" format="webp" loading="lazy" decoding="async" />
+        <div>
           <h3>Printing</h3>
           <p>
             Digital removes plate setup and wins on short runs. Offset overtakes it at volume.
             Litho-lamination gives carton print quality on a shipper-grade structure.
           </p>
           <a href="/custom-printing-options/">Custom printing options</a>
-        </article>
-        <article>
+        </div>
+      </article>
+      <article class="dc__card">
+        <Image src={specImages.finishing} alt="Window gift box with a gold foil interior" widths={[400, 600]} sizes="(min-width: 70em) 23vw, (min-width: 40em) 45vw, 100vw" format="webp" loading="lazy" decoding="async" />
+        <div>
           <h3>Finishing</h3>
           <p>
             A durability decision before a visual one — and the decision that determines whether the
             board stays in the paper recycling stream.
           </p>
           <a href="/finishes-and-add-ons/">Finishes and add-ons</a>
-        </article>
-        <article>
+        </div>
+      </article>
+      <article class="dc__card">
+        <Image src={specImages.size} alt="Kraft corrugated display box with a die-cut front" widths={[400, 600]} sizes="(min-width: 70em) 23vw, (min-width: 40em) 45vw, 100vw" format="webp" loading="lazy" decoding="async" />
+        <div>
           <h3>Size</h3>
           <p>
             Measured at the widest point, which is usually the cap rather than the body. Internal
             dimensions are the ones that matter, and board thickness changes them.
           </p>
           <a href="/custom-box-sizes/">Custom box sizes</a>
-        </article>
-      </div>
+        </div>
+      </article>
     </div>
   </section>
 
-  <section class="section">
-    <div class="container container--wide pricing-band fx-fade-up">
-      <div>
-        <p class="eyebrow">Pricing and minimums</p>
-        <h2>What it costs, honestly</h2>
-        <p class="price-statement">{price.statement}</p>
-        <p class="price-qualifier">{price.qualifier}</p>
-        <p class="section-link">
-          Each cost driver is broken down in the guide to{' '}
-          <a href="/how-much-do-custom-display-boxes-cost/">what custom display boxes cost</a>.
-        </p>
-      </div>
-      <div class="pricing-aside">
-        <h3>Low minimums</h3>
-        <p>
-          Digital printing removes plate setup, which is what makes genuinely short runs viable. The
-          actual minimum depends on structure, board, and print route — we confirm it with your
-          quote rather than publishing a number that would not hold for every job.
-        </p>
-        <a class="btn btn--outline" href="/low-minimum-orders/">Low minimum orders</a>
-      </div>
-    </div>
-  </section>
-
-  {/* Same copy, same single link, sticky layout. See PinnedProcess.astro. */}
-  <PinnedProcess />
-
-  <section class="section">
-    <div class="container container--wide">
-      <p class="eyebrow">What you get</p>
-      <h2>Support that prevents reprints rather than explaining them</h2>
-      <div class="trust-grid fx-stagger">
-        <article>
-          <h3>Free dielines and artwork checks</h3>
-          <p>
-            We draw the dieline and check your file against it before press — bleed, safe area,
-            resolution, color space, and whether live copy crosses a crease. Those are the faults
-            behind most reprints, and all are cheap to fix beforehand.
-          </p>
-          <a href="/free-design-support/">Free design support</a>
-        </article>
-        <article>
-          <h3>Checked against the proof</h3>
-          <p>
-            Every production stage is checked against the approved proof rather than the stage
-            before it, so a small drift cannot compound down the line. Displays with inserts get a
-            loaded fit check before the run completes.
-          </p>
-          <a href="/quality-assurance/">Our quality assurance process</a>
-        </article>
-        <article>
-          <h3>Recyclable specifications</h3>
-          <p>
-            The coating determines recyclability more than the board or its recycled content. If it
-            is a requirement, settle it before choosing a finish — a film laminate takes board out
-            of the paper stream in most municipalities.
-          </p>
-          <a href="/sustainability/">Sustainable board options</a>
-        </article>
-        <article>
-          <h3>Shipped across the USA</h3>
-          <p>
-            To business addresses in all fifty states. Freight on display packaging is billed on
-            volume rather than weight, which is why flat-packing changes the delivered cost so
-            substantially.
-          </p>
-          <a href="/shipping-information/">Shipping and delivery information</a>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--sunk">
-    <div class="container container--wide">
-      <p class="eyebrow">Work</p>
-      <h2>Production work, by the problem it solved</h2>
-      <ul class="gallery-grid fx-stagger">
-        {
-          gallery.map(({ slug, name, image }) =>
-            image ? (
-              <li>
-                <a href={`/${slug}/`}>
-                  <Image
-                    src={image}
-                    alt={`${name} — production example`}
-                    widths={[260, 520]}
-                    sizes="(min-width: 60em) 16rem, 45vw"
-                    format="webp"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
-              </li>
-            ) : null
-          )
-        }
-      </ul>
-      <p class="section-link">
-        More in the <a href="/portfolio/">our display box portfolio</a>, organized by the constraint each structure
-        had to solve.
+  {/* ── Pricing ───────────────────────────────────────────────────────── */}
+  <section class="pr">
+    <div class="pr__main">
+      <h2>What it costs, honestly</h2>
+      <p class="pr__statement">{price.statement}</p>
+      <p class="pr__qualifier">{price.qualifier}</p>
+      <p class="more-link">
+        Each cost driver is broken down in the guide to{' '}
+        <a href="/how-much-do-custom-display-boxes-cost/">what custom display boxes cost</a>.
       </p>
     </div>
-  </section>
-
-  <section class="section">
-    <div class="container container--wide">
-      <FaqAccordion faqs={withExtras('/', faqs)} heading="Common questions" />
+    <div class="pr__aside">
+      <h3>Low minimums</h3>
+      <p>
+        Digital printing removes plate setup, which is what makes genuinely short runs viable. The
+        actual minimum depends on structure, board, and print route — we confirm it with your
+        quote rather than publishing a number that would not hold for every job.
+      </p>
+      <a class="btn btn-ghost" href="/low-minimum-orders/">Low minimum orders</a>
     </div>
   </section>
 
-  <section class="section">
-    <div class="container container--wide">
-      <div class="final-cta fx-scale-in">
-        <div>
-          <h2>Send the product, not the measurements</h2>
-          <p>
-            For anything with an insert, the dimensions that decide fit are the ones no spec sheet
-            records. We will draw the dieline around the real thing and come back with a structure,
-            a board, and a price.
-          </p>
-        </div>
-        <a class="btn btn--primary btn--lg" href="/request-a-quote/">Request a quote</a>
+  {/* ── Industries ────────────────────────────────────────────────────── */}
+  <section class="in" aria-labelledby="in-h">
+    <div class="sec-head">
+      <div>
+        <h2 id="in-h">Different categories break in different ways</h2>
+        <p>
+          Glass weight for candles. Oil migration for soap. Food-contact coatings for bakery. Warning
+          copy claiming panel space before design starts. The constraint changes by category.
+        </p>
       </div>
+    </div>
+    <ul class="in__grid">
+      {industryTiles.map((i) => (
+        <li>
+          <a href={i.href}>
+            <Image src={i.image} alt="" widths={[240, 400]} sizes="(min-width: 80em) 15vw, (min-width: 40em) 24vw, 48vw" format="webp" loading="lazy" decoding="async" />
+            <span>{i.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {/* ── What you get ──────────────────────────────────────────────────── */}
+  <section class="wg wrap" aria-labelledby="wg-h">
+    <div class="sec-head">
+      <div>
+        <h2 id="wg-h">Support that prevents reprints rather than explaining them</h2>
+      </div>
+    </div>
+    <div class="wg__grid">
+      <article>
+        <h3>Free dielines and artwork checks</h3>
+        <p>
+          We draw the dieline and check your file against it before press — bleed, safe area,
+          resolution, color space, and whether live copy crosses a crease. Those are the faults
+          behind most reprints, and all are cheap to fix beforehand.
+        </p>
+        <a href="/free-design-support/">Free design support</a>
+      </article>
+      <article>
+        <h3>Checked against the proof</h3>
+        <p>
+          Every production stage is checked against the approved proof rather than the stage
+          before it, so a small drift cannot compound down the line. Displays with inserts get a
+          loaded fit check before the run completes.
+        </p>
+        <a href="/quality-assurance/">Our quality assurance process</a>
+      </article>
+      <article>
+        <h3>Recyclable specifications</h3>
+        <p>
+          The coating determines recyclability more than the board or its recycled content. If it
+          is a requirement, settle it before choosing a finish — a film laminate takes board out
+          of the paper stream in most municipalities.
+        </p>
+        <a href="/sustainability/">Sustainable board options</a>
+      </article>
+      <article>
+        <h3>Shipped across the USA</h3>
+        <p>
+          To business addresses in all fifty states. Freight on display packaging is billed on
+          volume rather than weight, which is why flat-packing changes the delivered cost so
+          substantially.
+        </p>
+        <a href="/shipping-information/">Shipping and delivery information</a>
+      </article>
+    </div>
+  </section>
+
+  {/* ── Work ──────────────────────────────────────────────────────────── */}
+  <section class="wk wrap" aria-labelledby="wk-h">
+    <div class="sec-head">
+      <div>
+        <h2 id="wk-h">Production work, by the problem it solved</h2>
+        <p>
+          More in the <a href="/portfolio/">our display box portfolio</a>, organized by the constraint each structure
+          had to solve.
+        </p>
+      </div>
+    </div>
+    <ul class="wk__strip">
+      {
+        gallery.map(({ slug, name, image }) => (
+          <li>
+            <a href={`/${slug}/`}>
+              <Image src={image} alt={`${name} — production example`} widths={[260, 520]} sizes="(min-width: 60em) 16vw, 48vw" format="webp" loading="lazy" decoding="async" />
+              <span>{name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="band wrap">
+    <FaqAccordion faqs={withExtras('/', faqs)} heading="Common questions" />
+  </section>
+
+  {/* ── Closing CTA: full-bleed photo ─────────────────────────────────── */}
+  <section class="cl">
+    <Image src={closeImage} alt="Teal soap counter display packed with printed soap boxes" widths={[600, 900, 1200]} sizes="(min-width: 40em) 62vw, 100vw" format="webp" loading="lazy" decoding="async" class="cl__img" />
+    <div class="cl__copy">
+      <h2>Send the product, not the measurements</h2>
+      <p>
+        For anything with an insert, the dimensions that decide fit are the ones no spec sheet
+        records. We will draw the dieline around the real thing and come back with a structure,
+        a board, and a price.
+      </p>
+      <a class="btn btn-solid btn-lg" href="/request-a-quote/">Request a quote</a>
     </div>
   </section>
 </BaseLayout>
 
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.rg__tabs button');
+  const tiles = document.querySelectorAll<HTMLElement>('.rg__grid li');
+  tabs.forEach((t) => {
+    t.addEventListener('click', () => {
+      tabs.forEach((b) => {
+        b.classList.toggle('is-on', b === t);
+        b.setAttribute('aria-pressed', String(b === t));
+      });
+      const f = t.dataset.f;
+      tiles.forEach((li) => {
+        li.hidden = f !== 'all' && li.dataset.g !== f;
+      });
+    });
+  });
+</script>
+
 <style>
-  .hero {
-    padding-block: var(--s-8) var(--section-y);
-    background: linear-gradient(to bottom, var(--c-paper-warm), var(--c-paper));
-    border-block-end: 1px solid var(--c-border);
-  }
-
-  .hero__inner {
-    display: grid;
-    gap: var(--s-8);
+  /* Hero */
+  .hx {
+    position: relative;
+    overflow: hidden;
+    min-height: clamp(560px, 46vw, 700px);
+    display: flex;
     align-items: center;
+    background: linear-gradient(180deg, #67909a 0%, #5a808a 45%, #4f737c 100%);
   }
-
-  @media (min-width: 64em) {
-    .hero__inner {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
-      gap: var(--s-10);
-    }
+  .hx__img {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: auto;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 22%);
   }
-
-  .hero h1 {
-    margin-block: var(--s-2) var(--s-5);
-    max-width: 18ch;
+  .hx__shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(9 20 36 / 0.9) 0%, rgb(9 20 36 / 0.74) 36%, rgb(9 20 36 / 0.16) 64%, rgb(9 20 36 / 0) 78%),
+      linear-gradient(0deg, rgb(9 20 36 / 0.35), rgb(9 20 36 / 0) 35%);
   }
-
-  .hero__actions {
+  .hx__copy {
+    position: relative;
+    z-index: 1;
+    padding: 64px var(--gut);
+    max-width: calc(660px + 2 * var(--gut));
+  }
+  .hx h1 {
+    color: #fff;
+    font-size: clamp(2.125rem, 3.5vw, 3.125rem);
+    line-height: 1.12;
+  }
+  .hx__lede {
+    margin-block-start: 20px;
+    max-width: 560px;
+    color: #d7e2ee;
+    font-size: 1.125rem;
+  }
+  .hx__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-3);
-    margin-block: var(--s-6);
+    gap: 12px;
+    margin-block-start: 30px;
+  }
+  .hx__facts {
+    list-style: none;
+    margin: 36px 0 0;
+    padding: 22px 0 0;
+    border-block-start: 1px solid rgb(255 255 255 / 0.22);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 28px;
+    color: #e4ecf5;
+    font: 600 15px/1.45 var(--font-sans);
+  }
+  .hx__facts li {
+    padding-inline-start: 14px;
+    border-inline-start: 2px solid var(--cobalt-light);
   }
 
-  .hero__points {
+  /* Placement panels */
+  .pl__head {
+    padding-block: 64px 28px;
+    max-width: calc(820px + 2 * var(--gut));
+  }
+  .pl__head p {
+    margin-block-start: 12px;
+    color: var(--muted);
+    font-size: 1.0625rem;
+  }
+  .pl__row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .pl__panel {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3.1;
+    overflow: hidden;
+    text-decoration: none;
+    background: var(--ink);
+  }
+  .pl__panel img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .pl__panel:hover img {
+    transform: scale(1.04);
+  }
+  .pl__text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 90px 32px 28px;
+    background: linear-gradient(0deg, rgb(9 20 36 / 0.9) 0%, rgb(9 20 36 / 0.65) 55%, rgb(9 20 36 / 0) 100%);
+  }
+  .pl__text h3 {
+    color: #fff;
+    font-size: 1.5rem;
+  }
+  .pl__text p {
+    margin-block-start: 6px;
+    max-width: 400px;
+    color: #d3deea;
+    font-size: 15px;
+  }
+  .pl__link {
+    display: inline-block;
+    margin-block-start: 12px;
+    padding-block-end: 2px;
+    border-block-end: 1.5px solid #5fa3ff;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  /* Range */
+  .rg {
+    padding-block: 88px 96px;
+  }
+  .rg__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .rg__tabs button {
+    padding: 12px 16px;
+    background: #fff;
+    border: 0;
+    border-inline-start: 1px solid var(--rule);
+    font: 600 14px/1 var(--font-sans);
+    color: var(--ink-2);
+  }
+  .rg__tabs button:first-child {
+    border-inline-start: 0;
+  }
+  .rg__tabs button.is-on {
+    background: var(--ink);
+    color: #fff;
+  }
+  .rg__grid {
     list-style: none;
     margin: 0;
-    padding: var(--s-5) 0 0;
-    border-block-start: 1px solid var(--c-border);
+    padding: 0;
     display: grid;
-    gap: var(--s-2);
-    color: var(--c-text-muted);
-    font-size: var(--t-base);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
   }
-
-  .hero__img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
+  .rg__grid li[hidden] {
+    display: none;
+  }
+  .rg__grid a {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
     border-radius: var(--r-lg);
-    background: var(--c-paper-warm);
+    overflow: hidden;
+    background: var(--mist);
+    text-decoration: none;
+  }
+  .rg__grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+  }
+  .rg__grid a:hover img {
+    transform: scale(1.05);
+  }
+  .rg__info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 48px 18px 16px;
+    background: linear-gradient(0deg, rgb(9 20 36 / 0.9) 0%, rgb(9 20 36 / 0.55) 60%, rgb(9 20 36 / 0) 100%);
+  }
+  .rg__info h3 {
+    color: #fff;
+    font-size: 1.0625rem;
+  }
+  .rg__info p,
+  .rg__info span {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin 0.3s;
+  }
+  .rg__info p {
+    color: #d5e0ec;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .rg__info span {
+    display: block;
+    color: #9cc4ff;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .rg__grid a:hover .rg__info p,
+  .rg__grid a:focus-visible .rg__info p {
+    max-height: 110px;
+    opacity: 1;
+    margin-block-start: 6px;
+  }
+  .rg__grid a:hover .rg__info span,
+  .rg__grid a:focus-visible .rg__info span {
+    max-height: 24px;
+    opacity: 1;
+    margin-block-start: 8px;
+  }
+  @media (hover: none) {
+    .rg__info span {
+      max-height: 24px;
+      opacity: 1;
+      margin-block-start: 4px;
+    }
   }
 
-  .placement-grid,
-  .spec-grid,
-  .trust-grid {
+  /* Structure */
+  .st {
     display: grid;
-    gap: var(--s-5);
-    margin-block-start: var(--s-7);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    background: #fff;
+  }
+  .st__photo img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .st__copy {
+    padding: 64px var(--gut);
+    max-width: 680px;
+  }
+  .st__copy p {
+    margin-block-start: 16px;
+    color: var(--ink-2);
+    font-size: 1.125rem;
   }
 
-  @media (min-width: 52em) {
-    .placement-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .spec-grid,
-    .trust-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--s-7);
-    }
+  /* Steps */
+  .sp {
+    padding-block: 88px;
+    border-block-start: 1px solid var(--rule);
+  }
+  .sp__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 32px;
+    counter-reset: step;
+  }
+  .sp__list li {
+    padding-block-start: 18px;
+    border-block-start: 2px solid var(--ink);
+    color: var(--muted);
+    counter-increment: step;
+  }
+  .sp__list li:nth-child(2),
+  .sp__list li:nth-child(4) {
+    border-block-start-color: var(--cobalt);
+  }
+  .sp__list li::before {
+    content: counter(step) '.';
+    display: block;
+    margin-block-end: 6px;
+    font: 800 15px/1 var(--font-display);
+    color: var(--ink);
+  }
+  .sp__list strong {
+    display: block;
+    margin-block-end: 6px;
+    font: 700 1.0625rem/1.35 var(--font-display);
+    color: var(--ink);
   }
 
-  @media (min-width: 72em) {
-    .spec-grid {
+  /* Decisions */
+  .dc {
+    padding-block: 0 88px;
+  }
+  .dc__cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .dc__card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+  }
+  .dc__card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .dc__card > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px 20px 22px;
+  }
+  .dc__card p {
+    flex: 1;
+    margin-block: 8px 14px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .dc__card a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .dc__card a:hover {
+    text-decoration: underline;
+  }
+
+  /* Pricing */
+  .pr {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+    padding: 80px var(--gut);
+    background: var(--ink);
+    color: #c4d1e0;
+  }
+  .pr h2,
+  .pr h3 {
+    color: #fff;
+  }
+  .pr__statement {
+    margin-block: 16px;
+    max-width: 46ch;
+    color: #fff;
+    font: 700 1.25rem/1.4 var(--font-display);
+  }
+  .pr__qualifier {
+    max-width: 62ch;
+  }
+  .pr .more-link {
+    color: #c4d1e0;
+  }
+  .pr a:not(.btn) {
+    color: var(--cobalt-light);
+  }
+  .pr__aside {
+    padding: 28px;
+    border: 1px solid rgb(255 255 255 / 0.16);
+    border-radius: var(--r-lg);
+    background: rgb(255 255 255 / 0.04);
+  }
+  .pr__aside p {
+    margin-block: 10px 20px;
+  }
+
+  /* Industries */
+  .in {
+    padding: 88px var(--gut);
+    background: var(--mist);
+    border-block-end: 1px solid var(--rule);
+  }
+  .in__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .in__grid a {
+    display: block;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color var(--dur-fast);
+  }
+  .in__grid a:hover {
+    border-color: var(--cobalt);
+  }
+  .in__grid img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .in__grid span {
+    display: block;
+    padding: 11px 14px 13px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  /* What you get */
+  .wg {
+    padding-block: 88px;
+  }
+  .wg__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .wg__grid article {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background: var(--mist);
+    border-radius: var(--r-lg);
+  }
+  .wg__grid p {
+    flex: 1;
+    margin-block: 10px 14px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .wg__grid a {
+    font-weight: 600;
+  }
+
+  /* Work strip */
+  .wk {
+    padding-block: 0 24px;
+  }
+  .wk__strip {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .wk__strip a {
+    position: relative;
+    display: block;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    text-decoration: none;
+  }
+  .wk__strip img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .wk__strip span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 30px 12px 10px;
+    background: linear-gradient(0deg, rgb(9 20 36 / 0.85), rgb(9 20 36 / 0));
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* Closing */
+  .cl {
+    position: relative;
+    min-height: 440px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: #a7d8cb;
+  }
+  .cl__img {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 62%;
+    height: auto;
+    max-width: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+  }
+  .cl::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgb(9 20 36 / 0.92) 0%, rgb(9 20 36 / 0.82) 40%, rgb(9 20 36 / 0.1) 75%);
+  }
+  .cl__copy {
+    position: relative;
+    z-index: 2;
+    padding: 72px var(--gut);
+    max-width: calc(620px + 2 * var(--gut));
+  }
+  .cl__copy h2 {
+    color: #fff;
+  }
+  .cl__copy p {
+    margin-block: 14px 26px;
+    color: #d3deea;
+    font-size: 1.0625rem;
+  }
+
+  @media (max-width: 1280px) {
+    .rg__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .in__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
-
-  .placement {
-    display: block;
-    padding: var(--s-6);
-    background: var(--c-paper);
-    border: 1px solid var(--c-border);
-    border-radius: var(--r-lg);
-    text-decoration: none;
-    transition: border-color var(--dur-fast) var(--ease-out);
-  }
-
-  .placement:hover {
-    border-color: var(--c-signal-700);
-  }
-
-  .placement h3 {
-    margin-block-end: var(--s-3);
-  }
-
-  .placement p {
-    color: var(--c-text-muted);
-    font-size: var(--t-base);
-  }
-
-  .spec-grid h3,
-  .trust-grid h3 {
-    margin-block-end: var(--s-3);
-  }
-
-  .spec-grid p,
-  .trust-grid p {
-    color: var(--c-text-muted);
-    margin-block-end: var(--s-3);
-  }
-
-  .spec-grid article,
-  .trust-grid article {
-    padding-block-start: var(--s-4);
-    border-block-start: 2px solid var(--c-kraft-400);
-  }
-
-  .product-grid {
-    display: grid;
-    gap: var(--s-6);
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    list-style: none;
-    margin: var(--s-7) 0 0;
-    padding: 0;
-  }
-
-  .product-grid a {
-    text-decoration: none;
-    display: block;
-  }
-
-  .product-grid__img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border: 1px solid var(--c-border);
-    border-radius: var(--r-md);
-    background: var(--c-paper);
-  }
-
-  .product-grid__name {
-    display: block;
-    margin-block-start: var(--s-3);
-    font-weight: 650;
-    color: var(--c-ink-900);
-  }
-
-  .product-grid a:hover .product-grid__name {
-    color: var(--c-signal-700);
-  }
-
-  .product-grid__intent {
-    margin-block-start: var(--s-1);
-    font-size: var(--t-sm);
-    color: var(--c-text-subtle);
-  }
-
-  .industry-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2) var(--s-3);
-    list-style: none;
-    margin: var(--s-7) 0 0;
-    padding: 0;
-  }
-
-  .industry-list a {
-    display: inline-block;
-    padding: var(--s-2) var(--s-4);
-    background: var(--c-paper-warm);
-    border: 1px solid var(--c-border);
-    border-radius: var(--r-pill);
-    font-size: var(--t-base);
-    font-weight: 550;
-    text-decoration: none;
-  }
-
-  .industry-list a:hover {
-    border-color: var(--c-signal-700);
-    color: var(--c-signal-700);
-  }
-
-  .pricing-band {
-    display: grid;
-    gap: var(--s-7);
-  }
-
-  @media (min-width: 62em) {
-    .pricing-band {
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-      gap: var(--s-9);
-      align-items: start;
+  @media (max-width: 1100px) {
+    .dc__cards,
+    .wg__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .sp__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .wk__strip {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-
-  .price-statement {
-    font-size: var(--t-lg);
-    font-weight: 600;
-    line-height: var(--lh-snug);
-    color: var(--c-ink-900);
-    margin-block: var(--s-4);
-    max-width: 46ch;
+  @media (max-width: 960px) {
+    .rg__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .pl__row {
+      grid-template-columns: 1fr;
+    }
+    .pl__panel {
+      aspect-ratio: 16 / 10;
+    }
+    .st,
+    .pr {
+      grid-template-columns: 1fr;
+    }
+    .hx__facts {
+      grid-template-columns: 1fr;
+    }
   }
-
-  .price-qualifier {
-    color: var(--c-text-muted);
-    max-width: 62ch;
-  }
-
-  .pricing-aside {
-    padding: var(--s-6);
-    background: var(--c-paper-warm);
-    border: 1px solid var(--c-border);
-    border-inline-start: 3px solid var(--c-signal-700);
-    border-radius: var(--r-lg);
-  }
-
-  .pricing-aside h3 {
-    margin-block-end: var(--s-3);
-  }
-
-  .pricing-aside p {
-    color: var(--c-text-muted);
-    margin-block-end: var(--s-5);
-    font-size: var(--t-base);
-  }
-
-  /* The process steps moved into PinnedProcess.astro along with their styles. */
-
-  .gallery-grid {
-    display: grid;
-    gap: var(--s-4);
-    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-    list-style: none;
-    margin: var(--s-7) 0 0;
-    padding: 0;
-  }
-
-  .gallery-grid img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: var(--r-md);
-    background: var(--c-paper);
-    border: 1px solid var(--c-border);
-  }
-
-  .section-link {
-    margin-block-start: var(--s-6);
-  }
-
-  .final-cta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--s-5);
-    padding: var(--s-8);
-    background: var(--c-ink-900);
-    color: var(--c-ink-200);
-    border-radius: var(--r-lg);
-  }
-
-  .final-cta :global(h2) {
-    color: var(--c-paper);
-    margin-block-end: var(--s-3);
-  }
-
-  .final-cta p {
-    max-width: 56ch;
-    margin: 0;
+  @media (max-width: 640px) {
+    .hx {
+      flex-direction: column;
+      align-items: stretch;
+      min-height: 0;
+      background: var(--ink);
+    }
+    .hx__img {
+      position: relative;
+      width: 100%;
+      height: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .hx__shade {
+      top: 0;
+      bottom: auto;
+      height: 100vw;
+      background: linear-gradient(0deg, var(--ink) 0%, rgb(13 27 46 / 0) 40%);
+    }
+    .hx__copy {
+      margin-block-start: -56px;
+      padding: 0 var(--gut) 40px;
+    }
+    .hx__lede {
+      font-size: 1.03rem;
+    }
+    .hx__actions .btn {
+      flex: 1 1 100%;
+    }
+    .pl__head {
+      padding-block: 48px 20px;
+    }
+    .pl__panel {
+      aspect-ratio: 1 / 1;
+    }
+    .pl__text {
+      padding: 80px 20px 22px;
+    }
+    .rg,
+    .sp,
+    .in,
+    .wg {
+      padding-block: 60px 64px;
+    }
+    .dc {
+      padding-block-end: 64px;
+    }
+    .rg__tabs {
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    .rg__tabs button {
+      white-space: nowrap;
+    }
+    .rg__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .rg__info {
+      padding: 36px 12px 11px;
+    }
+    .rg__info h3 {
+      font-size: 0.92rem;
+    }
+    .sp__list,
+    .dc__cards,
+    .wg__grid {
+      grid-template-columns: 1fr;
+    }
+    .in__grid,
+    .wk__strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .pr {
+      padding-block: 56px;
+    }
+    .cl {
+      min-height: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--ink);
+    }
+    .cl__img {
+      position: relative;
+      top: auto;
+      transform: none;
+      width: 100%;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .cl::before {
+      display: none;
+    }
+    .cl__copy {
+      padding: 32px var(--gut) 56px;
+    }
+    .cl__copy .btn {
+      width: 100%;
+    }
   }
 </style>
