@@ -72,14 +72,15 @@ const content: PageContent = {
     {
       heading: 'Payment terms',
       body: [
-        'Payment terms are agreed per order and confirmed with your quote. Deposit requirements, accepted methods, and any terms on late payment are set out there rather than published as a blanket policy, because they vary with order size and whether an account is in place.',
+        'Nothing is charged on this website. Orders are paid by PayPal invoice or bank transfer, which we send after you approve your proof, or by cash on delivery for addresses in the United States and Canada. Production starts once an invoiced order is paid.',
+        'The online pack price is $60.00 for 100 display boxes ($0.60 each) in US dollars, with free shipping to the US, UK, Canada and Australia. Larger or custom runs are priced by quote, and deposit requirements or account terms for those are confirmed with the quote.',
       ],
     },
     {
       heading: 'Delivery',
       body: [
-        'Shipping is included in the quoted price to business addresses across all fifty states. Delivery timings are estimates rather than guarantees, and no delivery date is published on this site that has not been agreed for a specific job.',
-        'Production is 5–7 business days from proof approval. Transit sits on top of that and is not guaranteed.',
+        'Shipping is free to the United States, the United Kingdom, Canada and Australia. Production is 5–7 business days from proof approval; delivery then takes 5–7 business days in the US and 7–10 business days to the UK, Canada and Australia. These are our standard times rather than a guaranteed date unless one has been agreed for a specific job.',
+        'Import duties or taxes charged by the destination country, if any, are the buyer’s responsibility.',
       ],
       link: {
         text: 'What affects shipping cost and risk is covered under',
@@ -90,7 +91,7 @@ const content: PageContent = {
     {
       heading: 'Liability',
       body: [
-        'Where goods are defective or do not match the approved proof and dieline, our responsibility is to replace or refund the affected units, as set out in the refund and return policy.',
+        'Custom printed goods are not returnable for change of mind. Where goods arrive damaged, are defective, or do not match the approved proof and dieline, and you report it within 14 days of delivery with photographs, our responsibility is to replace the affected units free or refund them, with shipping paid by us, as set out in the refund and return policy.',
         'No cap on wider liability, and no exclusion of consequential loss, is stated on this page. Those are terms worth settling with a qualified adviser rather than asserting here, and their absence should not be read as a waiver of any right either party has in law.',
       ],
       link: {
@@ -114,7 +115,7 @@ const content: PageContent = {
     { label: 'How ordering works', href: '/how-to-order/' },
   ],
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

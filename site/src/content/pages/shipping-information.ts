@@ -1,10 +1,10 @@
 import type { PageContent } from '../../data/page-content';
 
 /**
- * NOTE ON HONESTY: no transit times, delivery guarantees, carrier names, or
- * freight rates appear here — none has been verified. The page explains what
- * affects shipping cost and risk, which is genuinely useful, and states plainly
- * that timings are confirmed per order.
+ * Shipping facts set by the owner 2026-10-29: free to the US, UK, Canada and
+ * Australia; production 5–7 business days; transit 5–7 business days in the
+ * US and 7–10 to the other three (same numbers as src/data/order.ts, the Offer
+ * schema and the Merchant feed). No carrier names or freight rates appear.
  */
 const content: PageContent = {
   slug: 'shipping-information',
@@ -12,12 +12,12 @@ const content: PageContent = {
 
   metaTitle: 'Shipping Information | Display Packaging Delivery in USA',
   metaDescription:
-    'Free shipping across all fifty states, what drives freight cost on display packaging, and why flat-packing affects your price.',
+    'Free shipping to the US, UK, Canada and Australia, delivery times, and what drives freight cost on display packaging.',
 
   h1: 'Shipping Information',
 
   intro:
-    'Shipping is included in the quoted price to business addresses across all fifty states. What follows is what actually affects cost and risk in getting it there — freight on this product is charged on volume far more than on weight, which is why box sizing shows up in your price.',
+    'Shipping is free to the United States, the United Kingdom, Canada and Australia. What follows is what actually affects cost and risk in getting it there — freight on this product is charged on volume far more than on weight, which is why box sizing shows up in your price.',
 
   sections: [
     {
@@ -61,8 +61,8 @@ const content: PageContent = {
     {
       heading: 'What is included, and what is not',
       body: [
-        'Shipping is included in the quoted price to business addresses across all fifty states. There is no separate freight line to settle afterward.',
-        'What that does not include is a delivery date. Free shipping is a cost commitment, not a speed one — we do not publish transit times or guarantee delivery windows, because no carrier arrangement has been committed to on that basis.',
+        'Shipping is free on every order to the United States, the United Kingdom, Canada and Australia, whether you buy the online 100-box pack or a quoted run. There is no separate freight line to settle afterward.',
+        'Production takes 5–7 business days after proof approval. Delivery then takes 5–7 business days within the US and 7–10 business days to the UK, Canada and Australia. Any import duties or taxes charged by the destination country are the buyer’s responsibility.',
         'If your order is tied to a fixed in-store date, say so when you request a quote. We will tell you whether it is achievable before you commit rather than after.',
       ],
     },
@@ -81,12 +81,12 @@ const content: PageContent = {
   ],
 
   faqs: [
-    { question: 'Do you ship to all fifty states?', answer: 'Yes, to business addresses across the United States, with shipping included in the quoted price. Our registered address is in Brooklyn, New York, but it is not a collection point — everything is produced to order and shipped to you.' },
+    { question: 'Do you ship to all fifty states?', answer: 'Yes, free, to addresses across the United States, and also to the United Kingdom, Canada and Australia. Our registered address is in Brooklyn, New York, but it is not a collection point — everything is produced to order and shipped to you.' },
     { question: 'How is freight calculated on display packaging?', answer: 'Almost always on volume rather than weight. Paperboard is light and displays are bulky, so you are effectively paying for the space a consignment occupies. This is why flat-packing changes the economics so substantially.' },
     { question: 'If shipping is free, why does flat-packing matter?', answer: 'Because freight is billed on volume and that cost sits inside your quoted price. A display drawn tightly around its product and shipped flat costs less to move, and that shows up as a better price rather than as a separate freight line.' },
-    { question: 'How long will delivery take?', answer: 'Production is 5–7 business days after proof approval. Transit on top of that is not published, because free shipping is a price commitment rather than a speed one and no delivery window has been committed to. If you have a fixed in-store date, tell us at quoting stage and we will confirm whether it is achievable.' },
+    { question: 'How long will delivery take?', answer: 'Production is 5–7 business days after proof approval. Delivery then takes 5–7 business days in the US and 7–10 business days to the UK, Canada and Australia. If you have a fixed in-store date, tell us when you order and we will confirm whether it is achievable.' },
     { question: 'Can displays ship already loaded with product?', answer: 'Yes, and it removes a packing stage. It also means the structure carries product weight through freight, which usually raises the board specification. For glass and fragile items, shipping flat with product separate is often safer and cheaper.' },
-    { question: 'What happens if a display arrives damaged?', answer: 'Tell us and we will resolve it. The more useful point is prevention: damaged displays are usually discarded rather than replaced, and the placement is lost — which is why transit protection is designed in rather than added at dispatch.' },
+    { question: 'What happens if a display arrives damaged?', answer: 'Report it within 14 days of delivery with photographs and we replace the damaged boxes free or refund them, at our shipping cost. The more useful point is prevention: damaged displays are usually discarded rather than replaced, and the placement is lost — which is why transit protection is designed in rather than added at dispatch.' },
     { question: 'Does pallet fit really affect my cost?', answer: 'More than most people expect. A design leaving significant unused pallet space carries that cost on every shipment. Adjusting a dimension slightly at dieline stage to gain a unit per layer is free then and impossible afterward.' },
     { question: 'When should I place an order for a seasonal deadline?', answer: 'Work backward from the in-store date through delivery, production, proof approval, and dieline approval. Build slack at artwork approval — it involves the most people and slips most often.' },
   ],
@@ -103,7 +103,7 @@ const content: PageContent = {
     body: 'Send the in-store date with your enquiry. We will tell you whether it is achievable before you commit to anything.',
   },
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

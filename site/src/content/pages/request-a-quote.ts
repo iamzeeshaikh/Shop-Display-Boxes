@@ -35,7 +35,7 @@ const content: PageContent = {
       heading: 'On pricing',
       body: [
         'Quantity is the largest single driver, because setup costs are fixed and spread across the run. Structural complexity is the one most often underestimated: each extra glue point, insert, or die-cut opening adds a production stage, and stages cost more than material at most quantities.',
-        'Product pages carry a starting price of $0.30 per piece for qualifying large-volume orders. That is a genuine starting point, not a fixed rate — smaller runs, specialty board, and premium finishes all price above it.',
+        'Product pages carry one fixed price: 100 display boxes for $60.00 ($0.60 each), ordered online with free shipping. A quote is for everything else — larger runs, custom sizes, specialty board and premium finishes are priced against your specification.',
       ],
       link: {
         text: 'Each cost driver is broken down in the guide to',
@@ -58,7 +58,7 @@ const content: PageContent = {
     { label: 'Request a sample', href: '/sample-request/' },
     { label: 'Artwork guidelines', href: '/artwork-guidelines/' },
   ],
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

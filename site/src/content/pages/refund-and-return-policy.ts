@@ -1,9 +1,10 @@
 import type { PageContent } from '../../data/page-content';
 
 /**
- * Return terms confirmed by the owner 2026-07-20: custom printed goods are not
- * returnable for change of mind; defects and specification mismatches are
- * reportable within 7 days of delivery for replacement or refund.
+ * Return terms confirmed by the owner 2026-07-20, window changed 2026-10-29:
+ * custom printed goods are not returnable for change of mind; damaged,
+ * defective and wrong-spec orders are reportable within 14 days of delivery,
+ * with photos, for a free replacement or a refund, shipping paid by us.
  *
  * MerchantReturnPolicy schema is emitted from those verified terms in
  * src/lib/schema.ts. Any change here must be mirrored there — the schema and
@@ -15,19 +16,19 @@ const content: PageContent = {
 
   metaTitle: 'Refund and Return Policy | Custom Printed Packaging',
   metaDescription:
-    'How returns work on custom printed packaging: defects reportable within 7 days, and why the two approval stages protect you.',
+    'How returns work on custom printed packaging: defects reportable within 14 days, and why the two approval stages protect you.',
 
   h1: 'Refund and Return Policy',
 
   intro:
-    'Custom printed packaging is made to your specification and your artwork, which changes how returns work compared with stock goods. In short: not returnable for change of mind, but defects and specification errors are reportable within 7 days.',
+    'Custom printed packaging is made to your specification and your artwork, which changes how returns work compared with stock goods. In short: not returnable for change of mind, but damaged, defective and wrong-spec orders are reportable within 14 days for a free replacement or a refund.',
 
   sections: [
     {
       heading: 'Why custom goods are treated differently',
       body: [
         'A run of boxes printed with your artwork, cut to your dieline, and sized to your product has no resale value to anyone else. That is a structural fact about made-to-order goods rather than a policy choice, and it is why custom packaging is commonly treated differently from stock items under most suppliers’ terms.',
-        'So custom printed packaging is not returnable for change of mind. Manufacturing defects and goods that do not match the approved specification are a different matter: report them within 7 days of delivery, with photographs, and we will replace or refund the affected units.',
+        'So custom printed packaging is not returnable for change of mind. Damaged or defective goods, and goods that do not match the approved specification, are a different matter: report them within 14 days of delivery, with photographs, and we will replace the affected units free or refund them. We pay the shipping either way.',
       ],
     },
     {
@@ -46,7 +47,7 @@ const content: PageContent = {
       heading: 'Manufacturing defects',
       body: [
         'Defects are faults in production rather than differences of preference: misregistered print against the approved proof, crushed creases, failed glue seams, incorrect die cuts, or delivery of the wrong specification.',
-        'If you receive goods with a defect of this kind, contact us within 7 days of delivery with photographs and the order reference. We will replace the affected units or refund them.',
+        'If you receive goods with a defect of this kind, contact us within 14 days of delivery with photographs and the order reference. We will replace the affected units free or refund them, and we cover any shipping involved.',
       ],
       points: [
         'Print that does not match the approved proof',
@@ -58,7 +59,7 @@ const content: PageContent = {
     {
       heading: 'Transit damage',
       body: [
-        'Report transit damage within 7 days of delivery, in line with the defect window above, with photographs of both the outer packaging and the goods.',
+        'Report transit damage within 14 days of delivery, in line with the defect window above, with photographs of both the outer packaging and the goods. Damaged boxes are replaced free or refunded, at our shipping cost.',
         'Do not wait on this one. Carrier claims carry short reporting windows of their own, and a late report can remove the remedy entirely even where the damage is obvious.',
       ],
     },
@@ -90,7 +91,7 @@ const content: PageContent = {
     { label: 'How ordering works', href: '/how-to-order/' },
   ],
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

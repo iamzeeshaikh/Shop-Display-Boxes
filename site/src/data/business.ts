@@ -116,22 +116,22 @@ export const business = {
       'Enquiries are handled 24/7. Note that this is contact availability rather than a walk-in counter — the Brooklyn address is not a collection point, and production still runs to the stated 5–7 business day schedule.',
   }),
 
-  /** Supplied by the owner 2026-07-20. */
+  /** Supplied by the owner 2026-07-20; window changed to 14 days 2026-10-29. */
   returnWindowDays: verified({
-    days: 7,
+    days: 14,
     statement:
-      'Custom printed packaging is made to your artwork and specification, so it cannot be resold and is not returnable for change of mind. Manufacturing defects and orders that do not match the approved specification are a different matter: report them within 7 days of delivery, with photographs, and we will replace or refund.',
+      'Custom printed packaging is made to your artwork and specification, so it cannot be resold and is not returnable for change of mind. Damaged or defective orders, and orders that do not match the approved specification, are a different matter: report them within 14 days of delivery, with photographs, and we will replace them free or refund them, and we pay the shipping.',
   }),
   refundTerms: verified({
     statement:
       'Where goods are defective or do not match the approved proof and dieline, we replace the affected units or refund them. Goods that match what was approved are not returnable, which is why the dieline and proof approvals exist and why a physical proof is worth taking on anything where colour carries commercial weight.',
   }),
-  /** Supplied by the owner 2026-07-20. */
+  /** Supplied by the owner 2026-07-20; countries and transit times added 2026-10-29. */
   shippingTerms: verified({
     freeShipping: true,
-    coverage: 'All 50 US states',
+    coverage: 'United States, United Kingdom, Canada and Australia',
     statement:
-      'Shipping is included in the quoted price to business addresses across all fifty states. Transit time is not included in the production lead time and is not guaranteed — if your order depends on a fixed in-store date, say so at quoting stage.',
+      'Shipping is free to the United States, the United Kingdom, Canada and Australia. Production takes 5–7 business days after proof approval; delivery then takes 5–7 business days in the US and 7–10 business days to the UK, Canada and Australia.',
   }),
   /** Supplied by the owner 2026-07-20. */
   productionLeadTime: verified({
@@ -166,16 +166,16 @@ export const business = {
   }),
 
   /**
-   * Verified commercial fact supplied in the project brief.
-   * Rendered visibly on every product page, and mirrored in Offer schema.
+   * Online pack price, set by the owner 2026-10-29. The numbers themselves live
+   * in src/data/order.ts (PACK_QTY, PACK_PRICE); this is the visible wording.
    */
-  startingPricePerPiece: verified({
-    amount: '0.30',
+  packPrice: verified({
+    amount: '60.00',
     currency: 'USD',
     statement:
-      'Price starts from $0.30 per piece for large volume orders. Final pricing depends on size, material, printing, and quantity.',
+      'Online, 100 display boxes cost $60.00 ($0.60 each), with free shipping to the US, UK, Canada and Australia.',
     qualifier:
-      'The $0.30 figure is a starting point for qualifying large-volume orders, not a fixed price for every order. Smaller runs, complex structures, specialty board, and premium finishes all price higher.',
+      'That pack price covers a standard box in any of our styles, printed full color to your artwork on one side. Larger runs, custom sizes, specialty board, inserts and premium finishes are quoted against your specification.',
   }),
 
   socialProfiles: unverified(

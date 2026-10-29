@@ -178,7 +178,7 @@ const content: ProductContent = {
     { label: 'Samples', value: 'Charged — quoted with your job' },
     { label: 'Artwork format', value: 'Vector PDF, AI, or EPS with outlined fonts and 3 mm bleed' },
     { label: 'Production time', value: '5–7 business days after proof approval' },
-    { label: 'Shipping coverage', value: 'Free shipping to all 50 US states' },
+    { label: 'Shipping coverage', value: 'Free shipping to the US, UK, Canada and Australia' },
   ],
 
   faqs: [
@@ -235,7 +235,7 @@ const content: ProductContent = {
     {
       question: 'How is the price affected if I reduce the quantity?',
       answer:
-        'Setup costs — dieline, plates, press make-ready — are spread across the run, so a smaller run carries more of that cost per piece. This is why the starting price applies to large-volume orders. Reducing quantity raises the per-piece price rather than lowering the total proportionally.',
+        'The standard pack of 100 is a fixed $60.00 online. On a quoted custom run, setup costs — dieline, plates, press make-ready — are spread across the run, so a smaller run carries more of that cost per piece. Reducing quantity raises the per-piece price rather than lowering the total proportionally.',
     },
     {
       question: 'Do you print regulatory or ingredient copy on the display?',
@@ -251,7 +251,7 @@ const content: ProductContent = {
     'bath-bomb-display-boxes',
   ],
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

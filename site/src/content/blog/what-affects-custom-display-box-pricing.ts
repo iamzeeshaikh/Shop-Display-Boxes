@@ -19,7 +19,7 @@ const post: BlogPost = {
 
   author: 'Shop Display Boxes',
   published: '2026-07-04',
-  updated: '2026-07-04',
+  updated: '2026-10-29',
   tags: ['Costs', 'Ordering'],
 
   image: {
@@ -112,7 +112,7 @@ const post: BlogPost = {
     {
       heading: 'On the starting price',
       body: [
-        'Our product pages state that pricing starts from $0.30 per piece for qualifying large-volume orders. That is a genuine floor for a qualifying specification, not a typical price.',
+        'Our product pages show one fixed price: 100 standard display boxes for $60.00 ($0.60 each), ordered online. Bigger runs and custom specifications are quoted, because their price depends on everything above.',
         'Any supplier quoting a headline per-piece figure is describing one point on a curve. The useful question is always what the number is for your structure at your quantity.',
       ],
     },

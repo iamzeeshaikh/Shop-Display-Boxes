@@ -12,6 +12,7 @@
 
 import { absolute, asset, path } from './urls';
 import { business, site, has } from '../data/business';
+import { productOffer, PACK_PRICE_TEXT, PACK_QTY, SHIP_COUNTRIES } from '../data/order';
 
 type Json = Record<string, unknown>;
 
@@ -40,7 +41,6 @@ export function localBusiness(): Json | null {
     addressCountry: string;
   };
   const h = business.businessHours.value as { days: string[]; opens: string; closes: string };
-  const price = business.startingPricePerPiece.value as { amount: string; currency: string };
 
   const node: Json = {
     '@type': 'LocalBusiness',
@@ -49,7 +49,7 @@ export function localBusiness(): Json | null {
     url: absolute('/'),
     image: asset('/brand/shop-display-boxes-logo.png'),
     description:
-      'Custom printed display boxes and retail display packaging produced to order and shipped across the United States.',
+      'Custom printed display boxes and retail display packaging produced to order and shipped free to the United States, United Kingdom, Canada and Australia.',
     address: {
       '@type': 'PostalAddress',
       streetAddress: a.streetAddress,
@@ -64,8 +64,8 @@ export function localBusiness(): Json | null {
       opens: h.opens,
       closes: h.closes,
     },
-    priceRange: `From $${price.amount} per unit`,
-    areaServed: { '@type': 'Country', name: 'United States' },
+    priceRange: `$${PACK_PRICE_TEXT} per ${PACK_QTY} boxes`,
+    areaServed: SHIP_COUNTRIES.map((c) => ({ '@type': 'Country', name: c.name })),
     parentOrganization: { '@id': ORG_ID },
   };
 
@@ -99,7 +99,7 @@ export function organization(): Json {
 
   const contact: Json[] = [];
   if (has(business.phone) || has(business.email)) {
-    const point: Json = { '@type': 'ContactPoint', contactType: 'sales', areaServed: 'US' };
+    const point: Json = { '@type': 'ContactPoint', contactType: 'sales', areaServed: SHIP_COUNTRIES.map((c) => c.code) };
     if (has(business.phone)) point.telephone = (business.phone.value as { e164: string }).e164;
     if (has(business.email)) point.email = business.email.value;
     contact.push(point);
@@ -235,8 +235,6 @@ export function product(opts: {
   slug: string;
   description: string;
   images: string[];
-  /** Visible starting price. Mirrors the on-page pricing statement exactly. */
-  priceFrom: { amount: string; currency: string };
   /** Computed from displayed reviews only — see src/data/reviews.ts. */
   aggregateRating?: VerifiedRating | null;
   /** The same reviews rendered on the page. Emitted as Review nodes. */
@@ -250,86 +248,17 @@ export function product(opts: {
 }): Json {
   const url = absolute(opts.slug);
 
-  const offer: Json = {
-    '@type': 'Offer',
+  // One offer story for every surface: the visible order band, this JSON-LD,
+  // the Merchant feed and /checkout/ all read src/data/order.ts. Price is the
+  // 100-box pack ($60.00) with eligibleQuantity 100; shipping is free to the
+  // four countries with handling and transit times; returns are defective only.
+  // Inline the seller's identifying fields rather than a bare @id pointer, since
+  // each product page's JSON-LD is parsed on its own.
+  const offer: Json = productOffer(
     url,
-    priceCurrency: opts.priceFrom.currency,
-    // Quotation workflow: the visible page states this is a "from" price for
-    // qualifying large-volume orders, so the offer is modeled the same way.
-    price: opts.priceFrom.amount,
-    priceValidUntil: priceValidUntil(),
-    priceSpecification: {
-      '@type': 'UnitPriceSpecification',
-      price: opts.priceFrom.amount,
-      priceCurrency: opts.priceFrom.currency,
-      unitText: 'per piece',
-      valueAddedTaxIncluded: false,
-    },
-    availability: 'https://schema.org/InStock',
-    itemCondition: 'https://schema.org/NewCondition',
-    // Inline the identifying fields rather than a bare `{ '@id': … }` pointer:
-    // the full Organization node only appears in the homepage graph, and each
-    // page's JSON-LD is parsed on its own, so a pointer alone would leave the
-    // seller unnamed on every product page. The shared @id still ties this to
-    // the homepage Organization for consumers that do merge across pages.
-    seller: { '@type': 'Organization', '@id': ORG_ID, name: site.name, url: absolute('/') },
-    // The site sells made-to-order goods through a quote, not a cart. There is
-    // no checkout URL to advertise, so no potentialAction is claimed.
-    businessFunction: 'http://purl.org/goodrelations/v1#Sell',
-  };
-
-  // Minimum order quantity, stated visibly in every product spec table.
-  if (has(business.minimumOrderQuantity)) {
-    const moq = business.minimumOrderQuantity.value as { units: number };
-    offer.eligibleQuantity = {
-      '@type': 'QuantitativeValue',
-      minValue: moq.units,
-      unitCode: 'C62', // UN/CEFACT code for "one" (a countable unit)
-    };
-  }
-
-  // Production turnaround, expressed as handling time. This is the time to make
-  // the goods, not a delivery promise — transit time is deliberately absent
-  // because no carrier or freight terms have been confirmed.
-  if (has(business.productionLeadTime)) {
-    const lead = business.productionLeadTime.value as { days: string };
-    const [min, max] = lead.days.split('-').map(Number);
-    offer.shippingDetails = {
-      '@type': 'OfferShippingDetails',
-      shippingDestination: {
-        '@type': 'DefinedRegion',
-        addressCountry: 'US',
-      },
-      // Shipping is included in the quoted price across all fifty states.
-      shippingRate: {
-        '@type': 'MonetaryAmount',
-        value: '0',
-        currency: 'USD',
-      },
-      deliveryTime: {
-        '@type': 'ShippingDeliveryTime',
-        handlingTime: {
-          '@type': 'QuantitativeValue',
-          minValue: min,
-          maxValue: max,
-          unitCode: 'DAY',
-        },
-      },
-    };
-  }
-
-  // Return policy, emitted only from the owner-confirmed terms. Custom printed
-  // goods are not returnable for change of mind, which is what
-  // MerchantReturnNotPermitted expresses; the 7-day defect window is a separate
-  // remedy set out on the refund policy page rather than a general return right.
-  if (has(business.returnWindowDays)) {
-    offer.hasMerchantReturnPolicy = {
-      '@type': 'MerchantReturnPolicy',
-      applicableCountry: 'US',
-      returnPolicyCategory: 'https://schema.org/MerchantReturnNotPermitted',
-      merchantReturnLink: absolute('/refund-and-return-policy/'),
-    };
-  }
+    { '@type': 'Organization', '@id': ORG_ID, name: site.name, url: absolute('/') },
+    priceValidUntil()
+  );
 
   const node: Json = {
     '@type': 'Product',

@@ -1,68 +1,120 @@
 ---
 /**
- * "Order online" band. Driven by `orderPack` in src/data/showroom.ts and
- * renders NOTHING while the price is null — the owner has not set one yet, and
- * a placeholder price must never ship. There is no checkout yet; until there
- * is, the button opens the quote form with the pack size noted.
+ * "Order online" band: 100 display boxes for $60.00, on the home page, every
+ * product page, and the industry and hub pages that carry Design Your Display
+ * Box. Price, shipping and payment wording come from src/data/order.ts — the
+ * same constants as the Product Offer JSON-LD, the Merchant feed and
+ * /checkout/ — so the band, the listing and the order cannot disagree.
+ *
+ * With `product` set (product pages) the band sells that style. Without it the
+ * visitor picks a style; `defaultSlug` preselects one. The button opens
+ * /checkout/ with the style and pack count; nothing is charged on the site.
  */
 import { Image } from 'astro:assets';
-import { orderPack, HOME_PHOTOS } from '../data/showroom';
-import { photoOf } from '../lib/photos';
+import { HOME_PHOTOS, GALLERY_PICK } from '../data/showroom';
+import { PRODUCTS } from '../data/products';
+import { photoOf, type PhotoRef } from '../lib/photos';
+import {
+  PACK_QTY,
+  PACK_PRICE,
+  MAX_PACKS,
+  PRICE_LINE,
+  SHIP_LINE,
+  PRODUCTION_TEXT,
+  TRANSIT_US_TEXT,
+  TRANSIT_INTL_TEXT,
+  PAYMENT_LINE,
+  money,
+} from '../data/order';
 
-const ready = typeof orderPack.price === 'number' && orderPack.price > 0;
-const img = ready ? await photoOf(HOME_PHOTOS.order) : null;
-const price = ready
-  ? orderPack.price!.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
-  : '';
+interface Props {
+  product?: { slug: string; name: string };
+  defaultSlug?: string;
+  id?: string;
+}
+const { product, defaultSlug = 'custom-display-boxes', id = 'order' } = Astro.props;
+
+const ref: PhotoRef = product
+  ? { slug: product.slug, n: GALLERY_PICK[product.slug] ?? 1 }
+  : HOME_PHOTOS.order;
+const img = await photoOf(ref);
+const alt = product
+  ? `${product.name}, printed and ready to fill`
+  : 'Printed counter display box with a tiered insert';
+const headingId = `${id}-h`;
 ---
 
-{
-  ready && img && (
-    <section class="ob" aria-labelledby="ob-h">
-      <div class="ob__photo">
-        <Image src={img} alt="Printed counter display box with a tiered insert" widths={[480, 720, 960]} sizes="(min-width: 60em) 50vw, 100vw" format="webp" loading="lazy" decoding="async" />
+<section class="ob" id={id} aria-labelledby={headingId}>
+  <div class="ob__photo">
+    <Image src={img} alt={alt} widths={[480, 720, 960]} sizes="(min-width: 60em) 50vw, 100vw" format="webp" loading="lazy" decoding="async" />
+  </div>
+  <form class="ob__panel" action="/checkout/" method="get" data-ob data-pack={PACK_PRICE} data-qty={PACK_QTY}>
+    <h2 id={headingId}>
+      Order online: {product ? product.name.toLowerCase() : 'display boxes'} — <span class="ob__price">{money(PACK_PRICE)}</span> per {PACK_QTY}
+    </h2>
+    <p class="ob__line">{PRICE_LINE}</p>
+    <p>
+      A standard display box in this style, printed full color to your artwork and delivered flat.
+      Larger runs, a different size or specialty board are quoted —
+      <a href="/request-a-quote/">ask for a quote</a> instead.
+    </p>
+    <ul class="ob__spec">
+      {
+        product ? (
+          <li><span>Style</span>{product.name}</li>
+        ) : (
+          <li>
+            <label for={`${id}-style`}>Style</label>
+            <select id={`${id}-style`} name="add" class="ob__select">
+              {PRODUCTS.map((p) => <option value={p.slug} selected={p.slug === defaultSlug}>{p.name}</option>)}
+            </select>
+          </li>
+        )
+      }
+      <li><span>Print</span>Full color, one side, matte</li>
+      <li><span>Production</span>{PRODUCTION_TEXT} after proof approval</li>
+      <li><span>Delivery</span>{TRANSIT_US_TEXT} in the US, {TRANSIT_INTL_TEXT} to the UK, Canada and Australia</li>
+    </ul>
+    {product && <input type="hidden" name="add" value={product.slug} />}
+    <input type="hidden" name="packs" value="1" data-ob-packs />
+    <div class="ob__buy">
+      <div class="ob__stepper" data-ob-max={MAX_PACKS}>
+        <button type="button" aria-label="One pack fewer" data-ob-minus>−</button>
+        <output aria-live="polite" data-ob-count>1</output>
+        <button type="button" aria-label="One pack more" data-ob-plus>+</button>
       </div>
-      <div class="ob__panel">
-        <h2 id="ob-h">
-          Order online: {orderPack.qty} display boxes — <span class="ob__price">{price}</span>
-        </h2>
-        <p>
-          A standard counter display box, printed full color on white board, delivered flat. Need a
-          different size or board? Use the quote form instead.
-        </p>
-        <ul class="ob__spec">
-          <li><span>Style</span>Counter display with header card</li>
-          <li><span>Print</span>Full color, one side, matte</li>
-          <li><span>Production</span>5–7 business days after proof</li>
-        </ul>
-        <div class="ob__buy">
-          <div class="ob__stepper" data-ob-qty={orderPack.qty}>
-            <button type="button" aria-label="One pack fewer" data-ob-minus>−</button>
-            <output aria-live="polite" data-ob-count>1</output>
-            <button type="button" aria-label="One pack more" data-ob-plus>+</button>
-          </div>
-          <p class="ob__units"><span data-ob-units>{orderPack.qty}</span> boxes · packs of {orderPack.qty}</p>
-          <a class="btn btn-solid btn-lg" href="/request-a-quote/">Order Now</a>
-        </div>
-        <p class="ob__ship">Free shipping to any business address in the US.</p>
-      </div>
-    </section>
-  )
-}
+      <p class="ob__units"><span data-ob-units>{PACK_QTY}</span> boxes · <span data-ob-total>{money(PACK_PRICE)}</span></p>
+      <button type="submit" class="btn btn-solid btn-lg">Order Now</button>
+    </div>
+    <p class="ob__ship">{SHIP_LINE}. {PAYMENT_LINE}</p>
+  </form>
+</section>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-ob-qty]').forEach((box) => {
-    const per = Number(box.dataset.obQty) || 100;
-    const count = box.querySelector<HTMLElement>('[data-ob-count]');
-    const units = document.querySelector<HTMLElement>('[data-ob-units]');
+  document.querySelectorAll<HTMLFormElement>('[data-ob]').forEach((form) => {
+    const per = Number(form.dataset.qty) || 100;
+    const pack = Number(form.dataset.pack) || 0;
+    const box = form.querySelector<HTMLElement>('[data-ob-max]');
+    const max = Number(box?.dataset.obMax) || 50;
+    const count = form.querySelector<HTMLElement>('[data-ob-count]');
+    const units = form.querySelector<HTMLElement>('[data-ob-units]');
+    const total = form.querySelector<HTMLElement>('[data-ob-total]');
+    const packs = form.querySelector<HTMLInputElement>('[data-ob-packs]');
     let n = 1;
     const set = (v: number) => {
-      n = Math.max(1, Math.min(50, v));
+      n = Math.max(1, Math.min(max, v));
       if (count) count.textContent = String(n);
       if (units) units.textContent = (n * per).toLocaleString('en-US');
+      if (total) total.textContent = `$${(n * pack).toFixed(2)}`;
+      if (packs) packs.value = String(n);
     };
-    box.querySelector('[data-ob-minus]')?.addEventListener('click', () => set(n - 1));
-    box.querySelector('[data-ob-plus]')?.addEventListener('click', () => set(n + 1));
+    form.querySelector('[data-ob-minus]')?.addEventListener('click', () => set(n - 1));
+    form.querySelector('[data-ob-plus]')?.addEventListener('click', () => set(n + 1));
+    form.addEventListener('submit', () => {
+      const slug = (form.elements.namedItem('add') as HTMLInputElement | HTMLSelectElement | null)?.value;
+      const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+      w.gtag?.('event', 'add_to_cart', { currency: 'USD', value: n * pack, items: [{ item_id: slug, quantity: n }] });
+    });
   });
 </script>
 
@@ -102,6 +154,13 @@ const price = ready
     color: #c4d1e0;
     font-size: 17px;
   }
+  .ob__panel > p.ob__line {
+    color: #fff;
+    font: 700 1.25rem/1.4 var(--font-display);
+  }
+  .ob__panel a {
+    color: var(--cobalt-light);
+  }
   .ob__spec {
     list-style: none;
     margin: 26px 0 0;
@@ -110,15 +169,31 @@ const price = ready
   }
   .ob__spec li {
     display: flex;
+    align-items: center;
     gap: 16px;
     padding: 12px 0;
     border-block-end: 1px solid rgb(255 255 255 / 0.16);
     color: #e7eef7;
   }
-  .ob__spec span {
+  .ob__spec span,
+  .ob__spec label {
     width: 110px;
     flex: none;
     color: #93a6bd;
+  }
+  .ob__select {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1.5px solid rgb(255 255 255 / 0.35);
+    border-radius: 10px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 16px;
+  }
+  .ob__select option {
+    color: #0b1b2b;
   }
   .ob__buy {
     display: flex;

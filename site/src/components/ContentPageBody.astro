@@ -19,6 +19,7 @@ import QuotePanel from './QuotePanel.astro';
 import InquiryForm from './InquiryForm.astro';
 import QuoteFormFull from './QuoteFormFull.astro';
 import DesignYourBox from './DesignYourBox.astro';
+import OrderBand from './OrderBand.astro';
 import { Image } from 'astro:assets';
 import { photo, photoOf } from '../lib/photos';
 import { INDUSTRY_PHOTOS } from '../data/showroom';
@@ -277,6 +278,7 @@ const showDesign = content.kind === 'industry' || DESIGN_HUBS.includes(content.s
   }
 
   {showDesign && <DesignYourBox id={`dyb-${content.slug}`} />}
+  {showDesign && <OrderBand defaultSlug={content.relatedProducts?.[0] ?? 'custom-display-boxes'} id="order" />}
 
   {
     pageFaqs.length > 0 && (

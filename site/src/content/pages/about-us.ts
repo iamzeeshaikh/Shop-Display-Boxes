@@ -58,7 +58,7 @@ const content: PageContent = {
       heading: 'What we make',
       body: [
         'Counter displays, floor-standing units, shelf-ready cases, trays, mailers that convert to displays, and the industry-specific formats that come with their own constraints — glass weight for candles, oil migration for soap, food-contact coatings, warning-copy space for regulated categories.',
-        'All of it is custom: printed to your artwork, sized to your product, and shipped to businesses across all fifty states.',
+        'All of it is custom: printed to your artwork, sized to your product, and shipped free to businesses across the US, and to the UK, Canada and Australia.',
       ],
       link: {
         text: 'If you are not sure which format applies, start with the',
@@ -69,7 +69,7 @@ const content: PageContent = {
   ],
 
   faqs: [
-    { question: 'Where are you based?', answer: 'Our location and contact details are being confirmed before publication and will appear on the contact page once verified. We supply and ship custom display packaging to businesses across all fifty states.' },
+    { question: 'Where are you based?', answer: 'Our location and contact details are being confirmed before publication and will appear on the contact page once verified. We supply and ship custom display packaging free to businesses across the United States, the United Kingdom, Canada and Australia.' },
     { question: 'Do you have minimum order quantities?', answer: 'Minimum order is 100 units. Digital printing removes plate setup, which is what makes a run that short viable — expect a higher per-piece price at 100 than at volume, because fixed setup costs are spread across fewer pieces.' },
     { question: 'Can you produce a display if I only have a rough idea?', answer: 'Yes, and that is how most jobs begin. Send the product, an approximate quantity, and where the display will sit. We propose a structure and a board and explain the reasoning rather than expecting you to specify it.' },
     { question: 'Do you draw dielines for free?', answer: 'Yes. We draw the dieline for your product before you commit to a run, supplied as a layered vector file with cut, crease, and bleed on separate layers.' },
@@ -89,7 +89,7 @@ const content: PageContent = {
     body: 'Send dimensions and a quantity, or send the product itself. We will come back with a structure, a board, and a price.',
   },
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

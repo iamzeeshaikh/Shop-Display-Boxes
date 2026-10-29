@@ -84,9 +84,7 @@ export interface ProductContent {
 }
 
 /**
- * The visible pricing statement required on every product page, plus the
- * qualifier that keeps it honest. Rendered by the PriceNote component and
- * mirrored exactly in Offer schema.
+ * The visible pricing statement on every product page, mirrored by the Offer
+ * schema. Built from src/data/order.ts so it can never drift from the price.
  */
-export const PRICING_STATEMENT =
-  'Price starts from $0.30 per piece for large volume orders. Final pricing depends on size, material, printing, and quantity.';
+export { PRICE_LINE as PRICING_STATEMENT } from './order';

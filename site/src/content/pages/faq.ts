@@ -36,7 +36,7 @@ const content: PageContent = {
 
   faqs: [
     { question: 'What is your minimum order quantity?', answer: 'Minimum order is 100 units. Digital printing removes plate setup, which is what makes a run that short viable — expect a higher per-piece price at 100 than at volume, because fixed setup costs are spread across fewer pieces.' },
-    { question: 'How much do custom display boxes cost?', answer: 'Product pages carry a starting price of $0.30 per piece for qualifying large-volume orders. That is a genuine starting point rather than a fixed rate: smaller runs, specialty board, added inserts, and premium finishes all price above it.' },
+    { question: 'How much do custom display boxes cost?', answer: 'Online, 100 display boxes cost $60.00 ($0.60 each) in any of our styles, printed full color with free shipping to the US, UK, Canada and Australia. Larger runs, custom sizes, specialty board, added inserts and premium finishes are quoted against your specification.' },
     { question: 'Why does a smaller order not cost proportionally less?', answer: 'Because setup costs — dieline, tooling, plates, press make-ready — are fixed and spread across the run. Halving a quantity does not halve the invoice, and at small volumes the change can be marginal.' },
     { question: 'Do you charge for dielines?', answer: 'No. We draw a dieline around your product before you commit to anything, supplied as a layered vector file with cut, crease, and bleed on separate layers. It is yours to keep.' },
     { question: 'What artwork format do you need?', answer: 'Print-ready vector — PDF, AI, or EPS — with fonts outlined or embedded, at 100% scale, placed images at 300 DPI at final size, and 3 mm bleed. Place artwork on the dieline we send rather than designing to a rectangle.' },
@@ -45,7 +45,7 @@ const content: PageContent = {
     { question: 'How do I know whether I need cardboard or corrugated?', answer: 'Load the display to its intended assortment, lift it by one edge, and watch the base. If it bows, you need corrugated. Repeat the test after several days loaded — paperboard fails gradually, so day-one results mislead.' },
     { question: 'Can I get a sample before ordering?', answer: 'Samples are charged. The cost depends on the structure and whether the sample is plain or printed, so it is quoted alongside your job rather than listed as a flat fee. On a new structure it costs a fraction of a full run and is the only reliable way to find out that a product does not fit before the run is made.' },
     { question: 'How long does production take?', answer: 'Standard production is 5–7 business days after proof approval. That clock starts at approval, not at enquiry — the dieline and proof stages come first, and how fast they go depends partly on how quickly approvals come back from your side.' },
-    { question: 'Where do you ship?', answer: 'To business addresses across all fifty US states. We do not maintain premises or collection points in individual states or cities — everything is shipped rather than collected.' },
+    { question: 'Where do you ship?', answer: 'To the United States, the United Kingdom, Canada and Australia, with shipping free. Delivery takes 5–7 business days in the US and 7–10 business days elsewhere, after 5–7 business days of production. We do not maintain premises or collection points in individual states or cities — everything is shipped rather than collected.' },
     { question: 'How is freight calculated?', answer: 'On volume rather than weight. Display packaging is light and bulky, so you are effectively paying for the space a consignment occupies. This is why flat-packing changes the delivered cost so substantially.' },
     { question: 'What happens if the delivered goods do not match the proof?', answer: 'That is on us — production is checked against the approved proof at each stage precisely so it does not happen. If the approved proof itself contained an error, a reprint is a new job, which is why proof approval matters.' },
     { question: 'Are reorders cheaper than first orders?', answer: 'Yes. Development — dieline, proofing, approvals — dominates a first order. Once those are approved and on file, tooling is retained and a reorder is a print job rather than a new development.' },
@@ -67,7 +67,7 @@ const content: PageContent = {
     buttonHref: '/contact-us/',
   },
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;
