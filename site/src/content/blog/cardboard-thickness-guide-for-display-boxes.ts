@@ -106,7 +106,7 @@ const post: BlogPost = {
     {
       heading: 'A note on grades',
       body: [
-        'SBS is bleached white throughout and gives the best print surface. Kraft-back board keeps a white printing face with a brown reverse and costs less. Recycled greyboard is cheaper again, with a warmer, less uniform surface and visible fiber variation.',
+        'SBS is bleached white throughout and gives the best print surface. Kraft-back board keeps a white printing face with a brown reverse and costs less. Recycled grayboard is cheaper again, with a warmer, less uniform surface and visible fiber variation.',
         'At the same caliper these behave differently in creasing and in how they take a laminate, so specify the grade alongside the thickness rather than assuming points alone describe the board.',
       ],
     },

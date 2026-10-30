@@ -25,7 +25,7 @@ const content: PageContent = {
       heading: 'Print route moves it most',
       body: [
         'Offset printing makes plates per job. Spread across a small run, that setup dominates, which is why traditional minimums were high.',
-        'Digital printing removes plates entirely. That single change is what made genuinely short runs viable, and it is the first thing to ask about if a quoted minimum is higher than you need.',
+        'Digital printing removes plates entirely. That single change is what made genuinely short runs viable, and it is the first thing to ask about if the minimum a supplier quotes is higher than you need.',
       ],
       link: {
         text: 'Where each print route wins is compared under',
@@ -44,7 +44,7 @@ const content: PageContent = {
       heading: 'Die tooling is the sticky part',
       body: [
         'Plates can be avoided with digital. Cutting dies generally cannot — a custom shape needs a physical die made, and that cost is real regardless of print route.',
-        'This is why a custom structure has a meaningfully higher minimum than printing onto an existing die. It is also why the second order is so much cheaper: the die already exists.',
+        'This is why a custom structure costs meaningfully more on a short run than printing onto an existing die. It is also why the second order is so much cheaper: the die already exists.',
       ],
     },
     {
@@ -93,7 +93,7 @@ const content: PageContent = {
   faqs: [
     { question: 'What is the minimum order for display boxes?', answer: 'Minimum order is 100 units. Digital printing removes plate setup, which is what makes a run that short viable — expect a higher per-piece price at 100 than at volume, because fixed setup costs are spread across fewer pieces.' },
     { question: 'Why do minimums exist at all?', answer: 'Fixed costs. Dieline drawing, die cutting, plates, and press setup are incurred regardless of quantity. A minimum is the point below which those make the per-piece price unreasonable — not the point below which production is impossible.' },
-    { question: 'What lowers a minimum most?', answer: 'Digital printing, because it removes plate setup entirely. That is the first thing to ask about if a quoted minimum is higher than you need. Simplifying the structure is the second lever.' },
+    { question: 'What lowers a minimum most?', answer: 'Digital printing, because it removes plate setup entirely. That is the first thing to ask about if the minimum a supplier quotes is higher than you need. Simplifying the structure is the second lever.' },
     { question: 'Can I avoid die tooling costs?', answer: 'Only by using an existing die, which means fitting your product to a structure that already exists. A custom shape requires a physical die, and that cost is real regardless of print route.' },
     { question: 'Why is my second order so much cheaper?', answer: 'Because the die and the approved dieline already exist. Most of the cost and elapsed time on a first order is development, and a reorder against approved tooling is effectively a print job.' },
     { question: 'Should I order a small proving run first?', answer: 'For a new structure, usually yes. Finding a structural problem across a hundred units costs far less than across ten thousand, and the reorder economics are better than the first order anyway.' },
@@ -112,7 +112,7 @@ const content: PageContent = {
 
   cta: {
     heading: 'Blocked by a minimum?',
-    body: 'Send the specification. We will tell you the real minimum for that job and what would change if the structure were simpler.',
+    body: 'Our minimum is 100 boxes. Send the specification and we will quote the run and show you what would change if the structure were simpler.',
   },
 
   updated: '2026-07-19',

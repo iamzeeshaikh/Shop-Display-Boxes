@@ -139,7 +139,7 @@ export function organization(): Json {
   }
 
   // Still Organization rather than LocalBusiness, deliberately. LocalBusiness
-  // asserts a place customers can visit; the hours here describe when enquiries
+  // asserts a place customers can visit; the hours here describe when inquiries
   // are answered, and the Brooklyn address is not a collection point.
   return node;
 }

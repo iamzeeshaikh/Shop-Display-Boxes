@@ -65,10 +65,10 @@ const content: PageContent = {
       ],
     },
     {
-      heading: 'Freight is part of the delivered cost',
+      heading: 'Shipping is included, but size still counts',
       body: [
-        'Freight on display packaging is billed on volume rather than weight, so a bulky display costs more to ship than its weight suggests. Flat-packing changes this substantially.',
-        'Pallet fit matters too. A design leaving significant unused pallet space carries that cost on every shipment, and adjusting a dimension at dieline stage to gain a unit per layer is free then and impossible later.',
+        'Shipping is free to the US, UK, Canada and Australia, so freight is not a line on your invoice for those destinations. Other countries are quoted up front.',
+        'Size still affects what you pay, through board. An oversized box uses more material on every unit, and a design that wastes pallet space is harder to store. Adjusting a dimension at dieline stage costs nothing then and is impossible later.',
       ],
     },
     {
@@ -84,10 +84,10 @@ const content: PageContent = {
       },
     },
     {
-      heading: 'Why we do not publish a price list',
+      heading: 'What we publish, and what we quote',
       body: [
-        'Because the same box in two different specifications can differ in price by a multiple, and a published table would be wrong for almost everybody who read it.',
-        'We publish one fixed price: the online pack of 100 standard boxes for $60.00. It covers a standard size printed full color on one side. Anything beyond that, a bigger run, a custom size, specialty board or premium finishing, is quoted against the specification, because a table could not be right for all of them.',
+        'We publish one fixed price: the online pack of 100 standard display boxes for $60.00, which is $0.60 a box, with free shipping to the US, UK, Canada and Australia. It covers a standard size printed full color on one side.',
+        'Anything beyond that, a bigger run, a custom size, specialty board or premium finishing, is quoted against the specification. The same box in two different specifications can differ in price by a multiple, so a single table could not be right for all of them.',
       ],
     },
   ],
@@ -103,7 +103,7 @@ const content: PageContent = {
         ['Print route', 'Moderate', 'Digital wins short runs; offset wins volume'],
         ['Finishing', 'Moderate to large', 'Foil and emboss carry their own tooling'],
         ['Spot colors', 'Small per color', 'One plate each; adds up beyond three or four'],
-        ['Size and pallet fit', 'Affects freight on every shipment', 'Free to optimize at dieline stage'],
+        ['Size and pallet fit', 'Affects board use on every unit', 'Free to optimize at dieline stage'],
       ],
       note: 'Effects are directional rather than quantified. We are not publishing percentages or savings figures that would not hold across different specifications.',
     },
@@ -115,9 +115,9 @@ const content: PageContent = {
     { question: 'What is the most underestimated cost driver?', answer: 'Structural complexity. Every extra glue point, insert, window, or perforation adds a production step, and at most quantities steps cost more than material. If a quote is higher than expected, look at structure before board.' },
     { question: 'Should I downgrade the board to save money?', answer: 'Usually not. It saves less than people expect and risks a display that bows or collapses under load, which costs far more than the saving. Simplifying structure or increasing quantity are better levers.' },
     { question: 'Digital or offset — which is cheaper?', answer: 'Digital on short runs and versioned artwork, because there are no plates. Offset overtakes it as quantity grows. Where the crossover falls depends on box size, ink coverage, and finishing, so we compare both on your job.' },
-    { question: 'Does box size affect cost beyond material?', answer: 'Yes, through freight. Display packaging freight is billed on volume, so an oversized box costs more to ship on every consignment. Optimizing size and pallet fit at dieline stage is free; doing it later is impossible.' },
+    { question: 'Does box size affect cost beyond material?', answer: 'Not through shipping to the US, UK, Canada or Australia, which is free. The cost of an oversized box is the extra board in every unit and the extra space it takes in storage. Optimizing size and pallet fit at dieline stage is free; doing it later is impossible.' },
     { question: 'Where is the biggest saving on an established display?', answer: 'Consolidating repeat runs. Ordering the same specification four times a year means paying setup four times. Where storage allows, one consolidated run usually beats any rate negotiation.' },
-    { question: 'Why will you not publish a price list?', answer: 'Because the same box in two specifications can differ in price by a multiple, so a published table would be wrong for almost everyone reading it. We quote against your actual specification instead.' },
+    { question: 'Which prices do you publish, and which do you quote?', answer: 'We publish one: 100 standard display boxes for $60.00 ($0.60 each), with free shipping to the US, UK, Canada and Australia. Larger runs and custom specifications are quoted, because the same box in two specifications can differ in price by a multiple.' },
   ],
 
   relatedProducts: ['custom-display-boxes', 'counter-display-boxes', 'corrugated-display-boxes', 'cardboard-display-boxes'],

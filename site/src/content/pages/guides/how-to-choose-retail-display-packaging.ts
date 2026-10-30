@@ -18,7 +18,7 @@ const content: PageContent = {
       heading: 'One: which channel',
       body: [
         'Independents, chains, wholesale, and events behave completely differently. An independent will usually accept whatever fits their counter. A chain issues a specification and rejects anything that misses it.',
-        'A programme that treats both the same ends up over-engineered for one and non-compliant for the other. Start here, because it determines how much latitude you have in everything that follows.',
+        'A program that treats both the same ends up over-engineered for one and non-compliant for the other. Start here, because it determines how much latitude you have in everything that follows.',
       ],
     },
     {

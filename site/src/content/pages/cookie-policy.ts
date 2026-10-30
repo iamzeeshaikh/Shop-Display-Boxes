@@ -34,7 +34,7 @@ const content: PageContent = {
         'Where analytics is enabled, Google Analytics sets cookies to distinguish visitors and measure how pages are used. Those cookies do not receive personal information from this site: conversion events record that a form was submitted, and carry no name, email, phone number, company, or file name.',
       ],
       link: {
-        text: 'How enquiry information is handled is set out in the',
+        text: 'How inquiry information is handled is set out in the',
         href: '/privacy-policy/',
         anchor: 'privacy policy',
       },

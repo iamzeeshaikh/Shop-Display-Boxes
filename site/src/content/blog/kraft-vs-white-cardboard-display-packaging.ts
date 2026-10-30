@@ -40,7 +40,7 @@ const post: BlogPost = {
         {
           heading: 'What this does to light colors',
           body: [
-            'Pale colors suffer most. A soft pink, a pale blue, or a light grey printed directly onto kraft may barely register at all — the brown dominates and the ink reads as a tint of the substrate.',
+            'Pale colors suffer most. A soft pink, a pale blue, or a light gray printed directly onto kraft may barely register at all — the brown dominates and the ink reads as a tint of the substrate.',
             'A white underprint solves it: a layer of opaque white laid down first, with the color printed over it. That adds an ink station and cost, and where it stops short of the artwork edges there will be a visible transition.',
           ],
         },
@@ -69,7 +69,7 @@ const post: BlogPost = {
       heading: 'What kraft signals',
       body: [
         'In some categories it reads as considered, natural, and deliberate — handmade soap, candles, artisan food, and natural personal care all use it to genuine effect.',
-        'In others it reads as economical, and can undercut a premium position. Conventional luxury signalling relies on weight, gloss, and depth of color, and kraft delivers none of those. It is a positioning decision as much as a material one.',
+        'In others it reads as economical, and can undercut a premium position. Conventional luxury signaling relies on weight, gloss, and depth of color, and kraft delivers none of those. It is a positioning decision as much as a material one.',
       ],
     },
     {

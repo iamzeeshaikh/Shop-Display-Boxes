@@ -70,12 +70,12 @@ const content: PageContent = {
       },
     },
     {
-      heading: 'If you are scoping a whole programme',
+      heading: 'If you are scoping a whole program',
       body: [
         'Most brands eventually need more than one format — a counter unit for independents, a shelf format for chains, something free-standing for promotions. Deciding how those fit together is a different problem from choosing one box.',
       ],
       link: {
-        text: 'Programme-level planning is covered on the',
+        text: 'Program-level planning is covered on the',
         href: '/retail-display-packaging/',
         anchor: 'retail display packaging page',
       },
@@ -89,7 +89,7 @@ const content: PageContent = {
     { question: 'Does the insert matter more than the box?', answer: 'On many displays, yes. The insert does the work of holding product where you placed it, and a display that holds product loosely leans within a week. It is usually where the specification budget is best spent.' },
     { question: 'Should the display ship flat or assembled?', answer: 'Flat for most retail work, since freight is billed on volume and an assembled display is mostly air. Pair it with a lock-bottom structure that erects in one motion. Ship assembled only where store assembly is impractical.' },
     { question: 'What is a shipper-display?', answer: 'A structure that travels as a sealed case and converts into a retail display on arrival, usually by tearing away a perforated section. It removes a separate packing stage and means store staff do not assemble anything.' },
-    { question: 'Do I need more than one display format?', answer: 'Most brands eventually do — a counter unit for independents, a shelf format for chains, something free-standing for promotions. How those fit together is a programme decision rather than a single-box one.' },
+    { question: 'Do I need more than one display format?', answer: 'Most brands eventually do — a counter unit for independents, a shelf format for chains, something free-standing for promotions. How those fit together is a program decision rather than a single-box one.' },
     { question: 'What is the most common mistake in choosing display packaging?', answer: 'Designing the display before establishing the retailer footprint. Footprint is the constraint that decides whether a display gets placed at all, and discovering it after design means starting again.' },
   ],
 

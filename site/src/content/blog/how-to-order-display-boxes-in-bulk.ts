@@ -53,17 +53,17 @@ const post: BlogPost = {
       heading: 'Check pallet fit at dieline stage',
       body: [
         'Freight is billed on volume, so a design that leaves unused pallet space carries that cost on every shipment. At bulk quantities that repeats many times.',
-        'Adjusting a dimension slightly to gain another unit per layer is free while the dieline is being drawn and impossible once it is approved. On a large programme it is one of the highest-return five-minute conversations available.',
+        'Adjusting a dimension slightly to gain another unit per layer is free while the dieline is being drawn and impossible once it is approved. On a large program it is one of the highest-return five-minute conversations available.',
       ],
     },
     {
       heading: 'Consolidate rather than negotiate',
       body: [
         'If you are ordering the same specification several times a year, each run carries setup. Combining those into fewer larger runs usually saves more than any rate improvement you could negotiate on the same annual volume.',
-        'Send the annual volume when asking for pricing rather than a single order quantity. It is a different conversation when it is about a programme.',
+        'Send the annual volume when asking for pricing rather than a single order quantity. It is a different conversation when it is about a program.',
       ],
       link: {
-        text: 'How programme pricing differs is covered under',
+        text: 'How program pricing differs is covered under',
         href: '/wholesale-display-boxes/',
         anchor: 'wholesale display boxes',
       },

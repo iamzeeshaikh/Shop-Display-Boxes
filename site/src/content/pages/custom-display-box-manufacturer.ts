@@ -89,7 +89,7 @@ const content: PageContent = {
   ],
 
   faqs: [
-    { question: 'Do you manufacture the boxes yourselves?', answer: 'Details of production facilities, equipment, and capacity are pending confirmation by the site owner and are not published here. We produce custom display packaging to order and ship it free to the US, UK, Canada and Australia — the specifics of how will be stated once verified.' },
+    { question: 'Do you manufacture the boxes yourselves?', answer: 'We produce custom display packaging to order and ship it free to the US, UK, Canada and Australia. We do not publish a facility tour, equipment list or capacity figures; if your job needs those specifics, ask at quoting stage and we will tell you what applies to your run.' },
     { question: 'What should I ask any display box manufacturer?', answer: 'Whether a dieline is drawn before you commit, what each approval stage fixes, how board is specified, what they will not do, how reorders work, and whether you can have a sample first. The answers separate suppliers more than price does.' },
     { question: 'How should a manufacturer specify board?', answer: 'Against load — the weight of a full assortment relative to the unsupported base span, and how the display travels. Specifying by product category is a shortcut that produces displays which pass a bench test and bow in a store.' },
     { question: 'Why does the dieline matter so much?', answer: 'Because most packaging problems are dimensional, and they surface either when the first sample arrives or when the full run does. A dieline drawn around your real product moves that discovery to where fixing it is free.' },

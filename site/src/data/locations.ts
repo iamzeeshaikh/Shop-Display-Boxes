@@ -310,7 +310,7 @@ export const STATES: StateLocation[] = [
       heading: 'What tends to drive packaging decisions in Georgia',
       body: [
         'Beauty is the category where the specification questions get most demanding here. Cosmetic units are small, tall, and top-heavy, and a display that holds them loosely will have a leaning front row within a week — so cavity tolerance, set from a physical unit rather than a spec sheet, becomes the critical dimension.',
-        'For brands shipping through the state’s distribution infrastructure, the second factor is that displays travelling palletized need board specified against stack compression, which is a different and usually higher figure than the weight of what the display holds.',
+        'For brands shipping through the state’s distribution infrastructure, the second factor is that displays traveling palletized need board specified against stack compression, which is a different and usually higher figure than the weight of what the display holds.',
       ],
     },
     products: ['cosmetic-display-boxes', 'counter-display-boxes', 'food-display-boxes', 'display-trays'],
@@ -483,7 +483,7 @@ STATES.push(
       heading: 'What tends to drive packaging decisions in Arizona',
       body: [
         'Heat is a genuine specification input. Sustained high temperatures affect adhesives and can soften some products in storage or transit, and packaging that will sit in a non-climate-controlled warehouse or a hot vehicle should be specified with that in mind rather than assumed to behave as it would in a temperate environment.',
-        'For brands shipping from fulfillment operations here, the other recurring factor is that display packaging travelling palletized needs board specified against stack compression rather than the weight of its own contents.',
+        'For brands shipping from fulfillment operations here, the other recurring factor is that display packaging traveling palletized needs board specified against stack compression rather than the weight of its own contents.',
       ],
     },
     products: ['corrugated-display-boxes', 'display-mailer-boxes', 'counter-display-boxes', 'retail-display-boxes'],
@@ -999,7 +999,7 @@ CITIES.push(
     stateName: 'California',
     stateAbbr: 'CA',
     positioning:
-      'San Jose is centred on technology hardware and consumer electronics, where accessory packaging is judged on compatibility information and theft deterrence.',
+      'San Jose is centered on technology hardware and consumer electronics, where accessory packaging is judged on compatibility information and theft deterrence.',
     sectors: [
       'Consumer electronics and accessories',
       'Technology hardware and components',
@@ -1028,7 +1028,7 @@ CITIES.push(
     stateName: 'California',
     stateAbbr: 'CA',
     positioning:
-      'San Francisco has a concentrated specialty food and premium personal care scene, and a market that scrutinises packaging sustainability more closely than most.',
+      'San Francisco has a concentrated specialty food and premium personal care scene, and a market that scrutinizes packaging sustainability more closely than most.',
     sectors: [
       'Specialty coffee, chocolate, and artisan food',
       'Premium personal care and clean beauty',

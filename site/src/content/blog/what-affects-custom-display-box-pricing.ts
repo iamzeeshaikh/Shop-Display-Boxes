@@ -78,10 +78,10 @@ const post: BlogPost = {
       ],
     },
     {
-      heading: 'What is not on the quote but is on the invoice',
+      heading: 'Where freight fits in',
       body: [
-        'Freight, usually. Display packaging freight is billed on volume rather than weight, so a bulky display costs more to ship than its weight suggests, and an oversized box carries that penalty on every consignment.',
-        'Ask how the quoted goods will be shipped and whether the design flat-packs efficiently. A dimension adjusted at dieline stage to improve pallet fit is free then and repays itself continuously afterward.',
+        'Shipping is free to the US, UK, Canada and Australia, so freight is never added to your invoice for those destinations. Other countries are quoted before you order, never after.',
+        'Size still matters, because an oversized box uses more board and takes more space per pallet. Ask whether the design flat-packs efficiently: a dimension adjusted at dieline stage to improve pallet fit costs nothing then and is impossible to change later.',
       ],
       link: {
         text: 'What drives freight on this product is covered under',

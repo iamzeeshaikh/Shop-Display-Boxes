@@ -89,7 +89,7 @@ const content: PageContent = {
 
   cta: {
     heading: 'Testing a new display?',
-    body: 'Send the specification and quantity you have in mind and we will tell you the real minimum for that job.',
+    body: 'Our minimum is 100 boxes, the same as the online pack. Send the specification and quantity you have in mind and we will quote that run.',
   },
 
   updated: '2026-07-19',

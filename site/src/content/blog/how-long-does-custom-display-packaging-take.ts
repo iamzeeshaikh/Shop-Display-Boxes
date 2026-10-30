@@ -1,10 +1,9 @@
 import type { BlogPost } from '../../data/blog';
 
 /**
- * NOTE ON HONESTY: no lead time, turnaround, or delivery window is stated,
- * because none has been verified for this business. The article explains what
- * consumes time and which stage slips, which is genuinely useful and does not
- * require a number we cannot stand behind.
+ * Standard times match Merchant Center and the shipping policy: production
+ * 5–7 business days after proof approval, delivery 5–7 business days in the
+ * US and 7–10 business days to the UK, Canada and Australia.
  */
 const post: BlogPost = {
   slug: 'how-long-does-custom-display-packaging-take',
@@ -12,10 +11,10 @@ const post: BlogPost = {
   title: 'How Long Does Custom Display Packaging Take?',
   metaTitle: 'How Long Does Custom Display Packaging Take? | Timelines',
   metaDescription:
-    'What consumes time on a custom packaging order, which stage slips most often, and how to plan backward from an in-store date.',
+    'Production takes 5–7 business days after proof approval. What consumes time before that, which stage slips most often, and how to plan backward from an in-store date.',
 
   excerpt:
-    'The honest answer is that it depends — but not evenly. Most of the variability sits in one stage, and it is not the one people plan around.',
+    'Production and delivery run to standard times. The variability sits earlier, in one stage that is not the one people plan around.',
 
   author: 'Shop Display Boxes',
   published: '2026-07-12',
@@ -30,10 +29,10 @@ const post: BlogPost = {
 
   sections: [
     {
-      heading: 'Why we do not publish a lead time',
+      heading: 'Our standard times, and where the real variation sits',
       body: [
-        'Because it would be wrong for most people who read it. A simple digitally printed tray and a multi-component litho-laminated floor unit with a custom insert do not share a timeline, and averaging them produces a figure that misleads in both directions.',
-        'What is useful instead is knowing which stages consume time, which are within your control, and which one reliably slips. With that, you can work backward from a date rather than trusting a number.',
+        'Once you approve the proof, production takes 5–7 business days. Delivery then takes 5–7 business days in the US and 7–10 business days to the UK, Canada and Australia, and shipping to all four is free.',
+        'Those figures start at proof approval, so the part that varies from job to job is everything before it. Knowing which of those stages consume time, which are within your control, and which one reliably slips lets you work backward from a date with confidence.',
       ],
     },
     {
@@ -69,13 +68,13 @@ const post: BlogPost = {
         {
           heading: 'Production',
           body: [
-            'The most predictable stage, and usually the one people assume is the long pole. Print, coat, die-cut, glue, and fold each take a known amount of time — variability comes from the number of stages a structure requires, not from uncertainty within them.',
+            'The most predictable stage, and usually the one people assume is the long pole. Production takes 5–7 business days after proof approval: print, coat, die-cut, glue, and fold each take a known amount of time.',
           ],
         },
         {
           heading: 'Delivery',
           body: [
-            'Transit depends on distance and consignment type. Palletized freight behaves differently from parcel. We confirm timing per order rather than publishing a figure we have not committed to.',
+            'Delivery takes 5–7 business days in the US and 7–10 business days to the UK, Canada and Australia, and shipping to all four is free. If your order has to land by a fixed in-store date, tell us when you order so we can confirm it fits.',
           ],
         },
       ],
@@ -105,7 +104,7 @@ const post: BlogPost = {
         'Some of these are within your control and worth knowing before you need them.',
       ],
       points: [
-        'Send a physical product sample with the first enquiry, not after the quote',
+        'Send a physical product sample with the first inquiry, not after the quote',
         'Choose digital printing where the run is short — it removes plate making',
         'Simplify structure: fewer components means fewer production stages',
         'Get artwork approvers lined up before the file exists, not after',

@@ -30,7 +30,7 @@ const content: PageContent = {
       points: [
         'SBS — bleached white throughout, best print surface, highest cost',
         'Kraft-back — white printing face, brown reverse, common compromise',
-        'Recycled greyboard — lowest cost, warmer surface, visible fiber variation',
+        'Recycled grayboard — lowest cost, warmer surface, visible fiber variation',
       ],
       link: {
         text: 'How boxboard behaves in a display structure is covered on the',

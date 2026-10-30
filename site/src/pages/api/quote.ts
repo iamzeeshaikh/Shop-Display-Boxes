@@ -4,7 +4,7 @@
  * Requires a server adapter — see README → "Connecting the forms". With the
  * site built as pure static output this route is not emitted, and the forms
  * will post to a URL that does not exist. That is deliberate and documented:
- * shipping a form that silently discards enquiries would be worse.
+ * shipping a form that silently discards inquiries would be worse.
  *
  * Security posture:
  *   • every field revalidated server-side, independent of the browser
@@ -161,7 +161,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   console.log(`[form] delivered via ${delivery.adapter}${spamReason ? ' (possible spam)' : ''}`);
   return new Response(
-    JSON.stringify({ ok: true, message: 'Thank you — your enquiry has been received.' }),
+    JSON.stringify({ ok: true, message: 'Thank you — your inquiry has been received.' }),
     { status: 200, headers: { 'Content-Type': 'application/json' } }
   );
 };

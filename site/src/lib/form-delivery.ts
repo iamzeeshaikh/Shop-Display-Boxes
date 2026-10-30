@@ -8,7 +8,7 @@
  *
  * With FORM_ADAPTER unset or set to "console", submissions are logged to the
  * server log and nothing is sent. That is the default so the site cannot
- * silently swallow enquiries while appearing to work: the log makes it obvious
+ * silently swallow inquiries while appearing to work: the log makes it obvious
  * that delivery is not configured yet.
  *
  * See README → "Connecting the forms".

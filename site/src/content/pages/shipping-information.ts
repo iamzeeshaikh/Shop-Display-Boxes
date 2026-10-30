@@ -81,7 +81,7 @@ const content: PageContent = {
   ],
 
   faqs: [
-    { question: 'Do you ship to all fifty states?', answer: 'Yes, free, to addresses across the United States, and also to the United Kingdom, Canada and Australia. Our registered address is in Brooklyn, New York, but it is not a collection point — everything is produced to order and shipped to you.' },
+    { question: 'Where do you ship?', answer: 'To the United States, the United Kingdom, Canada and Australia, free. Other countries are quoted on request. Our registered address is in Brooklyn, New York, but it is not a collection point — everything is produced to order and shipped to you.' },
     { question: 'How is freight calculated on display packaging?', answer: 'Almost always on volume rather than weight. Paperboard is light and displays are bulky, so you are effectively paying for the space a consignment occupies. This is why flat-packing changes the economics so substantially.' },
     { question: 'If shipping is free, why does flat-packing matter?', answer: 'Because freight is billed on volume and that cost sits inside your quoted price. A display drawn tightly around its product and shipped flat costs less to move, and that shows up as a better price rather than as a separate freight line.' },
     { question: 'How long will delivery take?', answer: 'Production is 5–7 business days after proof approval. Delivery then takes 5–7 business days in the US and 7–10 business days to the UK, Canada and Australia. If you have a fixed in-store date, tell us when you order and we will confirm whether it is achievable.' },
@@ -100,7 +100,7 @@ const content: PageContent = {
 
   cta: {
     heading: 'Working to a deadline?',
-    body: 'Send the in-store date with your enquiry. We will tell you whether it is achievable before you commit to anything.',
+    body: 'Send the in-store date with your inquiry. We will tell you whether it is achievable before you commit to anything.',
   },
 
   updated: '2026-10-29',

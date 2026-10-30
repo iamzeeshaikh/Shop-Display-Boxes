@@ -51,7 +51,7 @@ const content: PageContent = {
       heading: 'We do not guess at what we cannot verify',
       body: [
         'We print the artwork you supply, including regulatory, ingredient, and safety copy. We do not review artwork for compliance in your market, and we will say so rather than imply a check we are not performing.',
-        'The same principle applies to specifications. Where a figure depends on your job — production time, minimum quantity, board weight — our pages say so instead of publishing a number that would not hold for every order.',
+        'The same principle applies to specifications. Where a figure holds for every order, we publish it: a 100-box minimum, 5–7 business days of production after proof approval, and free shipping to the US, UK, Canada and Australia. Where a figure depends on your job, such as board weight or the price of a custom run, our pages say so instead of guessing.',
       ],
     },
     {
@@ -69,7 +69,7 @@ const content: PageContent = {
   ],
 
   faqs: [
-    { question: 'Where are you based?', answer: 'Our location and contact details are being confirmed before publication and will appear on the contact page once verified. We supply and ship custom display packaging free to businesses across the United States, the United Kingdom, Canada and Australia.' },
+    { question: 'Where are you based?', answer: 'Our registered address is 1639 70th St, Brooklyn, NY 11204, and you can reach us on (503) 461-4788 or info@shopdisplayboxes.com. It is not a collection point: everything is produced to order and shipped free to the United States, the United Kingdom, Canada and Australia.' },
     { question: 'Do you have minimum order quantities?', answer: 'Minimum order is 100 units. Digital printing removes plate setup, which is what makes a run that short viable — expect a higher per-piece price at 100 than at volume, because fixed setup costs are spread across fewer pieces.' },
     { question: 'Can you produce a display if I only have a rough idea?', answer: 'Yes, and that is how most jobs begin. Send the product, an approximate quantity, and where the display will sit. We propose a structure and a board and explain the reasoning rather than expecting you to specify it.' },
     { question: 'Do you draw dielines for free?', answer: 'Yes. We draw the dieline for your product before you commit to a run, supplied as a layered vector file with cut, crease, and bleed on separate layers.' },

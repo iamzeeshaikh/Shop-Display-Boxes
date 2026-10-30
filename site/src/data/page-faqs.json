@@ -97,7 +97,7 @@
    },
    {
     "q": "Is there a blog guide on display packaging production timelines?",
-    "a": "Yes. The timeline article explains that lead time depends on the job, but not evenly, because most of the variability sits in one stage, and it is not the stage most buyers plan around."
+    "a": "Yes. The timeline article sets out our standard production and delivery times and explains where the real variation sits: in one stage before proof approval, and not the stage most buyers plan around."
    },
    {
     "q": "Does the display packaging blog cover recyclable display materials?",
@@ -387,8 +387,8 @@
   "h2": "Display packaging timeline questions answered",
   "faqs": [
    {
-    "q": "Why won't this guide give one lead time for custom display packaging?",
-    "a": "A simple digitally printed tray and a multi-component litho-laminated floor unit do not share a timeline, and averaging them misleads in both directions. Knowing which stages consume time and which slip lets you plan backward instead."
+    "q": "What lead time should I plan for on custom display packaging?",
+    "a": "Production takes 5–7 business days after you approve the proof, then delivery takes 5–7 business days in the US or 7–10 business days to the UK, Canada and Australia. Time before proof approval depends on how quickly artwork and the dieline are signed off, so plan that stage with the most slack."
    },
    {
     "q": "How can I speed up the quote stage for custom display packaging?",
@@ -955,8 +955,8 @@
     "a": "Lamination adds a pass, while foil and embossing add a pass plus tooling that behaves like setup. That is significant on a short run and almost incidental on a long one, so per-piece figures vary widely."
    },
    {
-    "q": "Which display box cost can appear on the invoice but not the quote?",
-    "a": "Freight, usually. Display freight is billed on volume, so bulky displays cost more to ship than their weight suggests. Ask how goods will ship; our <a href=\"/shipping-information/\">shipping and delivery information</a> explains how ours is handled."
+    "q": "Is freight added to a display box invoice?",
+    "a": "Not for the US, UK, Canada or Australia: shipping there is free. Other destinations are quoted before you order, so nothing appears on the invoice that was not agreed first. Our <a href=\"/shipping-information/\">shipping and delivery information</a> sets out times and coverage."
    },
    {
     "q": "How should I read quantity breaks on a display box quote?",

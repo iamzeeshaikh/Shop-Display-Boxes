@@ -66,8 +66,8 @@ const content: PageContent = {
     {
       heading: 'Cancellations',
       body: [
-        'It depends how far the order has progressed. Before dieline approval little has been committed, and cancelling is straightforward.',
-        'After plates are made and material is cut, costs have been incurred that cannot be recovered, and those are chargeable. Ask before cancelling and we will tell you exactly where your order stands and what it would cost.',
+        'It depends how far the order has progressed. Before dieline approval little has been committed, and canceling is straightforward.',
+        'After plates are made and material is cut, costs have been incurred that cannot be recovered, and those are chargeable. Ask before canceling and we will tell you exactly where your order stands and what it would cost.',
       ],
     },
     {

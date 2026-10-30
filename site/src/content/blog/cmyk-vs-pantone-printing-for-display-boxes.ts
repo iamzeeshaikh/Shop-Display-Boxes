@@ -41,7 +41,7 @@ const post: BlogPost = {
           heading: 'The colors that drift most',
           body: [
             'Corporate blues, oranges, and greens are the usual casualties. They sit in regions where a small change in one ink moves the perceived hue noticeably.',
-            'Neutral greys built from process inks are also unstable — a slight shift in one channel turns a grey warm or cold, which is very visible next to a product.',
+            'Neutral grays built from process inks are also unstable — a slight shift in one channel turns a gray warm or cold, which is very visible next to a product.',
           ],
         },
       ],

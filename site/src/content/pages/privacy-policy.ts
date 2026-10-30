@@ -30,12 +30,12 @@ const content: PageContent = {
     {
       heading: 'What the forms collect',
       body: [
-        'The quote, sample, dieline, and contact forms collect only what is needed to respond: your name, business name, email address, phone number where you provide one, and the details of your enquiry — dimensions, quantities, materials, and any artwork file you choose to upload.',
+        'The quote, sample, dieline, and contact forms collect only what is needed to respond: your name, business name, email address, phone number where you provide one, and the details of your inquiry — dimensions, quantities, materials, and any artwork file you choose to upload.',
         'No field on this site asks for payment card details, and none is collected through the website.',
       ],
       points: [
         'Contact details you enter — name, business, email, phone',
-        'Enquiry details — product, dimensions, quantity, requirements',
+        'Inquiry details — product, dimensions, quantity, requirements',
         'Artwork files you choose to upload',
         'A timestamp used to detect automated submissions',
       ],
@@ -43,7 +43,7 @@ const content: PageContent = {
     {
       heading: 'How that information is used',
       body: [
-        'To respond to your enquiry, to prepare a quote, and to carry out any work you subsequently order. It is not sold, and it is not shared with third parties for their own marketing.',
+        'To respond to your inquiry, to prepare a quote, and to carry out any work you subsequently order. It is not sold, and it is not shared with third parties for their own marketing.',
         'Where a supplier is involved in fulfilling your order, only the information required to do that is shared with them.',
       ],
     },
@@ -69,7 +69,7 @@ const content: PageContent = {
     {
       heading: 'How long information is kept',
       body: [
-        'Enquiry correspondence and order records are kept for as long as needed to service the relationship and to meet legal and accounting obligations, after which they are deleted. Artwork files are kept so that reorders can be produced against the same approved specification without you having to resupply them.',
+        'Inquiry correspondence and order records are kept for as long as needed to service the relationship and to meet legal and accounting obligations, after which they are deleted. Artwork files are kept so that reorders can be produced against the same approved specification without you having to resupply them.',
         'If you would like information about you removed sooner, contact info@shopdisplayboxes.com and we will do so except where we are required to retain it.',
       ],
     },

@@ -96,7 +96,7 @@ export const business = {
     /** Rendered as a single line in the footer and on the contact page. */
     display: '1639 70th St, Brooklyn, NY 11204, USA',
   }),
-  /** Confirmed by the owner 2026-07-20: enquiries handled around the clock. */
+  /** Confirmed by the owner 2026-07-20: inquiries handled around the clock. */
   businessHours: verified({
     alwaysOpen: true,
     /** schema.org openingHoursSpecification for a 24/7 operation. */
@@ -113,7 +113,7 @@ export const business = {
     closes: '23:59',
     short: '24/7',
     statement:
-      'Enquiries are handled 24/7. Note that this is contact availability rather than a walk-in counter — the Brooklyn address is not a collection point, and production still runs to the stated 5–7 business day schedule.',
+      'Inquiries are handled 24/7. Note that this is contact availability rather than a walk-in counter — the Brooklyn address is not a collection point, and production still runs to the stated 5–7 business day schedule.',
   }),
 
   /** Supplied by the owner 2026-07-20; window changed to 14 days 2026-10-29. */
@@ -124,7 +124,7 @@ export const business = {
   }),
   refundTerms: verified({
     statement:
-      'Where goods are defective or do not match the approved proof and dieline, we replace the affected units or refund them. Goods that match what was approved are not returnable, which is why the dieline and proof approvals exist and why a physical proof is worth taking on anything where colour carries commercial weight.',
+      'Where goods are defective or do not match the approved proof and dieline, we replace the affected units or refund them. Goods that match what was approved are not returnable, which is why the dieline and proof approvals exist and why a physical proof is worth taking on anything where color carries commercial weight.',
   }),
   /** Supplied by the owner 2026-07-20; countries and transit times added 2026-10-29. */
   shippingTerms: verified({
@@ -140,7 +140,7 @@ export const business = {
     short: '5–7 business days',
     /** Long form for body copy and FAQs. */
     statement:
-      'Standard production time is 5–7 business days after artwork and proof approval. The clock starts at approval, not at enquiry — dieline and proof stages come first and depend partly on how quickly approvals come back.',
+      'Standard production time is 5–7 business days after artwork and proof approval. The clock starts at approval, not at inquiry — dieline and proof stages come first and depend partly on how quickly approvals come back.',
   }),
 
   /** Commercial terms referenced on product and commercial pages. */

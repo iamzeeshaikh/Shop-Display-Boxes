@@ -75,7 +75,7 @@ const content: PageContent = {
       heading: 'Terms',
       body: [
         'Volume pricing tiers, payment terms, and any account arrangements are confirmed on quotation rather than published, because they depend on specification and quantity.',
-        'Send the annual volume you expect rather than a single order quantity. The pricing conversation is different when it is about a programme rather than a run.',
+        'Send the annual volume you expect rather than a single order quantity. The pricing conversation is different when it is about a program rather than a run.',
       ],
     },
   ],
@@ -88,7 +88,7 @@ const content: PageContent = {
     { question: 'Should I commit my whole volume to one first order?', answer: 'Often not. A smaller proving run followed by volume lets you find structural problems across a hundred units rather than ten thousand, and the reorder economics are better than the first order anyway.' },
     { question: 'Does freight matter at wholesale volumes?', answer: 'Considerably, and it is billed on volume rather than weight. Flat-packing and pallet fit matter more at scale — a dimension adjusted at dieline stage to gain a unit per pallet layer repays itself on every shipment.' },
     { question: 'Is a very long run always cheaper?', answer: 'Not where artwork has a shelf life. Seasonal ranges and regulated categories can leave you with a write-off rather than a saving. Structures where a printed sleeve updates independently limit that exposure.' },
-    { question: 'What information do you need to quote wholesale?', answer: 'The annual volume you expect rather than a single order quantity, plus the specification and how many SKUs it covers. The pricing conversation is different when it is about a programme rather than one run.' },
+    { question: 'What information do you need to quote wholesale?', answer: 'The annual volume you expect rather than a single order quantity, plus the specification and how many SKUs it covers. The pricing conversation is different when it is about a program rather than one run.' },
   ],
 
   relatedProducts: ['custom-display-boxes', 'retail-display-boxes', 'cardboard-counter-display-units', 'corrugated-display-boxes'],
@@ -101,7 +101,7 @@ const content: PageContent = {
   ],
 
   cta: {
-    heading: 'Planning an annual programme?',
+    heading: 'Planning an annual program?',
     body: 'Send the yearly volume rather than a single order quantity. Consolidation usually saves more than the rate does.',
   },
 

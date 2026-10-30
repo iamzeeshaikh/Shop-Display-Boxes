@@ -70,7 +70,7 @@ const content: PageContent = {
       heading: 'What we do not claim',
       body: [
         'We are not publishing certification marks, audit results, or defect-rate statistics, because we do not have verified evidence to present. If your job requires documented inspection, certified stock, or a specific quality standard, raise it at quoting stage and we will confirm what can be evidenced for that job.',
-        'The checks described above are inherent to producing packaging properly, not a certified programme we are asking you to take on trust.',
+        'The checks described above are inherent to producing packaging properly, not a certified program we are asking you to take on trust.',
       ],
     },
   ],

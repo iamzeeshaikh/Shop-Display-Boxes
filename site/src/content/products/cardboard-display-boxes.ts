@@ -76,7 +76,7 @@ const content: ProductContent = {
       heading: 'What folding boxboard is',
       body: [
         'Folding boxboard is a single-ply paperboard, typically multi-layered but not fluted, measured in points — a point being one thousandth of an inch. Display work usually falls between 14 pt and 28 pt.',
-        'The most common grade is SBS, bleached solid white throughout, which gives the whitest print surface available in packaging. Kraft-back board keeps a white printing face with a brown reverse and costs less. Fully recycled greyboard is cheaper again and prints acceptably, with a warmer, less uniform surface.',
+        'The most common grade is SBS, bleached solid white throughout, which gives the whitest print surface available in packaging. Kraft-back board keeps a white printing face with a brown reverse and costs less. Fully recycled grayboard is cheaper again and prints acceptably, with a warmer, less uniform surface.',
       ],
       points: [
         'SBS — white through the board, the best print surface, highest cost',
@@ -150,7 +150,7 @@ const content: ProductContent = {
   ],
 
   specs: [
-    { label: 'Materials', value: 'SBS folding boxboard, kraft-back board, recycled greyboard' },
+    { label: 'Materials', value: 'SBS folding boxboard, kraft-back board, recycled grayboard' },
     { label: 'Custom dimensions', value: 'Custom — drawn around your product sample' },
     { label: 'Board thickness', value: 'Typically 14 pt to 28 pt; specified per job' },
     { label: 'Flute type', value: 'Not applicable — folding boxboard is unfluted' },
