@@ -8,6 +8,8 @@
 export const NOINDEX_PATHS = [
   '/search/',
   '/thank-you/',
+  '/checkout/',
+  '/order-confirmed/',
   '/quote-received/',
   '/sample-received/',
   '/dieline-received/',

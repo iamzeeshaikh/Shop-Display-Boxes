@@ -139,7 +139,7 @@ const content: ProductContent = {
     { label: 'Samples', value: 'Charged — quoted with your job' },
     { label: 'Artwork format', value: 'Vector PDF, AI, or EPS with outlined fonts and 3 mm bleed' },
     { label: 'Production time', value: '5–7 business days after proof approval' },
-    { label: 'Shipping coverage', value: 'Free shipping to all 50 US states' },
+    { label: 'Shipping coverage', value: 'Free shipping to the US, UK, Canada and Australia' },
   ],
 
   faqs: [
@@ -212,7 +212,7 @@ const content: ProductContent = {
     'custom-display-boxes',
   ],
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

@@ -1,0 +1,89 @@
+---
+/**
+ * Shown after /api/order accepts an order. noindex via NOINDEX_PATHS.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PAYMENT_METHODS, PRODUCTION_TEXT, TRANSIT_US_TEXT, TRANSIT_INTL_TEXT } from '../data/order';
+
+const pay = JSON.stringify(Object.fromEntries(PAYMENT_METHODS.map((m) => [m.id, m.detail])));
+---
+
+<BaseLayout
+  url="/order-confirmed/"
+  title="Order Received — Thank You | Shop Display Boxes"
+  description="Your display box order has been received. We email a proof of your artwork before anything is printed."
+  noindex
+>
+  <section class="oc-head">
+    <h1>Order received</h1>
+    <p>Thank you. Your order is with our team, and a copy is on its way to your inbox.</p>
+  </section>
+
+  <section class="band wrap oc" data-pay={pay}>
+    <p data-ref hidden>Your order number: <strong data-ref-value></strong></p>
+    <h2>What happens next</h2>
+    <ol>
+      <li>We check your artwork and email you a proof.</li>
+      <li>You approve the proof or ask for changes. Nothing is printed before you approve.</li>
+      <li data-pay-line>{PAYMENT_METHODS[0].detail}</li>
+      <li>
+        Production takes {PRODUCTION_TEXT}. Shipping is free and takes {TRANSIT_US_TEXT} in the US,
+        {TRANSIT_INTL_TEXT} to the UK, Canada and Australia.
+      </li>
+    </ol>
+    <p class="oc-small">
+      Questions? Call <a href="tel:+15034614788">(503) 461-4788</a> or email
+      <a href="mailto:info@shopdisplayboxes.com">info@shopdisplayboxes.com</a> with your order number.
+    </p>
+    <p><a class="btn btn-solid" href="/">Back to home</a></p>
+  </section>
+</BaseLayout>
+
+<script>
+  const root = document.querySelector('[data-pay]') as HTMLElement | null;
+  if (root) {
+    const pay = JSON.parse(root.dataset.pay || '{}') as Record<string, string>;
+    const q = new URLSearchParams(location.search);
+    const ref = q.get('ref');
+    const p = q.get('pay');
+    if (ref) {
+      const r = root.querySelector('[data-ref]') as HTMLElement;
+      (r.querySelector('[data-ref-value]') as HTMLElement).textContent = ref;
+      r.hidden = false;
+    }
+    if (p && pay[p]) (root.querySelector('[data-pay-line]') as HTMLElement).textContent = pay[p];
+  }
+</script>
+
+<style>
+  .oc-head {
+    padding: clamp(48px, 6vw, 88px) var(--gut);
+    background: var(--ink);
+  }
+  .oc-head h1 {
+    color: #fff;
+  }
+  .oc-head p {
+    margin-block-start: 12px;
+    color: #c4d1e0;
+    font-size: 17px;
+  }
+  .oc {
+    max-width: 820px;
+    line-height: 1.7;
+  }
+  .oc h2 {
+    margin-block: 20px 10px;
+  }
+  .oc ol {
+    padding-left: 22px;
+    color: var(--ink-2);
+  }
+  .oc li {
+    margin-bottom: 8px;
+  }
+  .oc-small {
+    margin-block: 20px;
+    color: var(--muted);
+  }
+</style>

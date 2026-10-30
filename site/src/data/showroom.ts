@@ -6,12 +6,11 @@
 import type { PhotoRef } from '../lib/photos';
 
 /**
- * Online order pack. The "Order online" band renders NOTHING while `price` is
- * null. When the owner sets a price (USD, for the whole pack), the band appears
- * on the home page with that figure. There is no checkout yet; the band's
- * button goes to the quote form until one exists.
+ * Online order pack, set by the owner 2026-10-29: 100 display boxes for $60.00.
+ * src/data/order.ts reads these two numbers, so the order band, the checkout,
+ * the Product Offer JSON-LD and the Merchant feed all show the same price.
  */
-export const orderPack: { qty: number; price: number | null } = { qty: 100, price: null };
+export const orderPack: { qty: number; price: number | null } = { qty: 100, price: 60 };
 
 const p = (slug: string, n: number): PhotoRef => ({ slug, n });
 

@@ -69,7 +69,7 @@ const content: PageContent = {
       heading: 'Six — delivery',
       body: [
         'Most displays ship flat, which cuts freight volume substantially and pairs with a lock-bottom structure that erects without tape or tools. Pre-assembled and pre-loaded shipping are both possible where the structure and destination justify the cost.',
-        'We ship to business addresses across all fifty states.',
+        'We ship free to the United States, the United Kingdom, Canada and Australia. Delivery takes 5–7 business days in the US and 7–10 business days to the other three, after 5–7 business days of production.',
       ],
       link: {
         text: 'Coverage and what affects transit is covered under',
@@ -108,7 +108,7 @@ const content: PageContent = {
     body: 'Send the product and a quantity. The dieline follows before you commit to anything.',
   },
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

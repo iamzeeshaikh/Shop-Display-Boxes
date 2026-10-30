@@ -26,7 +26,7 @@ const seo = {
     'Custom printed display boxes built around your product, with free dielines and low minimums. Shipped to businesses across the USA.',
 };
 
-const price = business.startingPricePerPiece.value;
+const price = business.packPrice.value;
 
 const range = await Promise.all(
   PRODUCTS.map(async (p) => ({ product: p, image: await photo(p.slug, GALLERY_PICK[p.slug] ?? 1) }))
@@ -88,12 +88,12 @@ const industryTiles = await Promise.all(
 );
 
 const faqs = [
-  { question: 'What does a custom display box cost?', answer: `${price.statement} Quantity is the largest single driver, because setup costs are fixed and spread across the run — which is why halving an order does not halve the invoice.` },
+  { question: 'What does a custom display box cost?', answer: `${price.statement} Larger runs, custom sizes and specialty finishes are quoted, and there quantity is the largest single driver, because setup costs are fixed and spread across the run — which is why halving an order does not halve the invoice.` },
   { question: 'Do you charge for dielines?', answer: 'No. We draw a dieline around your product before you commit to anything, supplied as a layered vector file with cut, crease, and bleed on separate layers. It is yours to keep.' },
   { question: 'What is your minimum order?', answer: 'Minimum order is 100 units. Digital printing removes plate setup, which is what makes a run that short viable — expect a higher per-piece price at 100 than at volume, because fixed setup costs are spread across fewer pieces.' },
   { question: 'How do I know whether I need cardboard or corrugated?', answer: 'Load the display to its intended assortment, lift it by one edge, and watch the base. If it bows, you need corrugated. Then repeat the test after several days loaded — paperboard fails gradually, so day-one results mislead.' },
   { question: 'What do you need from me to start?', answer: 'The product itself, or its dimensions at the widest point, plus a quantity and where the display will sit. For anything with a cavity insert, send a physical unit — spec sheets omit the cap flare and label thickness that decide fit.' },
-  { question: 'Where do you ship?', answer: 'To business addresses across all fifty states. We do not maintain offices, production facilities, or collection points in individual states or cities — everything is produced to order and shipped to you.' },
+  { question: 'Where do you ship?', answer: 'To the United States, the United Kingdom, Canada and Australia, with shipping free on every order. Production takes 5–7 business days after proof approval, then delivery takes 5–7 business days in the US and 7–10 business days to the UK, Canada and Australia. We do not maintain offices, production facilities, or collection points in individual states or cities — everything is produced to order and shipped to you.' },
   { question: 'Do you check that my labeling is compliant?', answer: 'No, in any market. We print exactly the artwork you supply including ingredient lists, warnings, and safety marks, but responsibility for accuracy and regulatory compliance stays with you.' },
   { question: 'Do you have customer reviews?', answer: 'Not yet, and we are not publishing any until we have verified ones from real customers. There are no star ratings anywhere on this site, and none in its structured data either.' },
 ];
@@ -136,7 +136,7 @@ const schema = graph(
       <ul class="hx__facts">
         <li>Free dielines drawn from your actual product</li>
         <li>Low minimums — digital printing removes plate setup</li>
-        <li>Shipped to businesses across all fifty states</li>
+        <li>Free shipping to the US, UK, Canada and Australia</li>
       </ul>
     </div>
   </section>
@@ -223,7 +223,7 @@ const schema = graph(
 
   <DesignYourBox id="dyb-home" />
 
-  <OrderBand />
+  <OrderBand id="order" />
 
   {/* ── Structure: the six-panel argument beside a real box ───────────── */}
   <section class="st" aria-labelledby="st-h">
@@ -324,6 +324,7 @@ const schema = graph(
       <h2>What it costs, honestly</h2>
       <p class="pr__statement">{price.statement}</p>
       <p class="pr__qualifier">{price.qualifier}</p>
+      <p><a class="btn btn-solid" href="#order">Order 100 boxes online</a></p>
       <p class="more-link">
         Each cost driver is broken down in the guide to{' '}
         <a href="/how-much-do-custom-display-boxes-cost/">what custom display boxes cost</a>.
@@ -401,9 +402,9 @@ const schema = graph(
       <article>
         <h3>Shipped across the USA</h3>
         <p>
-          To business addresses in all fifty states. Freight on display packaging is billed on
-          volume rather than weight, which is why flat-packing changes the delivered cost so
-          substantially.
+          Free to any business address in the US, and to the UK, Canada and Australia. Freight
+          on display packaging is billed on volume rather than weight, which is why flat-packing
+          changes the delivered cost so substantially.
         </p>
         <a href="/shipping-information/">Shipping and delivery information</a>
       </article>

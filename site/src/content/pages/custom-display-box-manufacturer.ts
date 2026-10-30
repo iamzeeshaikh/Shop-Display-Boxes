@@ -25,7 +25,7 @@ const content: PageContent = {
     {
       heading: 'What we can confirm',
       body: [
-        'Shop Display Boxes produces custom printed display boxes and retail display packaging to order — drawn around your product, printed to your artwork, and shipped with delivery included to business addresses across all fifty states. Minimum order is 100 units and production runs 5–7 business days from proof approval.',
+        'Shop Display Boxes produces custom printed display boxes and retail display packaging to order — drawn around your product, printed to your artwork, and shipped free to the United States, the United Kingdom, Canada and Australia. Minimum order is 100 units and production runs 5–7 business days from proof approval.',
         'What we do not publish is a tour of equipment, capacity figures, or certification marks. Those get used as decoration on a lot of packaging sites, and a buyer cannot verify any of them. The questions below are worth more, and they work on us as well as on anyone else you are comparing.',
       ],
     },
@@ -64,7 +64,7 @@ const content: PageContent = {
       heading: 'Ask what they will not do',
       body: [
         'A supplier who claims to check regulatory compliance, guarantee delivery dates they do not control, or hold certifications they cannot produce is telling you something about how the rest of the relationship will go.',
-        'We do not review artwork for compliance in any market, we do not publish transit times that have not been confirmed, and we do not display certification marks we cannot evidence.',
+        'We do not review artwork for compliance in any market, we do not promise a delivery date we have not agreed for your job, and we do not display certification marks we cannot evidence.',
       ],
     },
     {
@@ -89,13 +89,13 @@ const content: PageContent = {
   ],
 
   faqs: [
-    { question: 'Do you manufacture the boxes yourselves?', answer: 'Details of production facilities, equipment, and capacity are pending confirmation by the site owner and are not published here. We produce custom display packaging to order and ship across all fifty states — the specifics of how will be stated once verified.' },
+    { question: 'Do you manufacture the boxes yourselves?', answer: 'Details of production facilities, equipment, and capacity are pending confirmation by the site owner and are not published here. We produce custom display packaging to order and ship it free to the US, UK, Canada and Australia — the specifics of how will be stated once verified.' },
     { question: 'What should I ask any display box manufacturer?', answer: 'Whether a dieline is drawn before you commit, what each approval stage fixes, how board is specified, what they will not do, how reorders work, and whether you can have a sample first. The answers separate suppliers more than price does.' },
     { question: 'How should a manufacturer specify board?', answer: 'Against load — the weight of a full assortment relative to the unsupported base span, and how the display travels. Specifying by product category is a shortcut that produces displays which pass a bench test and bow in a store.' },
     { question: 'Why does the dieline matter so much?', answer: 'Because most packaging problems are dimensional, and they surface either when the first sample arrives or when the full run does. A dieline drawn around your real product moves that discovery to where fixing it is free.' },
     { question: 'What should a reorder cost compared to a first order?', answer: 'Less, and noticeably. Development — dieline, proofing, approvals — dominates a first order. Once those are on file a reorder should be a print job. A supplier treating each reorder as new development is charging twice for the same work.' },
     { question: 'Do you hold certifications?', answer: 'We are not publishing certification marks we cannot evidence. If your job requires certified stock, documented inspection, or a specific standard, raise it at quoting stage and we will confirm what can be evidenced for that job.' },
-    { question: 'Can you guarantee a delivery date?', answer: 'We do not publish transit times or guarantees that have not been confirmed. If your order depends on a fixed in-store date, tell us when you request a quote and we will say whether it is achievable before you commit.' },
+    { question: 'Can you guarantee a delivery date?', answer: 'Our standard times are 5–7 business days of production after proof approval, then 5–7 business days of delivery in the US or 7–10 to the UK, Canada and Australia. Those are standard times rather than a guarantee. If your order depends on a fixed in-store date, tell us when you request a quote and we will say whether it is achievable before you commit.' },
     { question: 'Do you offer low minimum orders?', answer: 'Minimum order is 100 units. Digital printing removes plate setup, which is what makes a run that short viable — expect a higher per-piece price at 100 than at volume, because fixed setup costs are spread across fewer pieces.' },
   ],
 
@@ -113,7 +113,7 @@ const content: PageContent = {
     body: 'Send the same brief to each and compare what they ask you before quoting. That tells you more than the numbers do.',
   },
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

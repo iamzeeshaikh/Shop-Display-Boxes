@@ -2,8 +2,8 @@ import type { PageContent } from '../../../data/page-content';
 
 /**
  * NOTE ON HONESTY: no invented price points, percentages, or savings figures
- * appear here. The only price stated is the verified $0.30 starting point, with
- * its qualifier. Everything else describes how cost behaves, not what it is.
+ * appear here. The only price stated is the owner-set online pack price
+ * (100 boxes for $60.00, 2026-10-29). Everything else describes how cost behaves, not what it is.
  */
 const content: PageContent = {
   slug: 'how-much-do-custom-display-boxes-cost',
@@ -16,7 +16,7 @@ const content: PageContent = {
   h1: 'How Much Do Custom Display Boxes Cost?',
 
   intro:
-    'Pricing starts from $0.30 per piece for qualifying large-volume orders. That is a genuine starting point rather than a typical price, and this guide explains what moves a quote away from it in either direction.',
+    'Online, 100 display boxes cost $60.00 ($0.60 each) in any of our styles, printed full color with free shipping to the US, UK, Canada and Australia. Larger and custom runs are quoted, and this guide explains what moves a quote up or down.',
 
   sections: [
     {
@@ -87,7 +87,7 @@ const content: PageContent = {
       heading: 'Why we do not publish a price list',
       body: [
         'Because the same box in two different specifications can differ in price by a multiple, and a published table would be wrong for almost everybody who read it.',
-        'The $0.30 figure is stated because it is a real qualifying floor for large-volume orders. Presenting it as a typical price would be misleading, so the product pages state the qualifier alongside it every time.',
+        'We publish one fixed price: the online pack of 100 standard boxes for $60.00. It covers a standard size printed full color on one side. Anything beyond that, a bigger run, a custom size, specialty board or premium finishing, is quoted against the specification, because a table could not be right for all of them.',
       ],
     },
   ],
@@ -110,7 +110,7 @@ const content: PageContent = {
   ],
 
   faqs: [
-    { question: 'What does $0.30 per piece actually mean?', answer: 'It is a starting point for qualifying large-volume orders, not a typical price. Smaller runs, specialty board, added inserts, and premium finishes all price above it. Every product page states that qualifier alongside the figure.' },
+    { question: 'What does $0.60 per piece actually mean?', answer: 'It is the online pack price, $60.00 for 100 standard display boxes printed full color, divided by 100. Shipping to the US, UK, Canada and Australia is included free. Larger runs, custom sizes, specialty board, added inserts and premium finishes are quoted against your specification instead.' },
     { question: 'If I halve my order, does the price halve?', answer: 'No. Setup costs — dieline, tooling, plates, make-ready — are fixed and do not scale down with quantity. At small volumes, halving an order can change the invoice surprisingly little.' },
     { question: 'What is the most underestimated cost driver?', answer: 'Structural complexity. Every extra glue point, insert, window, or perforation adds a production step, and at most quantities steps cost more than material. If a quote is higher than expected, look at structure before board.' },
     { question: 'Should I downgrade the board to save money?', answer: 'Usually not. It saves less than people expect and risks a display that bows or collapses under load, which costs far more than the saving. Simplifying structure or increasing quantity are better levers.' },
@@ -134,7 +134,7 @@ const content: PageContent = {
     body: 'Send the product, quantity, and where the display will sit. A quote against your specification is the only price that means anything.',
   },
 
-  updated: '2026-07-19',
+  updated: '2026-10-29',
 };
 
 export default content;

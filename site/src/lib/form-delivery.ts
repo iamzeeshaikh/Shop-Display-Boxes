@@ -252,3 +252,125 @@ export async function deliver(payload: DeliveryPayload): Promise<DeliveryResult>
       };
   }
 }
+
+/**
+ * A free-form message sent through the SAME adapter, sender settings and lead
+ * recipients as deliver(). Used by /api/order, so an order reaches exactly the
+ * inboxes a quote request does. `to` defaults to the lead recipients; pass a
+ * buyer address only for the courtesy copy of an order.
+ */
+export interface Message {
+  to?: string[];
+  subject: string;
+  text: string;
+  html?: string;
+  replyTo?: string;
+  attachments?: Array<{ filename: string; content: Buffer }>;
+  /** Logged with the message when it cannot be delivered (webhook/console). */
+  data?: unknown;
+}
+
+export async function sendMessage(msg: Message): Promise<DeliveryResult> {
+  const adapter = activeAdapter();
+  const from = env('FORM_FROM_EMAIL');
+  const to = msg.to?.length ? msg.to : [...LEAD_RECIPIENTS];
+  const subject = msg.subject.replace(/[\r\n]+/g, ' ');
+
+  switch (adapter) {
+    case 'resend': {
+      const key = env('RESEND_API_KEY');
+      if (!key || !from) return { delivered: false, adapter, detail: 'resend selected but not fully configured' };
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from,
+          to,
+          subject,
+          text: msg.text,
+          ...(msg.html ? { html: msg.html } : {}),
+          ...(msg.replyTo ? { reply_to: msg.replyTo } : {}),
+          ...(msg.attachments?.length
+            ? { attachments: msg.attachments.map((a) => ({ filename: a.filename, content: a.content.toString('base64') })) }
+            : {}),
+        }),
+      });
+      return { delivered: res.ok, adapter, detail: res.ok ? undefined : `resend responded ${res.status}` };
+    }
+
+    case 'sendgrid': {
+      const key = env('SENDGRID_API_KEY');
+      if (!key || !from) return { delivered: false, adapter, detail: 'sendgrid selected but not fully configured' };
+      const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          personalizations: [{ to: to.map((email) => ({ email })) }],
+          from: { email: from },
+          ...(msg.replyTo ? { reply_to: { email: msg.replyTo } } : {}),
+          subject,
+          content: [
+            { type: 'text/plain', value: msg.text },
+            ...(msg.html ? [{ type: 'text/html', value: msg.html }] : []),
+          ],
+          ...(msg.attachments?.length
+            ? { attachments: msg.attachments.map((a) => ({ filename: a.filename, content: a.content.toString('base64') })) }
+            : {}),
+        }),
+      });
+      return { delivered: res.ok, adapter, detail: res.ok ? undefined : `sendgrid responded ${res.status}` };
+    }
+
+    case 'webhook': {
+      const url = env('FORM_WEBHOOK_URL');
+      if (!url) return { delivered: false, adapter, detail: 'webhook selected but FORM_WEBHOOK_URL unset' };
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to, subject, text: msg.text, replyTo: msg.replyTo, data: msg.data }),
+      });
+      return { delivered: res.ok, adapter, detail: res.ok ? undefined : `webhook responded ${res.status}` };
+    }
+
+    case 'smtp': {
+      const host = env('SMTP_HOST');
+      const port = Number(env('SMTP_PORT')) || 587;
+      const user = env('SMTP_USER');
+      const pass = env('SMTP_PASS') || env('SMTP_PASSWORD');
+      if (!host || !user || !pass) {
+        return { delivered: false, adapter, detail: 'smtp selected but SMTP_HOST, SMTP_USER, or SMTP_PASS is unset' };
+      }
+      const senderEmail = env('SMTP_FROM_EMAIL') || from || user;
+      const senderName = env('SMTP_FROM_NAME') || '';
+      const sender = senderName ? `"${senderName}" <${senderEmail}>` : senderEmail;
+      try {
+        const transport = nodemailer.createTransport({
+          host,
+          port,
+          secure: port === 465,
+          auth: { user, pass },
+          connectionTimeout: 10_000,
+          greetingTimeout: 10_000,
+          socketTimeout: 15_000,
+        });
+        await transport.sendMail({
+          from: sender,
+          to,
+          subject,
+          text: msg.text,
+          ...(msg.html ? { html: msg.html } : {}),
+          ...(msg.replyTo ? { replyTo: msg.replyTo } : {}),
+          attachments: (msg.attachments ?? []).map((a) => ({ filename: a.filename, content: a.content })),
+        });
+        return { delivered: true, adapter };
+      } catch (err) {
+        return { delivered: false, adapter, detail: `smtp send failed: ${err instanceof Error ? err.message : String(err)}` };
+      }
+    }
+
+    case 'console':
+    default:
+      console.log(`\n──── MESSAGE (delivery not configured) ────\n${subject}\n${msg.text}\n`);
+      return { delivered: false, adapter: 'console', detail: 'FORM_ADAPTER not configured — message logged only' };
+  }
+}

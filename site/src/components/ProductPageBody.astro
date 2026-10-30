@@ -5,11 +5,13 @@ import { withExtras, extraFaqs, extraHeading } from '../lib/page-faqs';
  * to a product. Owns its own <BaseLayout> so each page type controls its own
  * head, schema graph, and Open Graph image.
  */
-import { getImage } from 'astro:assets';
+import { productImages } from '../lib/product-images';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from './Breadcrumbs.astro';
 import ProductGallery from './ProductGallery.astro';
 import PriceNote from './PriceNote.astro';
+import OrderBand from './OrderBand.astro';
+import { PRICE_LINE, SHIP_LINE } from '../data/order';
 import SpecTable from './SpecTable.astro';
 import FaqAccordion from './FaqAccordion.astro';
 import RelatedProducts from './RelatedProducts.astro';
@@ -18,7 +20,6 @@ import DesignYourBox from './DesignYourBox.astro';
 import InquiryForm from './InquiryForm.astro';
 import { getProduct } from '../data/products';
 import type { ProductContent } from '../data/product-content';
-import { business } from '../data/business';
 import { reviewsForProduct, aggregateFor } from '../data/reviews';
 import {
   graph,
@@ -43,8 +44,6 @@ const crumbs: Crumb[] = [
   { name: record.name, url },
 ];
 
-const price = business.startingPricePerPiece.value;
-
 // Reviews for this product, and the rating computed from them. Both are empty
 // until real reviews exist in src/data/reviews.ts, at which point they render
 // on the page AND appear in schema together.
@@ -52,27 +51,10 @@ const productReviews = reviewsForProduct(content.slug);
 const rating = aggregateFor(productReviews);
 
 /**
- * Resolve the real emitted URLs for the gallery images so JSON-LD and the
- * Open Graph tag point at files that actually exist. Astro writes optimized,
- * content-hashed assets, so the source filename is not the delivered URL.
+ * Real emitted URLs for the gallery images, so JSON-LD, Open Graph and the
+ * Merchant feed all point at files that actually exist (content-hashed WebP).
  */
-// '!**/._*' keeps macOS AppleDouble sidecars (exFAT drive) out of the glob.
-const imageModules = import.meta.glob<{ default: ImageMetadata }>([
-  '../assets/products/**/*.png',
-  '!**/._*',
-]);
-
-const schemaImages = await Promise.all(
-  content.imageAlts.slice(0, 4).map(async (entry) => {
-    const load = imageModules[`../assets/products/${content.slug}/${entry.file}`];
-    const optimized = await getImage({
-      src: (await load()).default,
-      width: 1200,
-      format: 'webp',
-    });
-    return optimized.src;
-  })
-);
+const schemaImages = await productImages(content.slug, content.imageAlts);
 
 const schema = graph(
   webPage({ url, name: content.h1, description: content.metaDescription, dateModified: content.updated }),
@@ -82,7 +64,6 @@ const schema = graph(
     slug: url,
     description: content.summary,
     images: schemaImages,
-    priceFrom: { amount: price.amount, currency: price.currency },
     aggregateRating: rating,
     reviews: productReviews,
   }),
@@ -111,9 +92,11 @@ const schema = graph(
     <div class="pp-top__body">
       <h1>{content.h1}</h1>
       <p class="pp-top__summary">{content.summary}</p>
+      <p class="pp-top__price"><strong>{PRICE_LINE}</strong> · {SHIP_LINE}</p>
 
       <div class="pp-top__actions">
-        <a class="btn btn-solid btn-lg" href="/request-a-quote/">Request a quote</a>
+        <a class="btn btn-solid btn-lg" href="#order">Order online</a>
+        <a class="btn btn-line btn-lg" href="/request-a-quote/">Request a quote</a>
         <a class="btn btn-line btn-lg" href="/sample-request/">Request a sample</a>
         <a class="pp-top__design" href="#design">Design your display box</a>
       </div>
@@ -121,10 +104,13 @@ const schema = graph(
       <ul class="pp-top__facts">
         <li>Free dieline drawn for your product</li>
         <li>Custom sizes — the box is built around your unit</li>
-        <li>Shipped to businesses across all 50 states</li>
+        <li>Free shipping to the US, UK, Canada and Australia</li>
       </ul>
     </div>
   </section>
+
+  {/* ── Order online: the 100-box pack ─────────────────────────────── */}
+  <OrderBand product={{ slug: content.slug, name: record.name }} id="order" />
 
   {/* ── Quick inquiry ────────────────────────────────────────────────── */}
   <section class="band--tight wrap pp-ask">
@@ -277,6 +263,15 @@ const schema = graph(
     color: var(--ink-2);
     font-size: 1.125rem;
     max-width: 60ch;
+  }
+
+  .pp-top__price {
+    margin-block-start: 16px;
+    color: var(--ink-2);
+  }
+  .pp-top__price strong {
+    color: var(--ink);
+    font: 800 1.25rem/1.35 var(--font-display);
   }
 
   .pp-top__actions {

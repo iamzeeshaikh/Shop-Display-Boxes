@@ -1,26 +1,23 @@
 ---
 /**
- * Visible pricing statement, required on every product page.
- *
- * The exact sentence in PRICING_STATEMENT is what the Offer schema mirrors.
- * The qualifier below it is not decoration: it is what keeps the $0.30 figure
- * honest, by stating plainly that it is a volume starting point rather than a
- * price anyone will pay at any quantity.
+ * Pricing panel on every product page. One price story, from src/data/order.ts:
+ * the online pack is 100 display boxes for $60.00, the same figure as the order
+ * band, the Offer JSON-LD and the Merchant feed. Anything else is quoted.
  */
-import { PRICING_STATEMENT } from '../data/product-content';
+import { PRICE_LINE, PRODUCTION_TEXT } from '../data/order';
 ---
 
 <aside class="pn" aria-labelledby="pricing-heading">
   <h2 class="pn__h" id="pricing-heading">Pricing</h2>
-  <p class="pn__statement">{PRICING_STATEMENT}</p>
+  <p class="pn__statement">{PRICE_LINE}</p>
   <p class="pn__qualifier">
-    That $0.30 figure is a starting point for qualifying large-volume orders — not a fixed price,
-    and not what a small run costs. Setup work (dieline, plates, press make-ready) is spread across
-    the run, so the per-piece price rises as quantity falls. Specialty board, added inserts, and
-    premium finishes all move it as well. The only way to get your number is a quote against your
-    actual specification.
+    That is the online price for a pack of 100 in this style, printed full color to your artwork,
+    with free shipping to the US, UK, Canada and Australia. Production takes {PRODUCTION_TEXT} after you approve the proof.
+    Larger runs, custom sizes, specialty board, inserts and premium finishes are priced by quote
+    against your actual specification.
   </p>
-  <a class="btn btn-solid" href="/request-a-quote/">Get a price for your specification</a>
+  <a class="btn btn-solid" href="#order">Order 100 boxes online</a>
+  <p class="pn__alt"><a href="/request-a-quote/">Get a quote for a larger or custom run</a></p>
 </aside>
 
 <style>
@@ -45,6 +42,11 @@ import { PRICING_STATEMENT } from '../data/product-content';
   .pn__qualifier {
     margin-block: 14px 22px;
     font-size: 15px;
+  }
+  .pn__alt {
+    margin-block-start: 14px;
+    font-size: 15px;
+    font-weight: 600;
   }
   .pn .btn {
     width: 100%;
